@@ -16,3 +16,4 @@ public/assets
 resources/views
 resources/lang
 /github
+.DS_Store
