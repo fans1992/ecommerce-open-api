@@ -25,6 +25,7 @@ return [
 
             // 默认可用的发送网关
             'gateways' => [
+                'yunpian',
                 'errorlog',
             ],
         ],
@@ -36,7 +37,7 @@ return [
             ],
 
             'yunpian' => [
-                'api_key' => '824f0ff2f71cab52936axxxxxxxxxx',
+                'api_key' => env('YUNPIAN_API_KEY'),
             ],
 
             'aliyun' => [
@@ -62,9 +63,9 @@ return [
         'product' => '',
     ],
 
-    'dblog' => false,
+    'dblog' => true,
 
-    'content' => '【iBrand】亲爱的用户，您的验证码是%s。有效期为%s分钟，请尽快验证。',
+    'content' => '【星视度】您正在使用星视度广告系统，短信验证码：%s ， 有效期为600秒，感谢您的使用！',
 
     'storage' => \iBrand\Sms\Storage\CacheStorage::class,
 ];
