@@ -64,7 +64,7 @@ class BackendServiceProvider extends ServiceProvider
 
         Product::observe(ProductObserver::class);
 
-        $this->mergeUeditorConfig();
+//        $this->mergeUeditorConfig();
     }
 
     public function register()

@@ -21,17 +21,18 @@ return [
            // 'middleware' => 'auth',
         ],
 
-        'mode'=>'local',//上传方式,local 为本地   qiniu 为七牛
+//        'mode'=>'local',//上传方式,local 为本地   qiniu 为七牛
+        'mode'=>'qiniu',//上传方式,local 为本地   qiniu 为七牛
 
         //七牛配置,若mode='qiniu',以下为必填.
         'qiniu'=>[
-            'accessKey'=>'',
-            'secretKey'=>'',
-            'bucket'=>'',
-            'url'=>'http://xxx.clouddn.com',//七牛分配的CDN域名,注意带上http://
-
+            'accessKey'=>env('QINIU_ACCESS_KEY', 'xxxxxxxxxxxxxxxx'),
+            'secretKey'=>env('QINIU_SECRET_KEY', 'xxxxxxxxxxxxxxxx'),
+            'bucket'=> env('QINIU_BUCKET', 'test'),
+            'url'=> env('QINIU_DOMAIN', 'xxx.clouddn.com'),//七牛分配的CDN域名,注意带上http://
         ]
     ],
+
     /**
      * 和原 UEditor /php/config.json 配置完全相同
      *
