@@ -14,7 +14,7 @@ yarn-error.log
 public/uploads
 public/vendor
 public/assets
-resources/views
+resources/views/vendor
 resources/lang
 /github
 .DS_Store
