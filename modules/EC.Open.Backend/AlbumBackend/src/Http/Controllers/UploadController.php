@@ -10,6 +10,7 @@ namespace iBrand\EC\Open\Backend\Album\Http\Controllers;
 
 use Illuminate\Http\Request;
 use iBrand\Backend\Http\Controllers\Controller;
+use Storage;
 
 class UploadController extends Controller
 {
@@ -29,16 +30,18 @@ class UploadController extends Controller
         foreach ($file as $key => $item) {
             $extension = $item->getClientOriginalExtension();
 
-            $pic_name = $this->generaterandomstring() . '.' . $extension;
+//            $pic_name = $this->generaterandomstring() . '.' . $extension;
 
             //$dir = $destinationPath . $this->formatDir();
             $dir = $this->formatDir();
-            $file_path = $dir . $pic_name;
+//            $file_path = $dir . $pic_name;
+            $path = Storage::disk('qiniu')->put($dir, $item);
+//            $item->move(storage_path('app/public/images/') . $dir, $pic_name);
+//            $url = $this->replaceImgCDN(asset('storage/images/' . $file_path));
+            $url = $this->replaceImgCDN($path);
 
-            $item->move(storage_path('app/public/images/') . $dir, $pic_name);
-            $url = $this->replaceImgCDN(asset('storage/images/' . $file_path));
-
-            $data[$key]['path'] = asset('storage/images/' . $file_path);
+//            $data[$key]['path'] = asset('storage/images/' . $file_path);
+            $data[$key]['path'] = $url;
             $data[$key]['url'] = $url;
             $data[$key]['name'] = str_replace('.' . $extension, '', $item->getClientOriginalName());
         }
@@ -70,12 +73,14 @@ class UploadController extends Controller
         $parse_path = isset($parse['path']) ? $parse['path'] : '';
         $parse_host = isset($parse['host']) ? $parse['host'] : '';
         $app_parse = parse_url(env('APP_URL'));
-        if ($app_parse['host'] !== $parse_host) {
-            return $value;
-        }
+
+//        if ($app_parse['host'] !== $parse_host) {
+//            return $value;
+//        }
         $cdn_status = settings('store_img_cdn_status') ? settings('store_img_cdn_status') : 0;
         if ($cdn_status && $value) {
-            $cdn_url = settings('store_img_cdn_url') ? settings('store_img_cdn_url') : '';
+//            $cdn_url = settings('store_img_cdn_url') ? settings('store_img_cdn_url') : '';
+            $cdn_url = env('QINIU_DOMAIN') . '/';
             $parse_path = isset($parse['path']) ? $parse['path'] : '';
             return $cdn_url . $parse_path;
         }
@@ -86,6 +91,7 @@ class UploadController extends Controller
     protected function formatDir()
     {
         $directory = config('dmp-file-manage.dir', '{Y}/{m}/{d}');
+
         $replacements = [
             '{Y}' => date('Y'),
             '{m}' => date('m'),

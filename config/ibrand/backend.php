@@ -32,7 +32,7 @@ return [
 
     'disks' => [
         'admin' => [
-            'driver' => 'local',
+            'driver' => 'qiniu',
             'root' => storage_path('app/public/backend'),
             'url' => env('APP_URL').'/storage/backend',
             'visibility' => 'public',

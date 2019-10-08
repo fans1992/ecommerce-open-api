@@ -6,8 +6,8 @@
  * Time: 15:25
  */
 return [
-    'dir' => '{Y}{m}{d}/',
+    'dir' => '{Y}{m}{d}',
     'size'=>2,
     'num'=>5,
-    'mimes' => ['jpg','jpeg', 'png', 'bmp', 'gif'],
+    'mimes' => ['jpg','jpeg', 'png', 'bmp', 'gif', 'doc', 'docx', 'pdf'],
 ];
