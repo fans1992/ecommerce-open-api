@@ -8,10 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
+//手机号短信登录
 $router->post('oauth/sms', 'AuthController@smsLogin')->name('api.oauth.sms');
 
+//小程序快捷登陆
 $router->post('oauth/MiniProgramLogin', 'MiniProgramLoginController@login')->name('api.oauth.miniprogram.login');
+//小程序手机号授权登录
 $router->post('oauth/MiniProgramMobileLogin', 'MiniProgramLoginController@mobileLogin')->name('api.oauth.miniprogram.mobile.login');
 //小程序获取openId
 $router->get('oauth/miniprogram/openid', 'MiniProgramLoginController@getOpenIdByCode');
