@@ -10,6 +10,11 @@
  */
 //手机号短信登录
 $router->post('oauth/sms', 'AuthController@smsLogin')->name('api.oauth.sms');
+//用户注册
+$router->post('oauth/users', 'AuthController@register')->name('api.oauth.register');
+//用户账号密码登录
+$router->post('oauth/authorizations', 'AuthController@login')->name('api.oauth.login');
+
 
 //小程序快捷登陆
 $router->post('oauth/MiniProgramLogin', 'MiniProgramLoginController@login')->name('api.oauth.miniprogram.login');
