@@ -35,10 +35,14 @@ class UploadController extends Controller
             //$dir = $destinationPath . $this->formatDir();
             $dir = $this->formatDir();
 //            $file_path = $dir . $pic_name;
-            $path = Storage::disk('qiniu')->put($dir, $item);
+            $responseUpload = Storage::disk('qiniu')->put($dir, $item);
+            if ($responseUpload === false) {
+                return response()->json(['status' => false, 'message' => '上传七牛云失败']);
+            }
+
 //            $item->move(storage_path('app/public/images/') . $dir, $pic_name);
 //            $url = $this->replaceImgCDN(asset('storage/images/' . $file_path));
-            $url = $this->replaceImgCDN($path);
+            $url = $this->replaceImgCDN($responseUpload);
 
 //            $data[$key]['path'] = asset('storage/images/' . $file_path);
             $data[$key]['path'] = $url;
