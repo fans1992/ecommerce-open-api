@@ -69,6 +69,7 @@ class AuthController extends Controller
 
     /**
      * 用户注册
+     *
      * @return \Dingo\Api\Http\Response|mixed
      */
     public function register()
@@ -110,21 +111,64 @@ class AuthController extends Controller
 
     }
 
-    public function store(AuthorizationRequest $originRequest, AuthorizationServer $server, ServerRequestInterface $serverRequest)
+    /**
+     * 账号密码登录
+     *
+     * @param AuthorizationServer $server
+     * @param ServerRequestInterface $serverRequest
+     * @return mixed|\Psr\Http\Message\ResponseInterface
+     */
+    public function store(AuthorizationServer $server, ServerRequestInterface $serverRequest)
     {
         $validator = Validator::make(request()->all(), [
-            'phone' => 'required|string',
+            'username' => 'required|string',
             'password' => 'required|string|min:6',
         ]);
 
         if ($validator->fails()) {
             return $this->failed($validator->errors());
         }
+
         try {
-            return $server->respondToAccessTokenRequest($serverRequest, new Psr7Response)->withStatus(201);
-        } catch(OAuthServerException $e) {
-            return $this->response->errorUnauthorized($e->getMessage());
+            return $server->respondToAccessTokenRequest($serverRequest, new Psr7Response);
+        } catch (OAuthServerException $e) {
+            return $this->failed($e->getMessage());
         }
+    }
+
+    /**
+     * 刷新token
+     *
+     * @param AuthorizationServer $server
+     * @param ServerRequestInterface $serverRequest
+     * @return mixed|\Psr\Http\Message\ResponseInterface
+     */
+    public function update(AuthorizationServer $server, ServerRequestInterface $serverRequest)
+    {
+        try {
+            return $server->respondToAccessTokenRequest($serverRequest, new Psr7Response);
+        } catch(OAuthServerException $e) {
+            return $this->failed($e->getMessage());
+        }
+    }
+
+
+    /**
+     * 删除token(退出登录)
+     *
+     * @return mixed
+     */
+    public function destroy()
+    {
+        $user = request()->user();
+
+        if (!empty($user)) {
+            $user->token()->revoke();
+            return $this->success();
+        } else {
+            return $this->failed('The token is invalid.');
+        }
+
     }
 
 }

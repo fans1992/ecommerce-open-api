@@ -13,7 +13,9 @@ $router->post('oauth/sms', 'AuthController@smsLogin')->name('api.oauth.sms');
 //用户注册
 $router->post('oauth/users', 'AuthController@register')->name('api.oauth.register');
 //用户账号密码登录
-$router->post('oauth/authorizations', 'AuthController@login')->name('api.oauth.login');
+$router->post('oauth/authorizations', 'AuthController@store')->name('api.oauth.store');
+//刷新token
+$router->put('oauth/authorizations/current', 'AuthController@update')->name('api.oauth.update');
 
 
 //小程序快捷登陆
@@ -73,6 +75,7 @@ $router->group(config('ibrand.ec-open-api.routeAuthAttributes'), function ($rout
 
     /************************* 用户 **********************/
     $router->get('me', 'UserController@me')->name('api.me');
+    $router->delete('oauth/authorizations/current', 'AuthController@destroy')->name('api.oauth.destroy');
     $router->get('users/ucenter', 'UserController@ucenter')->name('api.user.ucenter');
     $router->post('users/update/info', 'UserController@updateInfo')->name('api.user.update.info');
     $router->post('users/update/mobile', 'UserController@updateMobile')->name('api.user.update.mobile');
