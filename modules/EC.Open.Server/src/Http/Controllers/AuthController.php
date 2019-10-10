@@ -11,17 +11,19 @@
 
 namespace iBrand\EC\Open\Server\Http\Controllers;
 
+use Carbon\Carbon;
 use iBrand\Component\User\Repository\UserBindRepository;
 use iBrand\Component\User\Repository\UserRepository;
 use iBrand\EC\Open\Core\Auth\User;
 use iBrand\Component\User\UserService;
 use iBrand\Sms\Facade as Sms;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use Validator;
 use Zend\Diactoros\Response as Psr7Response;
 use Psr\Http\Message\ServerRequestInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\AuthorizationServer;
+use Auth;
 
 class AuthController extends Controller
 {
@@ -59,12 +61,17 @@ class AuthController extends Controller
         }
 
         //1. create user token.
-        $token = $user->createToken($mobile)->accessToken;
+        $tokenResult = $user->createToken($mobile);
 
         //2. bind user bind data to user.
 //        $this->userService->bindPlatform($user->id, request('open_id'), config('wechat.mini_program.default.app_id'), 'miniprogram');
 
-        return $this->success(['token_type' => 'Bearer', 'access_token' => $token, 'is_new_user' => $is_new]);
+        return $this->success([
+            'token_type' => 'Bearer',
+            'access_token' => $tokenResult->accessToken,
+            'expires_at' => Carbon::parse($tokenResult->token->expires_at)->toDateTimeString(),
+            'is_new_user' => $is_new
+        ]);
     }
 
     /**
@@ -72,7 +79,7 @@ class AuthController extends Controller
      *
      * @return \Dingo\Api\Http\Response|mixed
      */
-    public function register()
+    public function signup(Request $request)
     {
         $validator = Validator::make(request()->all(), [
             'mobile' => 'required|regex:/^1[3456789]\d{9}$/',
@@ -101,13 +108,14 @@ class AuthController extends Controller
             'password' => bcrypt($password),
         ]);
 
-        $token = $user->createToken($mobile)->accessToken;
+        $tokenResult = $user->createToken($mobile);
+        $tokenResult->token->save();
 
         return $this->success([
             'token_type' => 'Bearer',
-            'access_token' => $token,
-            'is_new_user' => true,
-        ]);
+            'access_token' => $tokenResult->accessToken,
+            'expires_at' => Carbon::parse($tokenResult->token->expires_at)->toDateTimeString()
+        ], 201);
 
     }
 
@@ -118,10 +126,10 @@ class AuthController extends Controller
      * @param ServerRequestInterface $serverRequest
      * @return mixed|\Psr\Http\Message\ResponseInterface
      */
-    public function store(AuthorizationServer $server, ServerRequestInterface $serverRequest)
+    public function login(Request $request)
     {
         $validator = Validator::make(request()->all(), [
-            'username' => 'required|string',
+            'mobile' => 'required|string',
             'password' => 'required|string|min:6',
         ]);
 
@@ -129,11 +137,21 @@ class AuthController extends Controller
             return $this->failed($validator->errors());
         }
 
-        try {
-            return $server->respondToAccessTokenRequest($serverRequest, new Psr7Response);
-        } catch (OAuthServerException $e) {
-            return $this->failed($e->getMessage());
+        $credentials = request(['mobile', 'password']);
+
+        if (!Auth::attempt($credentials)) {
+            return $this->failed('手机号或者密码不正确, 请重新输入', 401);
         }
+
+        $user = $request->user();
+        $tokenResult = $user->createToken('Personal Access Token');
+        $tokenResult->token->save();
+
+        return $this->success([
+            'token_type' => 'Bearer',
+            'access_token' => $tokenResult->accessToken,
+            'expires_at' => Carbon::parse($tokenResult->token->expires_at)->toDateTimeString()
+        ]);
     }
 
     /**
@@ -147,20 +165,19 @@ class AuthController extends Controller
     {
         try {
             return $server->respondToAccessTokenRequest($serverRequest, new Psr7Response);
-        } catch(OAuthServerException $e) {
+        } catch (OAuthServerException $e) {
             return $this->failed($e->getMessage());
         }
     }
-
 
     /**
      * 删除token(退出登录)
      *
      * @return mixed
      */
-    public function destroy()
+    public function destroy(Request $request)
     {
-        $user = request()->user();
+        $user = $request->user();
 
         if (!empty($user)) {
             $user->token()->revoke();
