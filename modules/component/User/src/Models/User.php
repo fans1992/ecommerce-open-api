@@ -66,4 +66,20 @@ class User extends Authenticatable
 
         return $this->attributes['password'] = $value;
     }
+
+    /**
+     * 支持手机号和邮箱登录
+     * @param string $username
+     * @return mixed
+     */
+    public function findForPassport($username)
+    {
+        filter_var($username, FILTER_VALIDATE_EMAIL) ?
+            $credentials['email'] = $username :
+            $credentials['mobile'] = $username;
+
+        return self::where($credentials)->first();
+    }
+
+
 }

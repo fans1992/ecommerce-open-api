@@ -11,7 +11,6 @@
 
 namespace iBrand\EC\Open\Server\Providers;
 
-use iBrand\EC\Open\Server\Schedule\OrderRemindSchedule;
 use Illuminate\Support\ServiceProvider;
 
 class ServerServiceProvider extends ServiceProvider
@@ -38,7 +37,5 @@ class ServerServiceProvider extends ServiceProvider
         );
 
         $this->app->register(RouteServiceProvider::class);
-
-        //$this->app->make('iBrand\Scheduling\ScheduleList')->add(OrderRemindSchedule::class);
     }
 }

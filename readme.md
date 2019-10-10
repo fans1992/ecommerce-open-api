@@ -1,60 +1,72 @@
-# iBrand E-Commerce open source project
+<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
 
-iBrand EC 是一个免费的开源电子商务解决方案，使用 PHP 基于 Laravel 框架进行编写。基于模块化开发，易扩展，可基于个性需求快速实现定制化需求，功能符合国内电商绝大部分使用场景。
+<p align="center">
+<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
+</p>
 
-> 基于目前移动互联网的发展趋势，目前只提供 API 和 后端管理，不提供PC端商城。如有需要可理解项目架构后自行实现。
+## About Laravel
 
-管理后台：[iBrand e-commerce admin]( https://demo-open-admin.ibrand.cc/admin)
+Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-后台账号密码请关注公众号 [iBrand社交新零售](https://iyoyo.oss-cn-hangzhou.aliyuncs.com/post/wechat.jpg)  (微信号：ibrand_cc) ，并回复关键词：password 获取。
+- [Simple, fast routing engine](https://laravel.com/docs/routing).
+- [Powerful dependency injection container](https://laravel.com/docs/container).
+- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
+- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
+- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
+- [Robust background job processing](https://laravel.com/docs/queues).
+- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-扫码体验小程序：
+Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-![体验小店](https://iyoyo.oss-cn-hangzhou.aliyuncs.com/post/miniprogramcode/1.jpg)
+## Learning Laravel
 
-## 更新日志
+Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-目前 2.x 版本正在更新中，更新日志请见此[文档](./CHANGELOG.md) （2019-03-10 release 2.0.2）
+If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1400 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## 功能清单
+## Laravel Sponsors
 
-[开源版本功能清单](https://iyoyo.oss-cn-hangzhou.aliyuncs.com/post/iBrand%20%E5%BC%80%E6%BA%90%E7%94%B5%E5%95%86.png)
+We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
 
-## 小程序
+- **[Vehikl](https://vehikl.com/)**
+- **[Tighten Co.](https://tighten.co)**
+- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
+- **[64 Robots](https://64robots.com)**
+- **[Cubet Techno Labs](https://cubettech.com)**
+- **[Cyber-Duck](https://cyber-duck.co.uk)**
+- **[British Software Development](https://www.britishsoftware.co)**
+- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
+- **[DevSquad](https://devsquad.com)**
+- [UserInsights](https://userinsights.com)
+- [Fragrantica](https://www.fragrantica.com)
+- [SOFTonSOFA](https://softonsofa.com/)
+- [User10](https://user10.com)
+- [Soumettre.fr](https://soumettre.fr/)
+- [CodeBrisk](https://codebrisk.com)
+- [1Forge](https://1forge.com)
+- [TECPRESSO](https://tecpresso.co.jp/)
+- [Runtime Converter](http://runtimeconverter.com/)
+- [WebL'Agence](https://weblagence.com/)
+- [Invoice Ninja](https://www.invoiceninja.com)
+- [iMi digital](https://www.imi-digital.de/)
+- [Earthlink](https://www.earthlink.ro/)
+- [Steadfast Collective](https://steadfastcollective.com/)
+- [We Are The Robots Inc.](https://watr.mx/)
+- [Understand.io](https://www.understand.io/)
+- [Abdel Elrafa](https://abdelelrafa.com)
+- [Hyper Host](https://hyper.host)
 
-小程序端源码在此：[miniprogram-open-source](https://github.com/ibrandcc/miniprogram-ecommerce-open-source)
+## Contributing
 
-## 文档
-- [Wiki](https://github.com/ibrandcc/ecommerce-open-api/wiki)
-- [API 文档](https://www.ibrand.cc/docs/api/)
-- [iBrand 电商系统教程](https://www.ibrand.cc/open/article)
-- [设计稿](https://lanhuapp.com/url/v7Bfb)  密码： YgK7
+Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## 特性
+## Security Vulnerabilities
 
-- 使用 Laravel + dingo/api 完成接口开发。
-- 基于 Modules 或者 Package 开发模式，每个模块都是一个 Package，并且基础模块完成了单元测试，可复用性和可扩展性高。
-- 基于 Laravel-admin 实现管理后台。
-- 符合国内绝大部分B2C电商需求，同时可以轻易改造成 B2B、O2O、S2B2C模式。
-- 完整的API文档+系统使用教程+业务说明文档。
-- 配套的小程序解决方案+源码。
-- docker 实现自动化部署、负载均衡、自动扩容等。（待更新）
-- swoole 结合提高并发。（待更新）
+If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-## 贡献源码
+## License
 
-该项目正在持续迭代更新中，如果你想参与到本项目中来，请提交 Pull Request !
-
-如果你发现任何问题或者需求，请[提交ISSUE](https://github.com/ibrandcc/ecommerce-open-api/issues)
-
-## 开源系列
-
-[Laravel 社交电商](https://github.com/ibrandcc/ecommerce-open-api)    ·    [社交电商微信小程序](https://github.com/ibrandcc/miniprogram-ecommerce-open-source)    ·  [微信第三方平台](https://github.com/ibrandcc/laravel-wechat-platform)
-
-## 社交账号
-
-[Laravel-China](https://laravel-china.org/ibrand)   ·  [掘金](https://juejin.im/user/5aab2cfa518825556534407a/posts)    ·  [segmentfault](https://segmentfault.com/u/ibrand)  
-
-## 讨论交流
-
-![iBrand联系我们](https://iyoyo.oss-cn-hangzhou.aliyuncs.com/post/qrcode.jpg)
+The Laravel framework is open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).
