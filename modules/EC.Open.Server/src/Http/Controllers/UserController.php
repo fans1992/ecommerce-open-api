@@ -52,7 +52,7 @@ class UserController extends Controller
     {
         $user = request()->user();
 
-        $data = array_filter(request()->only(['name', 'nick_name', 'sex', 'birthday', 'city', 'education', 'qq', 'avatar', 'email', 'password']));
+        $data = array_filter(request()->only(['name', 'nick_name', 'sex', 'birthday', 'city', 'education', 'qq', 'avatar']));
 
         if (isset($data['name']) and ($data['name']) != $user->name and User::where('name', $data['name'])->first()) {
             return $this->failed('此用户名已存在');
