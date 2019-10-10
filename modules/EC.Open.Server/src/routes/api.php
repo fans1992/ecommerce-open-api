@@ -8,12 +8,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 //手机号短信登录
 $router->post('oauth/sms', 'AuthController@smsLogin')->name('api.oauth.sms');
 //用户注册
 $router->post('oauth/signup', 'AuthController@signup')->name('api.oauth.signup');
 //用户账号密码登录
 $router->post('oauth/login', 'AuthController@login')->name('api.oauth.login');
+//用户找回密码
+$router->post('oauth/password/reset', 'AuthController@resetPassword')->name('api.oauth.password.reset');
+
 
 //小程序快捷登陆
 $router->post('oauth/MiniProgramLogin', 'MiniProgramLoginController@login')->name('api.oauth.miniprogram.login');

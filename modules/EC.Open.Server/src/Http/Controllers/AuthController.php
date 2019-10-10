@@ -105,7 +105,7 @@ class AuthController extends Controller
 
         $user = $this->userRepository->create([
             'mobile' => $mobile,
-            'password' => bcrypt($password),
+            'password' => $password,
         ]);
 
         $tokenResult = $user->createToken($mobile);
@@ -185,7 +185,38 @@ class AuthController extends Controller
         } else {
             return $this->failed('The token is invalid.');
         }
-
     }
+
+    /**
+     * 用户找回密码
+     *
+     * @return \Dingo\Api\Http\Response|mixed
+     */
+    public function resetPassword()
+    {
+        $validator = Validator::make(request()->all(), [
+            'mobile' => 'required|regex:/^1[3456789]\d{9}$/',
+            'code' => 'required|string',
+            'new_password' => 'required|string|min:6',
+            'confirm_password' => 'required|string|min:6|same:new_password',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->failed($validator->errors());
+        }
+
+        if (!Sms::checkCode(request('mobile'), request('code'))) {
+            return $this->failed('验证码错误');
+        }
+
+        if (!$user = $this->userRepository->getUserByCredentials(['mobile' => request('mobile')])) {
+            return $this->failed('该手机号暂未注册');
+        }
+
+        $user->update(['password' => request('new_password')]);
+
+        return $this->success();
+    }
+
 
 }
