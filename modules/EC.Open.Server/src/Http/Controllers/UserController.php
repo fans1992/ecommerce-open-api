@@ -22,12 +22,9 @@ use iBrand\EC\Open\Server\Transformers\UserTransformer;
 use iBrand\Sms\Facade as Sms;
 use Illuminate\Http\Request;
 use Image;
-use Laravel\Passport\HasApiTokens;
 
 class UserController extends Controller
 {
-    use HasApiTokens;
-
     private $user;
     private $order;
 
@@ -114,9 +111,9 @@ class UserController extends Controller
     public function updatePassword()
     {
         $user = request()->user();
-        $credentials = ['mobile' => $user->mobile, 'password' => request('password')];
+        $credentials = ['mobile' => $user->mobile, 'password' => request(['password'])];
 
-        //TODO: 密码校验
+        //TODO: 旧密码校验
 //        if (!Auth::attempt($credentials)) {
 //            return $this->failed('手机号或者密码不正确, 请重新输入', 401);
 //        }
