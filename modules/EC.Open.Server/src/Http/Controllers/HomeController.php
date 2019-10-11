@@ -30,15 +30,23 @@ class HomeController extends Controller
 
         $goodsService = app(GoodsService::class);
 
-        $boysGoods = $goodsService->getGoodsByCategoryId(3)->where('is_del', 0)->take(6);
+        $boysGoods = $goodsService->getGoodsByCategoryId(1)->where('is_del', 0)->take(8);
 
-        $boyCategory = ['name' => '男童 T恤/衬衫', 'link' => '/pages/store/list/list?c_id=3', 'items' => array_values($boysGoods->toArray())];
+        $boyCategory = ['name' => '商标业务', 'link' => '/pages/store/list/list?c_id=1', 'items' => array_values($boysGoods->toArray())];
 
-        $girlGoods = $goodsService->getGoodsByCategoryId(6)->where('is_del', 0)->take(6);
+        $brandGoods = $goodsService->getGoodsByCategoryId(1)->where('is_del', 0)->take(8);
 
-        $girlCategory = ['name' => '女童 T恤/衬衫', 'link' => '/pages/store/list/list?c_id=6', 'items' => array_values($girlGoods->toArray())];
+        $brandCategory = ['name' => '商标业务', 'link' => '/pages/store/list/list?c_id=1', 'items' => array_values($brandGoods->toArray())];
 
-        return $this->success(compact('carousels', 'categories', 'boyCategory', 'girlCategory'));
+        $copyrightGoods = $goodsService->getGoodsByCategoryId(2)->where('is_del', 0)->take(8);
+
+        $copyrightCategory = ['name' => '版权业务', 'link' => '/pages/store/list/list?c_id=2', 'items' => array_values($copyrightGoods->toArray())];
+
+//        $girlGoods = $goodsService->getGoodsByCategoryId(2)->where('is_del', 0)->take(8);
+//
+//        $girlCategory = ['name' => '商标工具', 'link' => '/pages/store/list/list?c_id=2', 'items' => array_values($girlGoods->toArray())];
+
+        return $this->success(compact('carousels', 'categories', 'boyCategory', 'brandCategory', 'copyrightCategory'));
     }
 
     public function category()
