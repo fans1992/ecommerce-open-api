@@ -175,7 +175,7 @@ class AuthController extends Controller
      *
      * @return mixed
      */
-    public function destroy(Request $request)
+    public function logout(Request $request)
     {
         $user = $request->user();
 

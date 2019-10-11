@@ -22,9 +22,12 @@ use iBrand\EC\Open\Server\Transformers\UserTransformer;
 use iBrand\Sms\Facade as Sms;
 use Illuminate\Http\Request;
 use Image;
+use Laravel\Passport\HasApiTokens;
 
 class UserController extends Controller
 {
+    use HasApiTokens;
+
     private $user;
     private $order;
 
@@ -106,6 +109,25 @@ class UserController extends Controller
         }
 
         return $this->success(['url' => url('/storage/uploads/' . $filename)]);
+    }
+
+    public function updatePassword()
+    {
+        $user = request()->user();
+        $credentials = ['mobile' => $user->mobile, 'password' => request('password')];
+
+        //TODO: 密码校验
+//        if (!Auth::attempt($credentials)) {
+//            return $this->failed('手机号或者密码不正确, 请重新输入', 401);
+//        }
+
+        if (request('new_password') !== request('confirm_password')) {
+            return $this->failed('两次密码不一致, 请重新输入');
+        }
+
+        $user->update(['password' => request('password')]);
+        return $this->success('密码修改成功');
+
     }
 
     public function updateMobile(Request $request)
