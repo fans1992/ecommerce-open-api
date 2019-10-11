@@ -78,8 +78,8 @@ $router->group(config('ibrand.ec-open-api.routeAuthAttributes'), function ($rout
     $router->get('me', 'UserController@me')->name('api.me');
     //刷新token
     $router->put('oauth/authorizations/current', 'AuthController@update')->name('api.oauth.update');
-    //删除token
-    $router->delete('oauth/authorizations/current', 'AuthController@destroy')->name('api.oauth.destroy');
+    //用户退出登录
+    $router->delete('oauth/authorizations/current', 'AuthController@logout')->name('api.oauth.logout');
 
     $router->get('users/ucenter', 'UserController@ucenter')->name('api.user.ucenter');
     $router->post('users/update/info', 'UserController@updateInfo')->name('api.user.update.info');
