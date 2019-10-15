@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace iBrand\EC\Open\Server\Http\Controllers;
+namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 
 use Carbon\Carbon;
-use iBrand\Component\User\Repository\UserBindRepository;
-use iBrand\Component\User\Repository\UserRepository;
-use iBrand\EC\Open\Core\Auth\User;
-use iBrand\Component\User\UserService;
+use GuoJiangClub\Component\User\Repository\UserBindRepository;
+use GuoJiangClub\Component\User\Repository\UserRepository;
+use GuoJiangClub\EC\Open\Core\Auth\User;
+use GuoJiangClub\Component\User\UserService;
 use iBrand\Sms\Facade as Sms;
 use Illuminate\Http\Request;
 use Validator;
