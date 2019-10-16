@@ -39,23 +39,92 @@ class HomeController extends Controller
     public function index()
     {
         $carousels = $this->advertItem->getItemsByCode('home.carousel');
-//        $categories = $this->advertItem->getItemsByCode('home.categories');
+        $categories = $this->advertItem->getItemsByCode('home.categories');
 
         $goodsService = app(GoodsService::class);
-        $categories = $this->categoryRepository->getCategories()->where('status', Category::STATUS_OPEN);
 
-        foreach ($categories as $category) {
-            //获取分类下的商品
-            if ($category->children->isNotEmpty()) {
-                foreach ($category['children'] as $c) {
-                    $c->items = $this->getProductItems($goodsService, $c->id);
-                }
-            } else {
-                $category->items = $this->getProductItems($goodsService, $category->id);
-            }
-        }
+        //商标品牌
+        $brandCategory = Category::query()->find(63);
+        $brandGoods = $goodsService->getGoodsByCategoryId(63)->where('is_del', 0);
+        $brand = [
+            'name' => '商标品牌',
+            'description' => $brandCategory->description,
+            'image' => $brandCategory->image,
+            'items' =>  array_values($brandGoods->toArray()),
+        ];
 
-        return $this->success(compact('carousels', 'categories'));
+        //商标案件
+        $caseCategory = Category::query()->find(64);
+        $caseGoods = $goodsService->getGoodsByCategoryId(64)->where('is_del', 0);
+        $case = [
+            'name' => '商标案件',
+            'description' => $caseCategory->description,
+            'image' => $caseCategory->image,
+            'items' =>  array_values($caseGoods->toArray()),
+        ];
+
+        //国际商标
+        $internationalCategory = Category::query()->find(62);
+        $internationalGoods = $goodsService->getGoodsByCategoryId(62)->where('is_del', 0);
+        $international = [
+            'name' => '国际商标',
+            'description' => $internationalCategory->description,
+            'image' => $internationalCategory->image,
+            'items' =>  array_values($internationalGoods->toArray()),
+        ];
+
+        //商标业务
+        $trademark = compact('brand', 'case', 'international');
+
+        //版权业务
+        $copyrightCategory =  Category::query()->find(68);
+        $copyrightGoods = $goodsService->getGoodsByCategoryId(68)->where('is_del', 0);
+        $copyright = [
+            'name' => '版权业务',
+            'description' => $copyrightCategory->description,
+            'image' => $copyrightCategory->image,
+            'items' =>  array_values($copyrightGoods->toArray()),
+        ];
+
+        //商标工具
+        $tookCategory =  Category::query()->find(66);
+        $toolGoods = $goodsService->getGoodsByCategoryId(66)->where('is_del', 0);
+        $tool = [
+            'name' => '商标工具',
+            'description' => $tookCategory->description,
+            'image' => $tookCategory->image,
+            'items' =>  array_values($toolGoods->toArray()),
+        ];
+
+//        $boysGoods = $goodsService->getGoodsByCategoryId(3)->where('is_del', 0)->take(6);
+//
+//        $boyCategory = ['name' => '男童 T恤/衬衫', 'link' => '/pages/store/list/list?c_id=3', 'items' => array_values($boysGoods->toArray())];
+//
+//        $girlGoods = $goodsService->getGoodsByCategoryId(6)->where('is_del', 0)->take(6);
+//
+//        $girlCategory = ['name' => '女童 T恤/衬衫', 'link' => '/pages/store/list/list?c_id=6', 'items' => array_values($girlGoods->toArray())];
+//
+//        return $this->success(compact('carousels', 'categories', 'boyCategory', 'girlCategory'));
+
+
+
+//        $carousels = $this->advertItem->getItemsByCode('home.carousel');
+//        $categories = $this->advertItem->getItemsByCode('home.categories');
+//        $goodsService = app(GoodsService::class);
+//        $categories = $this->categoryRepository->getCategories()->where('status', Category::STATUS_OPEN);
+
+//        foreach ($categories as $category) {
+//            //获取分类下的商品
+//            if ($category->children->isNotEmpty()) {
+//                foreach ($category['children'] as $c) {
+//                    $c->items = $this->getProductItems($goodsService, $c->id);
+//                }
+//            } else {
+//                $category->items = $this->getProductItems($goodsService, $category->id);
+//            }
+//        }
+
+        return $this->success(compact('carousels', 'trademark', 'copyright', 'tool'));
     }
 
     public function category()
