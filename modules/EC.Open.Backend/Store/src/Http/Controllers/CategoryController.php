@@ -60,7 +60,7 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
-        $input = $request->except('_token');
+        $input = $request->except('_token', 'file');
         if (!$input['name']) {
             return $this->ajaxJson(false, [], 500, '请填写分类名称');
         }
