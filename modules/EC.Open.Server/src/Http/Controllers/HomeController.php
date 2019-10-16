@@ -2,6 +2,8 @@
 namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 
 use GuoJiangClub\Component\Advert\Repositories\AdvertItemRepository;
+use GuoJiangClub\Component\Category\Category;
+use GuoJiangClub\Component\Category\Repository as CategoryRepository;
 use GuoJiangClub\EC\Open\Core\Services\GoodsService;
 use GuoJiangClub\Component\Advert\Models\MicroPage;
 use GuoJiangClub\Component\Advert\Models\MicroPageAdvert;
@@ -15,8 +17,11 @@ class HomeController extends Controller
 
     protected $microPageAdvert;
 
+    protected $categoryRepository;
+
     public function __construct(
         AdvertItemRepository $advertItemRepository
+        , CategoryRepository $categoryRepository
         , MicroPage $microPage
         , microPageAdvert $microPageAdvert
     )
@@ -27,24 +32,30 @@ class HomeController extends Controller
 
         $this->microPageAdvert = $microPageAdvert;
 
+        $this->categoryRepository = $categoryRepository;
+
     }
 
     public function index()
     {
-//        $carousels = $this->advertItem->getItemsByCode('home.carousel');
+        $carousels = $this->advertItem->getItemsByCode('home.carousel');
 //        $categories = $this->advertItem->getItemsByCode('home.categories');
-//
-//        $goodsService = app(GoodsService::class);
-//
-//        $boysGoods = $goodsService->getGoodsByCategoryId(3)->where('is_del', 0)->take(6);
-//
-//        $boyCategory = ['name' => '男童 T恤/衬衫', 'link' => '/pages/store/list/list?c_id=3', 'items' => array_values($boysGoods->toArray())];
-//
-//        $girlGoods = $goodsService->getGoodsByCategoryId(6)->where('is_del', 0)->take(6);
-//
-//        $girlCategory = ['name' => '女童 T恤/衬衫', 'link' => '/pages/store/list/list?c_id=6', 'items' => array_values($girlGoods->toArray())];
-//
-//        return $this->success(compact('carousels', 'categories', 'boyCategory', 'girlCategory'));
+
+        $goodsService = app(GoodsService::class);
+        $categories = $this->categoryRepository->getCategories()->where('status', Category::STATUS_OPEN);
+
+        foreach ($categories as $category) {
+            //获取分类下的商品
+            if ($category->children->isNotEmpty()) {
+                foreach ($category['children'] as $c) {
+                    $c->items = $this->getProductItems($goodsService, $c->id);
+                }
+            } else {
+                $category->items = $this->getProductItems($goodsService, $category->id);
+            }
+        }
+
+        return $this->success(compact('carousels', 'categories'));
     }
 
     public function category()
@@ -149,6 +160,16 @@ class HomeController extends Controller
 
         return $advertItem;
 
+    }
+
+    /**
+     * @param GoodsService $goodsService
+     * @param int $category_id
+     * @return array
+     */
+    protected function getProductItems($goodsService, $category_id)
+    {
+        return array_values($goodsService->getGoodsByCategoryId($category_id)->where('is_del', 0)->toArray());
     }
 
 }
