@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4acbf824ff1ca512463f06866e8fbc76",
+    "content-hash": "f1ae4240c00217032af69a54d0575e38",
     "packages": [
         {
             "name": "anam/phantomjs-linux-x86-binary",
@@ -2627,7 +2627,7 @@
             "time": "2019-01-19T21:32:55+00:00"
         },
         {
-            "name": "jeremeamia/superclosure",
+            "name": "jeremeamia/SuperClosure",
             "version": "2.4.0",
             "source": {
                 "type": "git",
@@ -6076,9 +6076,9 @@
             "authors": [
                 {
                     "name": "Freek Van der Herten",
+                    "role": "Developer",
                     "email": "freek@spatie.be",
-                    "homepage": "https://spatie.be",
-                    "role": "Developer"
+                    "homepage": "https://spatie.be"
                 }
             ],
             "description": "Dump databases",
@@ -9820,6 +9820,55 @@
                 "testing"
             ],
             "time": "2018-03-13T02:35:58+00:00"
+        },
+        {
+            "name": "overtrue/laravel-query-logger",
+            "version": "1.0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/overtrue/laravel-query-logger.git",
+                "reference": "590e0f0aee978532d86cea96c1c0e39c6b1046bc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/overtrue/laravel-query-logger/zipball/590e0f0aee978532d86cea96c1c0e39c6b1046bc",
+                "reference": "590e0f0aee978532d86cea96c1c0e39c6b1046bc",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "laravel/framework": "~5.5||~6.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Overtrue\\LaravelQueryLogger\\ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Overtrue\\LaravelQueryLogger\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "overtrue",
+                    "email": "anzhengchao@gmail.com"
+                }
+            ],
+            "description": "A dev tool to log all queries for laravel application.",
+            "time": "2019-09-04T13:15:02+00:00"
         },
         {
             "name": "phar-io/manifest",

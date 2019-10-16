@@ -96,7 +96,7 @@ class CategoryController extends Controller
 
     public function update(Request $request, $id)
     {
-        $input = $request->except('_token');
+        $input = $request->except(['_token', 'file']);
         if (!$input['name']) {
             return $this->ajaxJson(false, [], 500, '请填写分类名称');
         }
