@@ -45,6 +45,8 @@ class WechatController extends Controller
             $weChatFlag = Uuid::uuid4()->getHex();
         }
 
+        Log::info('weChatFlag :' . $weChatFlag);
+
         // 缓存微信带参二维码
         if (!$url = Cache::get(UserBind::QR_URL . $weChatFlag)) {
             // 有效期 1 天的二维码
@@ -53,11 +55,14 @@ class WechatController extends Controller
             $url = $qrCode->url($result['ticket']);
 
             Cache::put(UserBind::QR_URL . $weChatFlag, $url, now()->addDay());
+
+            Log::info('cache_key: ' . UserBind::QR_URL . $weChatFlag);
+            Log::info('url: '. $url);
         }
 
         // 自定义参数返回给前端，前端轮询
-        return $this->success(compact('url', 'weChatFlag'));
-//            ->cookie(UserBind::TYPE_WECHAT, $weChatFlag, 24 * 60);
+        return $this->success(compact('url', 'weChatFlag'))
+            ->cookie(UserBind::TYPE_WECHAT, $weChatFlag, 24 * 60);
     }
 
     /**
