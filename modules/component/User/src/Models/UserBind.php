@@ -19,6 +19,8 @@ class UserBind extends Model
 
     const TYPE_WECHAT = 'wechat';
 
+    const QR_URL = 'www.baidu.com';
+
     /**
      * Address constructor.
      *

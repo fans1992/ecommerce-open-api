@@ -26,6 +26,9 @@ $router->post('oauth/MiniProgramMobileLogin', 'MiniProgramLoginController@mobile
 //小程序获取openId
 $router->get('oauth/miniprogram/openid', 'MiniProgramLoginController@getOpenIdByCode');
 
+//扫码关注公众号登录
+$router->get('oauth/qrcode', 'WechatController@getWxPic');
+
 $router->get('store/list', 'GoodsController@index')->name('api.goods.list');
 $router->get('store/detail/{id}', 'GoodsController@show')->name('api.goods.detail');
 $router->get('store/detail/{id}/stock', 'GoodsController@getStock')->name('api.goods.detail.stock');
