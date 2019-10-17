@@ -10,7 +10,9 @@
  */
 
 namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
+use Carbon\Carbon;
 use GuoJiangClub\Component\User\Models\UserBind;
+use GuoJiangClub\EC\Open\Core\Auth\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Ramsey\Uuid\Uuid;
@@ -117,7 +119,7 @@ class WechatController extends Controller
      */
     protected function eventUnsubscribe($event)
     {
-        $wxUser                 = WxUser::whereOpenid($this->openid)->first();
+        $wxUser                 = UserBind::whereOpenid($this->openid)->first();
         $wxUser->subscribe      = 0;
         $wxUser->subscribe_time = null;
         $wxUser->save();
@@ -149,9 +151,9 @@ class WechatController extends Controller
     {
         $openId = $this->openid;
 
-        if ($wxUser = WxUser::whereOpenid($openId)->first()) {
+        if ($wxUser = UserBind::whereOpenid($openId)->first()) {
             // 标记前端可登陆
-            $this->markTheLogin($event, $wxUser->uid);
+            $this->markTheLogin($event, $wxUser->id);
 
             return;
         }
@@ -162,40 +164,46 @@ class WechatController extends Controller
         $nickname = $this->filterEmoji($wxUser['nickname']);
 
         $result = DB::transaction(function () use ($openId, $event, $nickname, $wxUser) {
-            $uid  = Uuid::uuid4()->getHex();
-            $time = time();
+//            $uid  = Uuid::uuid4()->getHex();
 
             // 用户
-            $user = User::create([
-                'uid'        => $uid,
-                'created_at' => $time,
-            ]);
+//            $user = User::create([
+//                'uid'        => $uid,
+//                'created_at' => $time,
+//            ]);
+
             // 用户信息
-            $user->user_info()->create([
-                'email'      => $user->email,
+//            $user->user_info()->create([
+//                'email'      => $user->email,
+//                'nickname'   => $nickname,
+//                'sex'        => $wxUser['sex'],
+//                'address'    => $wxUser['country'] . ' ' . $wxUser['province'] . ' ' . $wxUser['city'],
+//                'avatar'     => $wxUser['headimgurl'],
+//                'code'       => app(UserRegisterController::class)->inviteCode(10),
+//                'created_at' => $time,
+//            ]);
+
+            $userBind = UserBind::query()->create([
+                'type' => 'official_account',
+                'app_id' => config('wechat.official_account.default.app_id'),
+                'open_id' => $wxUser['openid'],
                 'nickname'   => $nickname,
                 'sex'        => $wxUser['sex'],
-                'address'    => $wxUser['country'] . ' ' . $wxUser['province'] . ' ' . $wxUser['city'],
                 'avatar'     => $wxUser['headimgurl'],
-                'code'       => app(UserRegisterController::class)->inviteCode(10),
-                'created_at' => $time,
-            ]);
-            // 用户账户
-            $user->user_account()->create([
-                'gold'       => 200,
-                'created_at' => $time,
+                'subscribe'  => true,
+                'subscribe_at' => Carbon::now(),
             ]);
 
-            $wxUserModel = $user->wx_user()->create([
-                'subscribe'      => $wxUser['subscribe'],
-                'subscribe_time' => $wxUser['subscribe_time'],
-                'openid'         => $wxUser['openid'],
-                'created_at'     => $time,
-            ]);
+//            $wxUserModel = $user->wx_user()->create([
+//                'subscribe'      => $wxUser['subscribe'],
+//                'subscribe_time' => $wxUser['subscribe_time'],
+//                'openid'         => $wxUser['openid'],
+//                'created_at'     => Carbon::now(),
+//            ]);
 
             Log::info('用户注册成功 openid：' . $openId);
 
-            $this->markTheLogin($event, $wxUserModel->uid);
+            $this->markTheLogin($event, $userBind->id);
         });
 
         Log::debug('SQL 错误: ', [$result]);

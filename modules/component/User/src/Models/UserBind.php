@@ -17,6 +17,10 @@ class UserBind extends Model
 {
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'subscribe' => 'boolean', // subscribe 是一个布尔类型的字段
+    ];
+
     const TYPE_WECHAT = 'wechat';
 
     const QR_URL = 'www.baidu.com';
