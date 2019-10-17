@@ -28,6 +28,8 @@ $router->get('oauth/miniprogram/openid', 'MiniProgramLoginController@getOpenIdBy
 
 //扫码关注公众号登录
 $router->get('oauth/qrcode', 'WechatController@getWxPic');
+//微信消息
+$router->any('wechat', 'WechatController@serve');
 
 $router->get('store/list', 'GoodsController@index')->name('api.goods.list');
 $router->get('store/detail/{id}', 'GoodsController@show')->name('api.goods.detail');
