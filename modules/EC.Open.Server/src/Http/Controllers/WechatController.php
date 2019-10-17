@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Ramsey\Uuid\Uuid;
 use Log;
+use DB;
 
 class WechatController extends Controller
 {
@@ -49,7 +50,7 @@ class WechatController extends Controller
             // 有效期 1 天的二维码
             $qrCode = $this->app->qrcode;
             $result = $qrCode->temporary($weChatFlag, 3600 * 24);
-            $url    = $qrCode->url($result['ticket']);
+            $url = $qrCode->url($result['ticket']);
 
             Cache::put(UserBind::QR_URL . $weChatFlag, $url, now()->addDay());
         }
@@ -119,10 +120,11 @@ class WechatController extends Controller
      */
     protected function eventUnsubscribe($event)
     {
-        $wxUser                 = UserBind::whereOpenid($this->openid)->first();
-        $wxUser->subscribe      = 0;
-        $wxUser->subscribe_time = null;
-        $wxUser->save();
+        if ($userBind = UserBind::query()->where('open_id', $this->openid)->first()) {
+            $userBind->subscribe = false;
+            $userBind->subscribe_at = null;
+            $userBind->save();
+        }
     }
 
     /**
@@ -132,9 +134,10 @@ class WechatController extends Controller
      */
     public function eventSCAN($event)
     {
-        if ($wxUser = WxUser::whereOpenid($this->openid)->first()) {
+        Log::info('扫码二维码');
+        if ($userBind = UserBind::query()->where('open_id', $this->openid)->first()) {
             // 标记前端可登陆
-            $this->markTheLogin($event, $wxUser->uid);
+            $this->markTheLogin($event, $userBind->id);
 
             return;
         }
@@ -150,17 +153,19 @@ class WechatController extends Controller
     protected function eventSubscribe($event)
     {
         $openId = $this->openid;
+        Log::info('openid:' . $openId);
 
-        if ($wxUser = UserBind::whereOpenid($openId)->first()) {
+        if ($userBind = UserBind::query()->where('open_id', $openId)->first()) {
             // 标记前端可登陆
-            $this->markTheLogin($event, $wxUser->id);
+            $this->markTheLogin($event, $userBind->id);
 
             return;
         }
 
         // 微信用户信息
         $wxUser = $this->app->user->get($openId);
-        // 注册
+
+        // 用户注册
         $nickname = $this->filterEmoji($wxUser['nickname']);
 
         $result = DB::transaction(function () use ($openId, $event, $nickname, $wxUser) {
@@ -187,13 +192,12 @@ class WechatController extends Controller
                 'type' => 'official_account',
                 'app_id' => config('wechat.official_account.default.app_id'),
                 'open_id' => $wxUser['openid'],
-                'nickname'   => $nickname,
-                'sex'        => $wxUser['sex'],
-                'avatar'     => $wxUser['headimgurl'],
-                'subscribe'  => true,
+                'nick_name' => $nickname,
+                'sex' => $wxUser['sex'],
+                'avatar' => $wxUser['headimgurl'],
+                'subscribe' => true,
                 'subscribe_at' => Carbon::now(),
             ]);
-
 //            $wxUserModel = $user->wx_user()->create([
 //                'subscribe'      => $wxUser['subscribe'],
 //                'subscribe_time' => $wxUser['subscribe_time'],
@@ -215,7 +219,7 @@ class WechatController extends Controller
      * @param $event
      * @param $uid
      */
-    public function markTheLogin($event, $uid)
+    public function markTheLogin($event, $id)
     {
         if (empty($event['EventKey'])) {
             return;
@@ -231,9 +235,26 @@ class WechatController extends Controller
         Log::info('EventKey:' . $eventKey, [$event['EventKey']]);
 
         // 标记前端可登陆
-        Cache::put(WxUser::LOGIN_WECHAT . $eventKey, $uid, now()->addMinute(30));
+        Cache::put(UserBind::TYPE_WECHAT . $eventKey, $id, now()->addMinute(30));
     }
 
+    /**
+     * 过滤emoji表情
+     *
+     * @param $str 要过滤的字符串
+     * @return mixed
+     */
+    private function filterEmoji($str)
+    {
+        $str = preg_replace_callback(
+            '/./u',
+            function (array $match) {
+                return strlen($match[0]) >= 4 ? '' : $match[0];
+            },
+            $str);
+
+        return $str;
+    }
 
 
 }
