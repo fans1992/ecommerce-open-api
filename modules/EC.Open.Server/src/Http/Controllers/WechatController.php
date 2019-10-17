@@ -14,6 +14,7 @@ use GuoJiangClub\Component\User\Models\UserBind;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Ramsey\Uuid\Uuid;
+use Log;
 
 class WechatController extends Controller
 {
@@ -68,6 +69,8 @@ class WechatController extends Controller
     public function serve()
     {
         $app = $this->app;
+
+        Log::info('request arrived.');
 
         $app->server->push(function ($message) {
             if ($message) {
