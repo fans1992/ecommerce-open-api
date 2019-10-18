@@ -41,7 +41,7 @@ class WechatController extends Controller
     public function getWxPic(Request $request)
     {
         // 查询 cookie，如果没有就重新生成一次
-        if (!$weChatFlag = $request->cookie(UserBind::TYPE_WECHAT)) {
+        if (!$weChatFlag = $request->cookie(UserBind::WECHAT_FLAG)) {
             $weChatFlag = Uuid::uuid4()->getHex();
         }
 
@@ -62,7 +62,7 @@ class WechatController extends Controller
 
         // 自定义参数返回给前端，前端轮询
         return $this->success(compact('url', 'weChatFlag'))
-            ->cookie(UserBind::TYPE_WECHAT, $weChatFlag, 24 * 60);
+            ->withCookie(UserBind::WECHAT_FLAG, $weChatFlag, 24 * 60);
     }
 
     /**
@@ -240,7 +240,37 @@ class WechatController extends Controller
         Log::info('EventKey:' . $eventKey, [$event['EventKey']]);
 
         // 标记前端可登陆
-        Cache::put(UserBind::TYPE_WECHAT . $eventKey, $id, now()->addMinute(30));
+        Cache::put(UserBind::WECHAT_FLAG . $eventKey, $id, now()->addMinute(30));
+    }
+
+
+    /**
+     * 微信用户登录检查
+     *
+     * @param Request $request
+     *
+     */
+    public function loginCheck(Request $request)
+    {
+        // 判断请求是否有微信登录标识
+        if (!$flag = $request->wechat_flag) {
+            return $this->failed("缺少登录标识");
+        }
+
+        // 根据微信标识在缓存中获取需要登录用户的 UID
+        $uid  = Cache::get(UserBind::LOGIN_WECHAT . $flag);
+        $user = User::query()->where('uid', $uid)->first();
+
+        if (empty($user)) {
+            return $this->failed('登录失败');
+        }
+
+        // 登录用户、并清空缓存
+        auth('web')->login($user);
+        Cache::forget(UserBind::LOGIN_WECHAT . $flag);
+        Cache::forget(UserBind::QR_URL . $flag);
+
+        return $this->success(true);
     }
 
     /**
