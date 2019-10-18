@@ -12,6 +12,8 @@
 namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 use Carbon\Carbon;
 use GuoJiangClub\Component\User\Models\UserBind;
+use GuoJiangClub\Component\User\Repository\UserBindRepository;
+use GuoJiangClub\Component\User\UserService;
 use GuoJiangClub\EC\Open\Core\Auth\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -26,9 +28,10 @@ class WechatController extends Controller
     protected $userService;
     protected $app;
 
-    public function __construct()
+    public function __construct(UserService $userService)
     {
         $this->app = app('wechat.official_account');
+        $this->userService = $userService;
     }
 
     /**
@@ -249,6 +252,7 @@ class WechatController extends Controller
      *
      * @param Request $request
      *
+     * @throws \Exception
      */
     public function loginCheck(Request $request)
     {
@@ -259,18 +263,22 @@ class WechatController extends Controller
 
         // 根据微信标识在缓存中获取需要登录用户的 UID
         $id  = Cache::get(UserBind::WECHAT_FLAG . $flag);
-        $user = UserBind::query()->find($id);
+        $userBind = UserBind::query()->find($id);
 
-        if (empty($user)) {
+        if (empty($userBind)) {
             return $this->failed('登录失败');
         }
 
         // 登录用户、并清空缓存
-        auth('web')->login($user);
+        $user = $request->user();
+        if ($user) {
+            $userBind->update(['user_id' => $user->id]);
+        }
+
         Cache::forget(UserBind::WECHAT_FLAG . $flag);
         Cache::forget(UserBind::QR_URL . $flag);
 
-        return $this->success('登录成功');
+        return $this->success();
     }
 
     /**
