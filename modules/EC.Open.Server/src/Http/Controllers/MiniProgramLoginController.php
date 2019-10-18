@@ -68,6 +68,10 @@ class MiniProgramLoginController extends Controller
         return $this->success(['token_type' => 'Bearer', 'access_token' => $token]);
     }
 
+    /**
+     * @return \Dingo\Api\Http\Response|mixed
+     * @throws \Exception
+     */
     public function mobileLogin()
     {
         $miniProgram = EasyWeChat::miniProgram();

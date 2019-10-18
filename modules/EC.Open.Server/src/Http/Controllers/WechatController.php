@@ -258,8 +258,8 @@ class WechatController extends Controller
         }
 
         // 根据微信标识在缓存中获取需要登录用户的 UID
-        $uid  = Cache::get(UserBind::LOGIN_WECHAT . $flag);
-        $user = User::query()->where('uid', $uid)->first();
+        $id  = Cache::get(UserBind::WECHAT_FLAG . $flag);
+        $user = UserBind::query()->find($id);
 
         if (empty($user)) {
             return $this->failed('登录失败');
@@ -267,10 +267,10 @@ class WechatController extends Controller
 
         // 登录用户、并清空缓存
         auth('web')->login($user);
-        Cache::forget(UserBind::LOGIN_WECHAT . $flag);
+        Cache::forget(UserBind::WECHAT_FLAG . $flag);
         Cache::forget(UserBind::QR_URL . $flag);
 
-        return $this->success(true);
+        return $this->success('登录成功');
     }
 
     /**

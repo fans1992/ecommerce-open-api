@@ -70,7 +70,7 @@ class AuthController extends Controller
             'token_type' => 'Bearer',
             'access_token' => $tokenResult->accessToken,
             'expires_at' => Carbon::parse($tokenResult->token->expires_at)->toDateTimeString(),
-            'is_new_user' => $is_new
+            'is_new_user' => $is_new,
         ]);
     }
 

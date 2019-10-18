@@ -21,9 +21,9 @@ class UserBind extends Model
         'subscribe' => 'boolean', // subscribe 是一个布尔类型的字段
     ];
 
-    const WECHAT_FLAG = 'weChatFlag';
+    const WECHAT_FLAG = 'weChatFlag_';
 
-    const QR_URL = 'qrCode';
+    const QR_URL = 'qrCode_';
 
     /**
      * Address constructor.
