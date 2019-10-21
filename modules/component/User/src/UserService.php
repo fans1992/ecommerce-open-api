@@ -11,6 +11,7 @@
 
 namespace GuoJiangClub\Component\User;
 
+use GuoJiangClub\Component\User\Models\UserBind;
 use GuoJiangClub\Component\User\Repository\UserBindRepository;
 
 class UserService
@@ -40,5 +41,24 @@ class UserService
         } else {
             $repository->create(['open_id' => $openId, 'type' => $type, 'user_id' => $userId, 'app_id' => $appId]);
         }
+    }
+
+    /**
+     * 微信绑定状态
+     *
+     * @param $userId
+     * @return bool
+     */
+    public function checkWeChatUser($userId)
+    {
+        $userBind = UserBind::query()
+            ->where('user_id', $userId)
+            ->where('type', 'official_account')
+            ->first();
+
+        if ($userBind) {
+            return true;
+        }
+        return false;
     }
 }
