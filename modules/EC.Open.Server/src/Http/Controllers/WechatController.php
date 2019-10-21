@@ -255,7 +255,19 @@ class WechatController extends Controller
     public function wechatBind(Request $request) {
         //扫码检查
         $weChatFlag = $request->input('weChatFlag');
-        $userBind = $this->check($weChatFlag);
+
+        // 判断请求是否有微信登录标识
+        if (!$weChatFlag) {
+            return $this->failed('缺少登录标识');
+        }
+
+        // 根据微信标识在缓存中获取需要登录用户的 UID
+        $id  = Cache::get(UserBind::WECHAT_FLAG . $weChatFlag);
+        $userBind = UserBind::query()->find($id);
+
+        if (empty($userBind)) {
+            return $this->failed('pending');
+        }
 
         // 绑定微信、并清空缓存
         $user = $request->user();
@@ -276,9 +288,21 @@ class WechatController extends Controller
      * @return \Dingo\Api\Http\Response
      */
     public function loginCheck(Request $request) {
+        //扫码检查
         $weChatFlag = $request->input('weChatFlag');
-        /** @var UserBind $userBind */
-        $userBind = $this->check($weChatFlag);
+
+        // 判断请求是否有微信登录标识
+        if (!$weChatFlag) {
+            return $this->failed('缺少登录标识');
+        }
+
+        // 根据微信标识在缓存中获取需要登录用户的 UID
+        $id  = Cache::get(UserBind::WECHAT_FLAG . $weChatFlag);
+        $userBind = UserBind::query()->find($id);
+
+        if (empty($userBind)) {
+            return $this->failed('pending');
+        }
 
         Cache::forget(UserBind::WECHAT_FLAG . $weChatFlag);
         Cache::forget(UserBind::QR_URL . $weChatFlag);
@@ -300,30 +324,6 @@ class WechatController extends Controller
         ]);
     }
 
-
-    /**
-     * 参数校验
-     *
-     * @param $weChatFlag
-     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|mixed|null
-     */
-    private function check($weChatFlag)
-    {
-        // 判断请求是否有微信登录标识
-        if (!$weChatFlag) {
-            return $this->failed('缺少登录标识');
-        }
-
-        // 根据微信标识在缓存中获取需要登录用户的 UID
-        $id  = Cache::get(UserBind::WECHAT_FLAG . $weChatFlag);
-        $userBind = UserBind::query()->find($id);
-
-        if (empty($userBind)) {
-            return $this->failed('pending');
-        }
-
-        return $userBind;
-    }
 
     /**
      * 过滤emoji表情
