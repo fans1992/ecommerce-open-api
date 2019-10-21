@@ -39,7 +39,7 @@ class UserBind extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(\GuoJiangClub\EC\Open\Core\Auth\User::class, 'user_id', 'id');
     }
 
     public static function ByOpenIdAndType($openId, $openType)

@@ -309,7 +309,7 @@ class WechatController extends Controller
 
         //登录用户、并清空缓存
         if ($user = $userBind->user) {
-            $tokenResult = $user->createToken($user->mobile);
+            $tokenResult = $user->createToken($user->id);
 
             return $this->success([
                 'token_type' => 'Bearer',
