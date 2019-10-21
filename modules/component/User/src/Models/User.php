@@ -13,6 +13,7 @@ namespace GuoJiangClub\Component\User\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Ramsey\Uuid\Uuid;
 
 /**
  * Class User.
@@ -53,6 +54,19 @@ class User extends Authenticatable
         $this->setTable(config('ibrand.app.database.prefix', 'ibrand_').'user');
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+        // 监听模型创建事件，在写入数据库之前触发
+        static::creating(function ($model) {
+            // 如果模型的 no 字段为空
+            if (!$model->nick_name) {
+                // 调用 findAvailableNo 生成昵称
+                $model->nick_name = static::getAvailableNickname();
+            }
+        });
+    }
+
     /**
      * @param $value
      *
@@ -80,6 +94,19 @@ class User extends Authenticatable
 
         return self::where($credentials)->first();
     }
+
+    /**
+     * 生成昵称
+     * @return string
+     * @throws \Exception
+     */
+    public static function getAvailableNickname()
+    {
+        // 随机生成 6 位的数字
+        return  '游客' . str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+    }
+
+
 
 
 }

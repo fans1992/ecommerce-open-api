@@ -40,6 +40,12 @@ class AuthController extends Controller
         $this->userService = $userService;
     }
 
+    /**
+     * 验证码登录
+     *
+     * @param Request $request
+     * @return \Dingo\Api\Http\Response|mixed
+     */
     public function smsLogin(Request $request)
     {
         $mobile = $request->input('mobile');
