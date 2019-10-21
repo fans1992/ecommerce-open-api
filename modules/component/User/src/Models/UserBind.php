@@ -34,7 +34,12 @@ class UserBind extends Model
     {
         parent::__construct($attributes);
 
-        $this->setTable(config('ibrand.app.database.prefix', 'ibrand_').'user_bind');
+        $this->setTable(config('ibrand.app.database.prefix', 'ibrand_') . 'user_bind');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public static function ByOpenIdAndType($openId, $openType)

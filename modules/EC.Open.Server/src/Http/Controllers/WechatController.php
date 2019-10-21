@@ -246,45 +246,89 @@ class WechatController extends Controller
         Cache::put(UserBind::WECHAT_FLAG . $eventKey, $id, now()->addMinute(30));
     }
 
-
     /**
-     * 微信用户登录检查
-     *
+     * 手机登录扫码绑定微信
      * @param Request $request
-     *
+     * @return \Dingo\Api\Http\Response
      * @throws \Exception
      */
-    public function loginCheck(Request $request)
+    public function wechatBind(Request $request) {
+        //扫码检查
+        $weChatFlag = $request->input('weChatFlag');
+        $userBind = $this->check($weChatFlag);
+
+        // 绑定微信、并清空缓存
+        $user = $request->user();
+        $userBind->update(['user_id' => $user->id]);
+
+        Cache::forget(UserBind::WECHAT_FLAG . $weChatFlag);
+        Cache::forget(UserBind::QR_URL . $weChatFlag);
+
+        return $this->success([
+            'message' => '扫码绑定成功',
+        ]);
+    }
+
+    /**
+     * 微信登录扫码检查
+     *
+     * @param Request $request
+     * @return \Dingo\Api\Http\Response
+     */
+    public function loginCheck(Request $request) {
+        $weChatFlag = $request->input('weChatFlag');
+        /** @var UserBind $userBind */
+        $userBind = $this->check($weChatFlag);
+
+        Cache::forget(UserBind::WECHAT_FLAG . $weChatFlag);
+        Cache::forget(UserBind::QR_URL . $weChatFlag);
+
+        //登录用户、并清空缓存
+        if ($user = $userBind->user) {
+            $tokenResult = $user->createToken($user->mobile);
+
+            return $this->success([
+                'token_type' => 'Bearer',
+                'access_token' => $tokenResult->accessToken,
+                'expires_at' => Carbon::parse($tokenResult->token->expires_at)->toDateTimeString(),
+            ]);
+        }
+
+        return $this->success([
+            'message' => '需要绑定手机号',
+            'socialite_key' => encrypt($userBind->open_id),
+        ]);
+    }
+
+
+    /**
+     * 参数校验
+     *
+     * @param $weChatFlag
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|mixed|null
+     */
+    private function check($weChatFlag)
     {
         // 判断请求是否有微信登录标识
-        if (!$flag = $request->weChatFlag) {
-            return $this->failed("缺少登录标识");
+        if (!$weChatFlag) {
+            return $this->failed('缺少登录标识');
         }
 
         // 根据微信标识在缓存中获取需要登录用户的 UID
-        $id  = Cache::get(UserBind::WECHAT_FLAG . $flag);
+        $id  = Cache::get(UserBind::WECHAT_FLAG . $weChatFlag);
         $userBind = UserBind::query()->find($id);
 
         if (empty($userBind)) {
             return $this->failed('pending');
         }
 
-        // 登录用户、并清空缓存
-        $user = $request->user();
-        if ($user) {
-            $userBind->update(['user_id' => $user->id]);
-        }
-
-        Cache::forget(UserBind::WECHAT_FLAG . $flag);
-        Cache::forget(UserBind::QR_URL . $flag);
-
-        return $this->success();
+        return $userBind;
     }
 
     /**
      * 过滤emoji表情
      *
-     * @param $str 要过滤的字符串
+     * @param $str //要过滤的字符串
      * @return mixed
      */
     private function filterEmoji($str)

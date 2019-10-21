@@ -40,10 +40,10 @@ class AuthController extends Controller
         $this->userService = $userService;
     }
 
-    public function smsLogin()
+    public function smsLogin(Request $request)
     {
-        $mobile = request('mobile');
-        $code = request('code');
+        $mobile = $request->input('mobile');
+        $code = $request->input('code');
 
         if (!Sms::checkCode($mobile, $code)) {
             return $this->failed('验证码错误');
@@ -54,6 +54,12 @@ class AuthController extends Controller
         if (!$user = $this->userRepository->getUserByCredentials(['mobile' => $mobile])) {
             $user = $this->userRepository->create(['mobile' => $mobile]);
             $is_new = true;
+        }
+
+        //微信登录绑定手机号
+        if ($request->has('socialite_key')) {
+            $open_id = decrypt($request->input('socialite_key'));
+            $this->userBindRepository->bindToUser($open_id, $user->id);
         }
 
         if (User::STATUS_FORBIDDEN == $user->status) {

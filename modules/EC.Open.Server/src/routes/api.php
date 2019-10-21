@@ -28,9 +28,10 @@ $router->get('oauth/miniprogram/openid', 'MiniProgramLoginController@getOpenIdBy
 
 //扫码关注公众号登录
 $router->get('oauth/qrcode', 'WechatController@getWxPic');
-//微信消息
+//微信消息接入
 $router->any('wechat', 'WechatController@serve');
-
+//微信登录绑定手机号
+$router->post('oauth/qrcode/check', 'WechatController@loginCheck');
 
 $router->get('store/list', 'GoodsController@index')->name('api.goods.list');
 $router->get('store/detail/{id}', 'GoodsController@show')->name('api.goods.detail');
@@ -46,8 +47,8 @@ $router->post('wechat/notify', 'WechatPayNotifyController@notify');
 $router->post('shoppingCart/discount', 'DiscountController@shoppingCartDiscount')->name('api.shopping.cart.discount');
 
 $router->group(config('ibrand.ec-open-api.routeAuthAttributes'), function ($router) {
-    //微信用户登录检查
-    $router->get('oauth/qrcode/check', 'WechatController@loginCheck');
+    //手机登录扫码绑定微信
+    $router->post('oauth/qrcode/binding', 'WechatController@wechatBind');
 
     /************************* 购物车 **********************/
     $router->post('shopping/cart', 'ShoppingCartController@store')->name('api.shopping.cart.store');
