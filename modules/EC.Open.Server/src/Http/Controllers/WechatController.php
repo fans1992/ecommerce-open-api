@@ -12,9 +12,7 @@
 namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 use Carbon\Carbon;
 use GuoJiangClub\Component\User\Models\UserBind;
-use GuoJiangClub\Component\User\Repository\UserBindRepository;
 use GuoJiangClub\Component\User\UserService;
-use GuoJiangClub\EC\Open\Core\Auth\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Ramsey\Uuid\Uuid;
@@ -177,24 +175,6 @@ class WechatController extends Controller
         $nickname = $this->filterEmoji($wxUser['nickname']);
 
         $result = DB::transaction(function () use ($openId, $event, $nickname, $wxUser) {
-//            $uid  = Uuid::uuid4()->getHex();
-
-            // 用户
-//            $user = User::create([
-//                'uid'        => $uid,
-//                'created_at' => $time,
-//            ]);
-
-            // 用户信息
-//            $user->user_info()->create([
-//                'email'      => $user->email,
-//                'nickname'   => $nickname,
-//                'sex'        => $wxUser['sex'],
-//                'address'    => $wxUser['country'] . ' ' . $wxUser['province'] . ' ' . $wxUser['city'],
-//                'avatar'     => $wxUser['headimgurl'],
-//                'code'       => app(UserRegisterController::class)->inviteCode(10),
-//                'created_at' => $time,
-//            ]);
 
             $userBind = UserBind::query()->create([
                 'type' => 'official_account',

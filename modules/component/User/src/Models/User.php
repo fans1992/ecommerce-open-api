@@ -13,7 +13,6 @@ namespace GuoJiangClub\Component\User\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Ramsey\Uuid\Uuid;
 
 /**
  * Class User.
@@ -103,7 +102,7 @@ class User extends Authenticatable
     public static function getAvailableNickname()
     {
         // 随机生成 6 位的数字
-        return  '游客' . str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        return  '用户' . str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
     }
 
 

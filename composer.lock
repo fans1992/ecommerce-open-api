@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "21eff651265038be9c775ade730edce3",
+    "content-hash": "7617c5b8fbbdfab580e93bb4e0b75b03",
     "packages": [
         {
             "name": "anam/phantomjs-linux-x86-binary",
@@ -4523,6 +4523,57 @@
             ],
             "description": "Flysystem adapter for the Qiniu storage.",
             "time": "2019-08-16T03:20:56+00:00"
+        },
+        {
+            "name": "overtrue/laravel-filesystem-qiniu",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/overtrue/laravel-filesystem-qiniu.git",
+                "reference": "73e8346de9e892f9e42f17f781e1878e981b75d6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/overtrue/laravel-filesystem-qiniu/zipball/73e8346de9e892f9e42f17f781e1878e981b75d6",
+                "reference": "73e8346de9e892f9e42f17f781e1878e981b75d6",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "league/flysystem": "^1.0",
+                "overtrue/flysystem-qiniu": "^1.0.2",
+                "php": ">=5.5.9"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Overtrue\\LaravelFilesystem\\Qiniu\\QiniuStorageServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Overtrue\\LaravelFilesystem\\Qiniu\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "overtrue",
+                    "email": "i@overtrue.me"
+                }
+            ],
+            "description": "A Qiniu storage filesystem for Laravel.",
+            "time": "2018-12-06T04:06:18+00:00"
         },
         {
             "name": "overtrue/laravel-uploader",
