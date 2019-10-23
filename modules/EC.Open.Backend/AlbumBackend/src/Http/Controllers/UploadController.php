@@ -2,43 +2,27 @@
 
 namespace GuoJiangClub\EC\Open\Backend\Album\Http\Controllers;
 
+use GuoJiangClub\EC\Open\Backend\Store\Handlers\ImageUploadHandler;
 use Illuminate\Http\Request;
 use iBrand\Backend\Http\Controllers\Controller;
 use Storage;
 
 class UploadController extends Controller
 {
-    public function postUpload(Request $request)
+    public function postUpload(Request $request, ImageUploadHandler $uploader)
     {
-        $destinationPath = '/uploads/';
         $file = $request->file('upload_image');
-        $paths = [];
-        $img_url = [];
-        $name = [];
         $data = [];
         $category_id = request('category_id') ? request('category_id') : 1;
 
         if ($result = $this->validated($file) AND !$result['status']) {
             return response()->json(['status' => false, 'message' => $result['message']]);
         }
+
         foreach ($file as $key => $item) {
             $extension = $item->getClientOriginalExtension();
+            $url = $uploader->save($item);
 
-//            $pic_name = $this->generaterandomstring() . '.' . $extension;
-
-            //$dir = $destinationPath . $this->formatDir();
-            $dir = $this->formatDir();
-//            $file_path = $dir . $pic_name;
-            $responseUpload = Storage::disk('qiniu')->put($dir, $item);
-            if ($responseUpload === false) {
-                return response()->json(['status' => false, 'message' => '上传七牛云失败']);
-            }
-
-//            $item->move(storage_path('app/public/images/') . $dir, $pic_name);
-//            $url = $this->replaceImgCDN(asset('storage/images/' . $file_path));
-            $url = $this->replaceImgCDN($responseUpload);
-
-//            $data[$key]['path'] = asset('storage/images/' . $file_path);
             $data[$key]['path'] = $url;
             $data[$key]['url'] = $url;
             $data[$key]['name'] = str_replace('.' . $extension, '', $item->getClientOriginalName());

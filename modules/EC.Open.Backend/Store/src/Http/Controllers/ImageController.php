@@ -28,7 +28,7 @@ class ImageController extends Controller
     public function postUpload(Request $request, ImageUploadHandler $uploader)
     {
         $file = $request->file('upload_image');
-        $url = $uploader->save($file, $request);
+        $url = $uploader->save($file);
 
         return response()->json(['success' => true, 'file' => $url, 'url' => $url]);
     }
