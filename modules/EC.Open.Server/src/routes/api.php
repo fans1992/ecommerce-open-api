@@ -9,6 +9,9 @@
  * file that was distributed with this source code.
  */
 
+$router->get('test', 'BeanbunController@test');
+
+
 //手机号短信登录
 $router->post('oauth/sms', 'AuthController@smsLogin')->name('api.oauth.sms');
 //用户注册
