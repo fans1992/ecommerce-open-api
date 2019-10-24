@@ -45,6 +45,9 @@ $router->get('home', 'HomeController@index')->name('api.home.index');
 $router->get('category', 'HomeController@category')->name('api.home.category');
 $router->get('micro/page/{code}', 'MicroPageController@index')->name('api.micro.page.index');
 
+//尼斯分类
+$router->get('classification', 'NiceClassificationController@index')->name('api.classification.index');
+
 $router->post('wechat/notify', 'WechatPayNotifyController@notify');
 
 $router->post('shoppingCart/discount', 'DiscountController@shoppingCartDiscount')->name('api.shopping.cart.discount');
