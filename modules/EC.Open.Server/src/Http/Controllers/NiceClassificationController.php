@@ -11,6 +11,7 @@
 
 namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 
+use GuoJiangClub\Component\NiceClassification\NiceClassification;
 use GuoJiangClub\Component\NiceClassification\RepositoryContract as NiceClassificationRepository;
 use Illuminate\Http\Request;
 use Validator;
@@ -26,7 +27,11 @@ class NiceClassificationController extends Controller
 
     public function index(Request $request)
     {
-        $niceClassificationList = $this->niceClassificationRepository->getSubIdsById($request->input('pid'));
+
+        $niceClassificationList = NiceClassification::query()
+            ->where('parent_id', $request->input('pid'))
+//            ->orderBy('classification_code')
+            ->get();
 
         return $this->success($niceClassificationList);
     }
