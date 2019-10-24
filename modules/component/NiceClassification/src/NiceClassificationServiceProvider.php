@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace GuoJiangClub\Component\Classification;
+namespace GuoJiangClub\Component\NiceClassification;
 
 /**
  * Class ServiceProvider.
  */
-class ServiceProvider extends \Illuminate\Support\ServiceProvider
+class NiceClassificationServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     public function __construct(\Illuminate\Contracts\Foundation\Application $app)
     {
@@ -41,8 +41,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     public function register()
     {
         $this->app->bind(RepositoryContract::class, Repository::class);
-
-        $this->app->alias(RepositoryContract::class, 'repository.classification');
     }
 
 

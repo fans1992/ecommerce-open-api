@@ -26,13 +26,13 @@
   },
   "autoload": {
     "psr-4": {
-      "GuoJiangClub\\Component\\Classification\\": "src/"
+      "GuoJiangClub\\Component\\NiceClassification\\": "src/"
     }
   },
   "extra": {
     "laravel": {
       "providers": [
-        "GuoJiangClub\\Component\\Classification\\ServiceProvider"
+        "GuoJiangClub\\Component\\NiceClassification\\NiceClassificationServiceProvider"
       ]
     }
   },

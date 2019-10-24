@@ -15,6 +15,7 @@ use GuoJiangClub\Component\Advert\AdvertServiceProvider;
 use GuoJiangClub\Component\Discount\Contracts\AdjustmentContract;
 use GuoJiangClub\Component\Discount\Providers\DiscountServiceProvider;
 use GuoJiangClub\Component\Favorite\FavoriteServiceProvider;
+use GuoJiangClub\Component\NiceClassification\NiceClassificationServiceProvider;
 use GuoJiangClub\Component\Order\Models\Adjustment;
 use GuoJiangClub\Component\Order\Providers\OrderServiceProvider;
 use GuoJiangClub\Component\Payment\Providers\PaymentServiceProvider;
@@ -86,5 +87,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->register(AdvertServiceProvider::class);
         $this->app->register(PaymentServiceProvider::class);
         $this->app->register(PointServiceProvider::class);
+        $this->app->register(NiceClassificationServiceProvider::class);
     }
 }

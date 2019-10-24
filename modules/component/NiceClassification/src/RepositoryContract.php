@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace GuoJiangClub\Component\Classification;
+namespace GuoJiangClub\Component\NiceClassification;
 
 use Prettus\Repository\Contracts\RepositoryInterface;
 
