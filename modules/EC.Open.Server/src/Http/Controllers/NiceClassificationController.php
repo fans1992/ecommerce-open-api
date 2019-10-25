@@ -13,6 +13,7 @@ namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 
 use GuoJiangClub\Component\NiceClassification\NiceClassification;
 use GuoJiangClub\Component\NiceClassification\RepositoryContract as NiceClassificationRepository;
+use GuoJiangClub\EC\Open\Server\Transformers\NiceClassificationTransformer;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -33,7 +34,7 @@ class NiceClassificationController extends Controller
 //            ->orderBy('classification_code')
             ->get();
 
-        return $this->success($niceClassificationList);
+        return $this->response()->collection($niceClassificationList, new NiceClassificationTransformer());
     }
 
 }
