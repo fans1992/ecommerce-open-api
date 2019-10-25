@@ -160,12 +160,12 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">市场价：</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" name="market_price" placeholder="">
-                    </div>
-                </div>
+                {{--<div class="form-group">--}}
+                    {{--<label class="col-sm-2 control-label">市场价：</label>--}}
+                    {{--<div class="col-sm-10">--}}
+                        {{--<input type="text" class="form-control" name="market_price" placeholder="">--}}
+                    {{--</div>--}}
+                {{--</div>--}}
 
                 <div class="form-group">
                     <label class="col-sm-2 control-label">销售价：</label>
@@ -183,13 +183,13 @@
                 </div>
 
 
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">是否推荐：</label>
-                    <div class="col-sm-10">
-                        <input name="is_commend" type="radio" value="1"/> 是
-                        <input name="is_commend" type="radio" value="0" checked/> 否
-                    </div>
-                </div>
+                {{--<div class="form-group">--}}
+                    {{--<label class="col-sm-2 control-label">是否推荐：</label>--}}
+                    {{--<div class="col-sm-10">--}}
+                        {{--<input name="is_commend" type="radio" value="1"/> 是--}}
+                        {{--<input name="is_commend" type="radio" value="0" checked/> 否--}}
+                    {{--</div>--}}
+                {{--</div>--}}
 
                 <div class="form-group hide">
                     <label class="col-sm-2 control-label">是否赠品：</label>

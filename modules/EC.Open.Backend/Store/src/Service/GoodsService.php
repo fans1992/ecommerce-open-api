@@ -566,7 +566,7 @@ class GoodsService
 
         $goodsUpdateData['min_price'] = $goodsUpdateData['sell_price'];
         $goodsUpdateData['max_price'] = $goodsUpdateData['sell_price'];
-        $goodsUpdateData['min_market_price'] = $goodsUpdateData['market_price'];
+        $goodsUpdateData['min_market_price'] = $goodsUpdateData['sell_price'];
 
         return $data = [$goodsUpdateData, $goodsAttrData, $postData, $imgdata, $catedata, $goodsSpecData, $goodsSpecIdsRelation, $goodsPoint];
     }

@@ -424,7 +424,13 @@
                         return;
                     }
 
-                    if (!$('input[name="market_price"]').val() || !$('input[name="sell_price"]').val()) {
+                    // if (!$('input[name="market_price"]').val() || !$('input[name="sell_price"]').val()) {
+                    //     swal("请输入商品价格!", "", "warning");
+                    //     return;
+                    // }
+
+
+                    if (!$('input[name="sell_price"]').val()) {
                         swal("请输入商品价格!", "", "warning");
                         return;
                     }

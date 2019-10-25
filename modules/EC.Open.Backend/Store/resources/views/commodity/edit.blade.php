@@ -149,14 +149,6 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">市场价：</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" name="market_price" placeholder=""
-                               value="{{$goods_info->market_price}}">
-                    </div>
-                </div>
-
-                <div class="form-group">
                     <label class="col-sm-2 control-label">销售价：</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" name="sell_price" placeholder=""
@@ -175,7 +167,7 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+<!--                <div class="form-group">
                     <label class="col-sm-2 control-label">是否推荐：</label>
                     <div class="col-sm-10">
                         <?php $commend = $goods_info->is_commend == 1 ? 'checked' : '';
@@ -185,7 +177,7 @@
                         <input name="is_commend" type="radio" value="0" {{$uncommend}}/> 否
                     </div>
                 </div>
-
+-->
                 <div class="form-group">
                     <label class="col-sm-2 control-label">商品模型：</label>
                     <div class="col-sm-10">

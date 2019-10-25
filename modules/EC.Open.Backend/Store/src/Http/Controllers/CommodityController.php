@@ -343,7 +343,7 @@ class CommodityController extends Controller
             'brand_id' => 'required',
             'model_id' => 'required',
             'store_nums' => 'required | integer',
-            'market_price' => 'required',
+//            'market_price' => 'required',
             'sell_price' => 'required',
             'category_id' => 'required',
             '_imglist' => 'required',
