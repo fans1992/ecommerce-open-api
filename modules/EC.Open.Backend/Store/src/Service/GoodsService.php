@@ -433,7 +433,9 @@ class GoodsService
                 $skuData[$key]['sku'] = $item->sku;
                 $skuData[$key]['is_show'] = $item->is_show;
                 $skuData[$key]['specID'] = $item->spec_ids;
-                $skuData[$key]['market_price'] = $item->market_price ? $item->market_price : $goods->market_price;
+//                $skuData[$key]['market_price'] = $item->market_price ? $item->market_price : $goods->market_price;
+                $skuData[$key]['service_price'] = $item->service_price;
+                $skuData[$key]['official_price'] = $item->official_price;
             }
 
             foreach ($goods->specValue as $val) {

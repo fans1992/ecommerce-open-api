@@ -9,16 +9,37 @@
     <div class="form-group">
         <label class="col-sm-2 control-label">批量填充：</label>
 
-        <div class="form-group col-sm-3">
+        <div class="form-group col-sm-2">
             <div class="input-group m-b"><span
-                        class="input-group-addon">市场价:</span>
-                <input class="form-control" type="text" id="market-price"
-                       placeholder="请输入销售价格" data-name="market_price"
+                        class="input-group-addon">服务费:</span>
+                <input class="form-control" type="text" id="service_price"
+                       placeholder="请输入服务费" data-name="service_price"
                        data-action="batch">
             </div>
         </div>
+
         <div class="form-group col-sm-1"></div>
-        <div class="form-group col-sm-3">
+        <div class="form-group col-sm-2">
+            <div class="input-group m-b"><span
+                        class="input-group-addon">官费:</span>
+                <input class="form-control" type="text" id="official_price"
+                       placeholder="请输入官费" data-name="official_price"
+                       data-action="batch">
+            </div>
+        </div>
+
+
+        {{--<div class="form-group col-sm-3">--}}
+            {{--<div class="input-group m-b"><span--}}
+                        {{--class="input-group-addon">市场价:</span>--}}
+                {{--<input class="form-control" type="text" id="market-price"--}}
+                       {{--placeholder="请输入销售价格" data-name="market_price"--}}
+                       {{--data-action="batch">--}}
+            {{--</div>--}}
+        {{--</div>--}}
+
+        <div class="form-group col-sm-1"></div>
+        <div class="form-group col-sm-2">
             <div class="input-group m-b"><span
                         class="input-group-addon">销售价:</span>
                 <input class="form-control" type="text" id="all-price"
@@ -45,7 +66,8 @@
                 <tr>
                     <!--规格-->
                     <th class="spec_img_th_active">颜色图片</th>
-                    <th>市场价</th>
+                    <th>服务费</th>
+                    <th>官费</th>
                     <th>销售价</th>
                     <th>数量</th>
                     <th class="sku-th">SKU</th>

@@ -340,7 +340,7 @@ class CommodityController extends Controller
     {
         $rules = [
             'name' => 'required',
-            'brand_id' => 'required',
+//            'brand_id' => 'required',
             'model_id' => 'required',
             'store_nums' => 'required | integer',
 //            'market_price' => 'required',
@@ -366,7 +366,9 @@ class CommodityController extends Controller
             'sell_price' => '销售价',
             'goods_no' => '商品编号',
             'category_id' => '分类选择',
-            '_spec.*.market_price' => 'SKU市场价',
+//            '_spec.*.market_price' => 'SKU市场价',
+            '_spec.*.official_price' => '官费',
+            '_spec.*.service_price' => '服务费',
             '_spec.*.sell_price' => 'SKU销售价',
             '_spec.*.store_nums' => 'SKU库存',
             '_spec' => '规格选择',
@@ -383,7 +385,7 @@ class CommodityController extends Controller
             return !$input->id;
         });
 
-        $validator->sometimes(['_spec.*.market_price', '_spec.*.sell_price', '_spec.*.store_nums'], 'required', function ($input) {
+        $validator->sometimes(['_spec.*.official_price', '_spec.*.service_price', '_spec.*.sell_price', '_spec.*.store_nums'], 'required', function ($input) {
             return isset($input->_spec) AND count($input->_spec) > 0;
         });
 

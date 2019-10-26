@@ -20,8 +20,11 @@
 </script>
 
 <script type="text/html" id="template-sku-tr">
-    <td><input type="text" data-name="market_price" data-action="save"
-               value="{#market_price#}" name="_spec[{#index#}][market_price]">
+    <td><input type="text" data-name="service_price" data-action="save"
+               value="{#service_price#}" name="_spec[{#index#}][service_price]">
+    </td>
+    <td><input type="text" data-name="official_price" data-action="save"
+               value="{#official_price#}" name="_spec[{#index#}][official_price]">
     </td>
     <td>
         <input type="hidden" data-name="id" data-action="save" value="{#id#}"
