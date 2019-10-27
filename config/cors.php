@@ -13,7 +13,12 @@ return [
     */
    
     'supportsCredentials' => true,
-    'allowedOrigins' => ['http://shop.foridom.com', 'http://localhost:3030'],
+    'allowedOrigins' => [
+        'http://shop.foridom.com', //测试环境
+        'http://localhost:3030', //本地开发
+        'http://127.0.0.1:44042' //小程序
+    ],
+//    'allowedOrigins' => ['*'],
     'allowedHeaders' => ['*'],
     'allowedMethods' => ['*'],
     'exposedHeaders' => [],
