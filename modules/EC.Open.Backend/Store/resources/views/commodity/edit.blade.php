@@ -77,7 +77,7 @@
         right: 25px;
         left: 226px;
         width: auto;
-        padding: 20px 0;
+        padding: 15px 0;
         background: #ffc;
         margin: 50px 0;
         z-index: 999;
