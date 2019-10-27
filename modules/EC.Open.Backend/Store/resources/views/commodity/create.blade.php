@@ -130,7 +130,7 @@
                     <label class="col-sm-2 control-label">商品品牌：</label>
                     <div class="col-sm-10">
                         <select class="form-control" id="brand_id" name="brand_id">
-                            <option value="">请选择</option>
+                            <option value="1">请选择</option>
                             @foreach($brands as $item)
                                 <option value="{{$item->id}}">{{$item->name}}</option>
                             @endforeach

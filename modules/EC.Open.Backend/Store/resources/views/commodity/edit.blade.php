@@ -114,7 +114,7 @@
                     <label class="col-sm-2 control-label">商品品牌：</label>
                     <div class="col-sm-10">
                         <select class="form-control" name="brand_id" id="brand_id">
-                            <option value="">请选择</option>
+                            <option value="1">请选择</option>
                             @foreach($brands as $item)
                                 <?php
                                 $brand_select = $goods_info->brand_id == $item->id ? 'selected' : '';
