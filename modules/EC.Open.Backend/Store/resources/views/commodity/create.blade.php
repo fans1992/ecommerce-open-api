@@ -126,7 +126,7 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group hidden">
                     <label class="col-sm-2 control-label">商品品牌：</label>
                     <div class="col-sm-10">
                         <select class="form-control" id="brand_id" name="brand_id">

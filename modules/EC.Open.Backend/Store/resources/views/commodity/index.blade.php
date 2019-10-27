@@ -216,7 +216,7 @@
                                     <th>商品名称</th>
                                     <th>分类</th>
                                     <th>销售价</th>
-                                    <th>吊牌价</th>
+                                    {{--<th>吊牌价</th>--}}
                                     <th>库存</th>
                                     <th>上架</th>
                                     <th>类型</th>
@@ -253,7 +253,7 @@
                                             @endforeach
                                         </td>
                                         <td>{{$item->sell_price}}</td>
-                                        <td>{{$item->market_price}}</td>
+                                        {{--<td>{{$item->market_price}}</td>--}}
                                         <td>{{$item->store_nums}}</td>
                                         <th>{{$item->is_del==0?"是":"否"}}</th>
                                         <th>{{$item->model->name}}</th>
