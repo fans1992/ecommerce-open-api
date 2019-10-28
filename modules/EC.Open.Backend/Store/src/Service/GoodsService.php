@@ -109,7 +109,8 @@ class GoodsService
             $imgdata[] = ['sort' => $val['sort'],
                 'url' => $val['url'],
                 'code' => $key,
-                'is_default' => $default
+                'is_default' => $default,
+                'type' => $val['type'],
             ];
         }
 
