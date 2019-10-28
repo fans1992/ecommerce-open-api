@@ -15,7 +15,7 @@ class AddTypeToGoodsPhotoTable extends Migration
     public function up()
     {
         Schema::table('ibrand_goods_photo', function (Blueprint $table) {
-            $table->string('type')->default(GoodsPhoto::PHOTO_TYPE_PRODUCT_DETAIL)->after('flag')->comment('图片展示类型');
+            $table->string('type')->default(GoodsPhoto::PHOTO_TYPE_PRODUCT_DETAIL)->after('is_default')->comment('图片展示类型');
         });
     }
 
