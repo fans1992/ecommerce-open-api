@@ -10,6 +10,9 @@ class GoodsPhoto extends Model implements Transformable
 {
     use TransformableTrait;
 
+    const PHOTO_TYPE_PRODUCT_DETAIL = 'detail';
+    const PHOTO_TYPE_HOME = 'home';
+
     protected $guarded = ['id'];
 
     public function __construct(array $attributes = [])

@@ -4,6 +4,7 @@ namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 use GuoJiangClub\Component\Advert\Repositories\AdvertItemRepository;
 use GuoJiangClub\Component\Category\Category;
 use GuoJiangClub\Component\Category\Repository as CategoryRepository;
+use GuoJiangClub\Component\Product\Models\GoodsPhoto;
 use GuoJiangClub\EC\Open\Core\Services\GoodsService;
 use GuoJiangClub\Component\Advert\Models\MicroPage;
 use GuoJiangClub\Component\Advert\Models\MicroPageAdvert;
@@ -39,18 +40,19 @@ class HomeController extends Controller
     public function index()
     {
         $carousels = $this->advertItem->getItemsByCode('home.carousel');
-        $categories = $this->advertItem->getItemsByCode('home.categories');
+//        $categories = $this->advertItem->getItemsByCode('home.categories');
 
         $goodsService = app(GoodsService::class);
 
         //商标品牌
         $brandCategory = Category::query()->find(63);
         $brandGoods = $goodsService->getGoodsByCategoryId(63)->where('is_del', 0);
+
         $brand = [
             'name' => '商标品牌',
             'description' => $brandCategory->description,
             'image' => $brandCategory->image,
-            'items' =>  array_values($brandGoods->toArray()),
+            'items' => $this->handleProductPhotoes($brandGoods),
         ];
 
         //商标案件
@@ -60,7 +62,7 @@ class HomeController extends Controller
             'name' => '商标案件',
             'description' => $caseCategory->description,
             'image' => $caseCategory->image,
-            'items' =>  array_values($caseGoods->toArray()),
+            'items' => $this->handleProductPhotoes($caseGoods),
         ];
 
         //国际商标
@@ -70,7 +72,7 @@ class HomeController extends Controller
             'name' => '国际商标',
             'description' => $internationalCategory->description,
             'image' => $internationalCategory->image,
-            'items' =>  array_values($internationalGoods->toArray()),
+            'items' => $this->handleProductPhotoes($internationalGoods),
         ];
 
         //商标业务
@@ -83,7 +85,7 @@ class HomeController extends Controller
             'name' => '版权业务',
             'description' => $copyrightCategory->description,
             'image' => $copyrightCategory->image,
-            'items' =>  array_values($copyrightGoods->toArray()),
+            'items' => $this->handleProductPhotoes($copyrightGoods),
         ];
 
         //商标工具
@@ -93,7 +95,7 @@ class HomeController extends Controller
             'name' => '商标工具',
             'description' => $tookCategory->description,
             'image' => $tookCategory->image,
-            'items' =>  array_values($toolGoods->toArray()),
+            'items' => $this->handleProductPhotoes($toolGoods),
         ];
 
 //        $boysGoods = $goodsService->getGoodsByCategoryId(3)->where('is_del', 0)->take(6);
@@ -105,7 +107,6 @@ class HomeController extends Controller
 //        $girlCategory = ['name' => '女童 T恤/衬衫', 'link' => '/pages/store/list/list?c_id=6', 'items' => array_values($girlGoods->toArray())];
 //
 //        return $this->success(compact('carousels', 'categories', 'boyCategory', 'girlCategory'));
-
 
 
 //        $carousels = $this->advertItem->getItemsByCode('home.carousel');
@@ -239,6 +240,15 @@ class HomeController extends Controller
     protected function getProductItems($goodsService, $category_id)
     {
         return array_values($goodsService->getGoodsByCategoryId($category_id)->where('is_del', 0)->toArray());
+    }
+
+    protected function handleProductPhotoes($products)
+    {
+        foreach ($products as $good) {
+            $good->photos = $good->photos()->where('type', GoodsPhoto::PHOTO_TYPE_HOME)->orderBy('is_default', 'desc')->orderBy('sort', 'desc')->get();
+        }
+
+        return array_values($products->toArray());
     }
 
 }
