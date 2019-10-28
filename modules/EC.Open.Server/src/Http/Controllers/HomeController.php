@@ -4,6 +4,7 @@ namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 use GuoJiangClub\Component\Advert\Repositories\AdvertItemRepository;
 use GuoJiangClub\Component\Category\Category;
 use GuoJiangClub\Component\Category\Repository as CategoryRepository;
+use GuoJiangClub\Component\Product\Models\GoodsPhoto;
 use GuoJiangClub\EC\Open\Core\Services\GoodsService;
 use GuoJiangClub\Component\Advert\Models\MicroPage;
 use GuoJiangClub\Component\Advert\Models\MicroPageAdvert;
@@ -39,7 +40,7 @@ class HomeController extends Controller
     public function index()
     {
         $carousels = $this->advertItem->getItemsByCode('home.carousel');
-        $categories = $this->advertItem->getItemsByCode('home.categories');
+//        $categories = $this->advertItem->getItemsByCode('home.categories');
 
         $goodsService = app(GoodsService::class);
 
@@ -106,7 +107,6 @@ class HomeController extends Controller
 //        $girlCategory = ['name' => '女童 T恤/衬衫', 'link' => '/pages/store/list/list?c_id=6', 'items' => array_values($girlGoods->toArray())];
 //
 //        return $this->success(compact('carousels', 'categories', 'boyCategory', 'girlCategory'));
-
 
 
 //        $carousels = $this->advertItem->getItemsByCode('home.carousel');
@@ -245,7 +245,7 @@ class HomeController extends Controller
     protected function handleProductPhotoes($products)
     {
         foreach ($products as $good) {
-            $good->photos = $good->photos()->where('type', 'home')->orderBy('is_default', 'desc')->orderBy('sort', 'desc')->get();
+            $good->photos = $good->photos()->where('type', GoodsPhoto::PHOTO_TYPE_HOME)->orderBy('is_default', 'desc')->orderBy('sort', 'desc')->get();
         }
 
         return array_values($products->toArray());

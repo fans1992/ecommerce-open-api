@@ -15,6 +15,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class GoodsPhoto extends Model
 {
+    const PHOTO_TYPE_PRODUCT_DETAIL = 'detail';
+    const PHOTO_TYPE_HOME = 'home';
+
     protected $guarded = ['id'];
 
     public function __construct(array $attributes = [])
