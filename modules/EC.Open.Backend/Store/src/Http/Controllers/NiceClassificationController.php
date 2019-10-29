@@ -4,6 +4,7 @@ namespace GuoJiangClub\EC\Open\Backend\Store\Http\Controllers;
 
 use GuoJiangClub\EC\Open\Backend\Store\Model\Category;
 use GuoJiangClub\EC\Open\Backend\Store\Model\GoodsCategory;
+use GuoJiangClub\EC\Open\Backend\Store\Model\NiceClassification;
 use GuoJiangClub\EC\Open\Backend\Store\Repositories\NiceClassificationRepository;
 use iBrand\Backend\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -22,10 +23,10 @@ class NiceClassificationController extends Controller
 
     public function index()
     {
+        $parentClassifications = $this->niceClassificationRepository->getParentClassifications();
+        $niceClassifications = $this->niceClassificationRepository->getLevelNiceClassification($parentClassifications);
 
-        $niceClassifications = $this->niceClassificationRepository->getLevelNiceClassification();
-
-        return LaravelAdmin::content(function (Content $content) use ($niceClassifications) {
+        return LaravelAdmin::content(function (Content $content) use ($niceClassifications, $parentClassifications) {
 
             $content->header('商标分类列表');
 
@@ -33,7 +34,7 @@ class NiceClassificationController extends Controller
                 ['text' => '商标分类列表', 'url' => '', 'no-pjax' => 1, 'left-menu-active' => '分类管理']
             );
 
-            $content->body(view('store-backend::classification.index', compact('niceClassifications')));
+            $content->body(view('store-backend::classification.index', compact('niceClassifications', 'parentClassifications')));
         });
     }
 

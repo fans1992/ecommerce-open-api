@@ -32,13 +32,29 @@ class NiceClassificationRepository extends BaseRepository
     }
 
     /**
+     * 获取根节点分类
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getParentClassifications()
+    {
+        $parentClassifications = NiceClassification::query()
+            ->whereNull('parent_id')
+            ->orderBy('id', 'asc')->paginate(5);
+
+        return $parentClassifications;
+    }
+
+    /**
      * 获得排序分类
      * @return mixed
      */
-    public function getSortNiceClassification()
+    public function getSortNiceClassification($parentClassifications)
     {
-        $category = $this->orderBy('sort', 'asc')->all(['id', 'classification_name', 'parent_id', 'sort', 'level', 'path']);
-        return $category;
+        $parentIds = $parentClassifications->pluck('id')->all();
+
+        $childClassifications = NiceClassification::query()->whereIn('parent_id', $parentIds)->get();
+        return $parentClassifications->merge($childClassifications);
+//        $category = $this->orderBy('sort', 'asc')->where('parent_id', 1)->all(['id', 'classification_name', 'parent_id', 'sort', 'level', 'path']);
     }
 
     /**
@@ -47,13 +63,10 @@ class NiceClassificationRepository extends BaseRepository
      * @param int $level
      * @return array
      */
-    public function getLevelNiceClassification($pid = 0, $html = ' ', $dep = '')
+    public function getLevelNiceClassification($parentClassifications, $pid = 0, $html = ' ', $dep = '')
     {
-
-        $niceClassifications = $this->getSortNiceClassification();
-
+        $niceClassifications = $this->getSortNiceClassification($parentClassifications);
         return $this->buildNiceClassificationTree($niceClassifications, $pid, $html, $dep);
-
     }
 
     private function buildNiceClassificationTree($niceClassifications, $pid = 0, $html = ' ', $dep = '')

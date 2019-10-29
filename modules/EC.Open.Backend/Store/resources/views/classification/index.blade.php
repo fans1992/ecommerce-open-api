@@ -1,7 +1,7 @@
 
     <div class="ibox float-e-margins">
         <div class="ibox-content" style="display: block;">
-            <a href="{{ route('admin.category.create') }}" class="btn btn-primary margin-bottom">添加分类</a>
+            <a href="{{ route('admin.category.create') }}" class="btn btn-primary margin-bottom">添加商标分类</a>
 
             <!-- /.row -->
 
@@ -10,33 +10,44 @@
                     <thead>
                     <tr>
                         <th>排序</th>
+                        <th>分类编号</th>
                         <th>分类名称</th>
                         <th>操作</th>
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($niceClassifications as $category)
-                        <tr id="{{ $category->id }}" parent="{{ $category->parent_id }}">
-                            <td><input style="width: 45px" id="s{{ $category->id }}" value="{{ $category->sort }}"
+                    @foreach($niceClassifications as $niceClassification)
+                        <tr id="{{ $niceClassification->id }}" parent="{{ $niceClassification->parent_id }}">
+                            <td><input style="width: 45px" id="s{{ $niceClassification->id }}" value="{{ $niceClassification->sort }}"
                                        class="form-control" type="text" size="2"
-                                       onblur="toSort( {{ $category->id }} );"></td>
+                                       onblur="toSort( {{ $niceClassification->id }} );"></td>
                             <td>
-                                <img style='margin-left:{{ ($category->level - 1) * 20 }}px' class="operator"
-                                     src="{!! url('assets/backend/images/close.gif') !!}" onclick="displayData(this);" alt="关闭"/>
-                                {{ $category->name }}
+                                {{$niceClassification->classification_code}}
+                            </td>
+                            <td>
+                                <img style='margin-left:{{ ($niceClassification->level - 1) * 20 }}px' class="operator"
+                                     src="{!! url('assets/backend/images/close.gif') !!}" onclick="displayData(this);" alt="打开"/>
+                                {{ $niceClassification->classification_name }}
                             </td>
 
                             <td>
-                                <a href="{{ route('admin.category.edit',['id' => $category->id]) }}" class="btn btn-xs btn-primary">
+                                <a href="{{ route('admin.category.edit',['id' => $niceClassification->id]) }}" class="btn btn-xs btn-primary">
                                     <i class="fa fa-pencil" data-toggle="tooltip" data-placement="top" title="编辑"></i>
                                 </a>
-                                <button onclick="checkCategory({{$category->id}})" class="btn btn-xs btn-danger">
+                                <button onclick="checkCategory({{$niceClassification->id}})" class="btn btn-xs btn-danger">
                                     <i class="fa fa-trash" data-toggle="tooltip" data-placement="top" title="删除"></i>
                                 </button>
                             </td>
                         </tr>
                     @endforeach
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="10" class="footable-visible">
+                                {!! $parentClassifications->render() !!}
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>

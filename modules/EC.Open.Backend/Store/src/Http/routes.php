@@ -147,14 +147,6 @@ $router->group(['prefix' => 'admin/store'], function () use ($router) {
 
     //尼斯分类
     $router->get('classification', 'NiceClassificationController@index')->name('admin.classification.index');
-//    $router->get('category/create', 'CategoryController@create')->name('admin.category.create');
-//    $router->post('category/store', 'CategoryController@store')->name('admin.category.store');
-//    $router->get('category/edit/{id}', 'CategoryController@edit')->name('admin.category.edit');
-//    $router->post('category/update/{id}', 'CategoryController@update')->name('admin.category.update');
-//    $router->get('category/check', 'CategoryController@check')->name('admin.category.check');
-//    $router->post('category/delete', 'CategoryController@destroy')->name('admin.category.delete');
-//
-//    $router->get('category/category_sort', 'CategoryController@category_sort')->name('admin.category.category_sort');
 });
 
 //促销
