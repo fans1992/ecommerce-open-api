@@ -8,7 +8,6 @@ use GuoJiangClub\EC\Open\Backend\Store\Model\NiceClassification;
 use GuoJiangClub\EC\Open\Backend\Store\Repositories\NiceClassificationRepository;
 use iBrand\Backend\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use GuoJiangClub\EC\Open\Backend\Store\Repositories\CategoryRepository;
 use Encore\Admin\Facades\Admin as LaravelAdmin;
 use Encore\Admin\Layout\Content;
 
@@ -23,8 +22,12 @@ class NiceClassificationController extends Controller
 
     public function index()
     {
+//        $test = NiceClassification::descendantsAndSelf(1);
+//        $test = $cat->getDescendants()->toArray();
+//        dd($test);
+
         $parentClassifications = $this->niceClassificationRepository->getParentClassifications();
-        $niceClassifications = $this->niceClassificationRepository->getLevelNiceClassification($parentClassifications);
+        $niceClassifications = $this->niceClassificationRepository->getLevelNiceClassification($parentClassifications->first());
 
         return LaravelAdmin::content(function (Content $content) use ($niceClassifications, $parentClassifications) {
 
