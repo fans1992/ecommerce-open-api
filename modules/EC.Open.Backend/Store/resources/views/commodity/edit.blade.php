@@ -96,6 +96,8 @@
 
         <li class=""><a data-id="5" class="app-action" aria-expanded="false">橱窗图</a></li>
         <li class=""><a data-id="6" class="app-action" aria-expanded="false">SEO设置</a></li>
+        <li class=""><a data-id="7" class="app-action" aria-expanded="false">热门问答</a></li>
+
     </ul>
     {!! Form::open( [ 'url' => [route('admin.goods.store')], 'method' => 'POST', 'id' => 'base-form','class'=>'form-horizontal'] ) !!}
     <div class="tab-content">
@@ -342,12 +344,14 @@
             </div>
 
             <div class="app-actions">
-                <a data-id="6" data-action="next" class="btn btn-success app-action-prev">«上一步</a>
-                <a data-id="8" data-action="next" class="btn btn-success app-action">下一步»</a>
+                <a data-id="5" data-action="next" class="btn btn-success app-action-prev">«上一步</a>
+                <a data-id="7" data-action="next" class="btn btn-success app-action">下一步»</a>
                 <input type="submit" class="btn btn-success app-action-save" data-toggle="form-submit" data-target="#base-form"
                        value="保存">
             </div>
         </div><!-- /.tab-pane -->
+
+        @include('store-backend::commodity.includes.questions_answers')
 
         <div class="popup">
             <div class="sortContainer">

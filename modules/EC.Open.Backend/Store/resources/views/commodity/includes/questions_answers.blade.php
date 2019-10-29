@@ -1,7 +1,6 @@
 <style type="text/css">
-    /*#filePicker,.webuploader-pick{display: block; z-index: 9999; position: absolute;}*/
 </style>
-<div class="tab-pane" id="tab_5">
+<div class="tab-pane" id="tab_7">
     <div class="panel-body">
 
         <div class="table-responsive">
@@ -9,20 +8,14 @@
                 <thead>
                 <tr>
                     <th>
-                        主图
+                        问题
                     </th>
                     <th>
-                        预览
-                    </th>
-                    <th>
-                        图片链接
+                        答案
                     </th>
 
                     <th>
                         排序(数字越大排在越前)
-                    </th>
-                    <th>
-                        类型
                     </th>
                     <th>
                         操作
@@ -33,28 +26,16 @@
                 @if(isset($goods_info))
                     @foreach($goods_info->GoodsPhotos as $key => $val)
                         <tr data-id="{{$val['code']}}" class="top_menu" id="menu_id_{{$val['code']}}">
-                            <td valign="middle"><input name="_is_default" type="radio" value="{{$val['code']}}" {{$val->CheckedStatus}}  /></td>
                             <td>
-                                <img src="{{$val['url']}}" style="max-width: 100px;">
+                                {{--<img src="{{$val['url']}}" style="max-width: 100px;">--}}
+                                问题
                             </td>
                             <td>
                                 <input type="hidden" name="_imglist[{{$val['code']}}][url]" value="{{$val['url']}}">
                                 <input type="text" class="form-control" disabled="" value="{{$val['url']}}">
                             </td>
-
                             <td>
                                 <input type="text" class="form-control" name="_imglist[{{$val['code']}}][sort]" value="{{$val['sort']}}">
-                            </td>
-                            <td>
-                                <select class="form-control" name="_imglist[{{$val['code']}}][type]">
-                                    @if($val['type'] === 'home')
-                                        <option value="detail">详情页</option>
-                                        <option selected value="home">首页</option>
-                                    @else
-                                        <option selected value="detail">详情页</option>
-                                        <option value="home">首页</option>
-                                    @endif
-                                </select>
                             </td>
                             <td>
                                 <a href="javascript:;" class="btn btn-white" onclick="delAlbumImg(this)"><i class="fa fa-trash"></i>
@@ -104,8 +85,8 @@
         </script>
     </div>
     <div class="app-actions">
-        <a data-id="4" data-action="next" class="btn btn-success app-action-prev">«上一步</a>
-        <a data-id="6" data-action="next" class="btn btn-success app-action">下一步»</a>
+        <a data-id="6" data-action="next" class="btn btn-success app-action-prev">«上一步</a>
+        <a data-id="1" data-action="next" class="btn btn-success app-action">下一步»</a>
         <input type="submit" class="btn btn-success app-action-save" data-toggle="form-submit" data-target="#base-form"
                value="保存">
     </div>
