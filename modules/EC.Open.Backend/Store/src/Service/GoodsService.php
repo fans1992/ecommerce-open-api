@@ -131,6 +131,26 @@ class GoodsService
     }
 
     /**
+     * 处理问答数据
+     *
+     * @param $questionlist
+     * @return array
+     */
+    public function handleQuestion($questionlist)
+    {
+        $questionData = [];
+        foreach ($questionlist as $key => $val) {
+            $questionData[] = ['sort' => $val['sort'],
+                'question' => $val['question'],
+                'code' => $key,
+                'answer' => $val['answer'],
+            ];
+        }
+
+        return $questionData;
+    }
+
+    /**
      * 商品属性处理
      *
      * @param $goodsAttrData
@@ -549,6 +569,10 @@ class GoodsService
         $imgdata = $images[0];
         $goodsUpdateData['img'] = $images[1];
 
+        //问题数据
+        $questionlist = isset($postData['_questionlist']) ? $postData['_questionlist'] : [];
+        $questionData = $this->handleQuestion($questionlist);
+
         //属性
         $goodsAttrData = $this->attrArray($goodsAttrData, $goodsUpdateData['model_id']);
 
@@ -571,7 +595,7 @@ class GoodsService
         $goodsUpdateData['max_price'] = $goodsUpdateData['sell_price'];
         $goodsUpdateData['min_market_price'] = $goodsUpdateData['sell_price'];
 
-        return $data = [$goodsUpdateData, $goodsAttrData, $postData, $imgdata, $catedata, $goodsSpecData, $goodsSpecIdsRelation, $goodsPoint];
+        return $data = [$goodsUpdateData, $goodsAttrData, $postData, $imgdata, $catedata, $goodsSpecData, $goodsSpecIdsRelation, $goodsPoint, $questionData];
     }
 
     /**

@@ -71,6 +71,11 @@ class Goods extends LaravelModel
         return $this->hasMany(GoodsPhoto::class, 'goods_id');
     }
 
+    public function questions()
+    {
+        return $this->hasMany(GoodsQuestion::class, 'goods_id', 'id');
+    }
+
     public function reduceStock($quantity)
     {
         $this->store_nums = $this->products()->sum('store_nums');

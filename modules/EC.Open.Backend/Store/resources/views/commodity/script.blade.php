@@ -328,6 +328,32 @@
     {!! Html::script(env("APP_URL").'/assets/backend/libs/jquery.el/jquery.http.js') !!}
     {!! Html::script(env("APP_URL").'/assets/backend/libs/jquery.el/page/jquery.pages.js') !!}
     {!! Html::script(env("APP_URL").'/assets/backend/file-manage/el-Upload/js/pop.js?v=20180809') !!}
+
+    <script>
+        //添加问题按钮(点击绑定)
+        $("#questionAddButton").on("click", function () {
+            $('#question_menu_table tbody').append($('#question_menu_template').html().replace(/{MENU_ID}/g, hex_md5(new Date().getTime() + '|' + Math.random())));
+        });
+
+        function delQuestion(_self) {
+            var obj = $(_self);
+            swal({
+                title: "确定删除该条问答吗?",
+                text: "",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "删除",
+                cancelButtonText: "取消",
+                closeOnConfirm: false
+            }, function () {
+                obj.parents('tr').remove();
+                swal("删除成功!", "", "success");
+
+            });
+        }
+    </script>
+
     <script>
         $("#upload").on("click", function () {
             var el_list = $(this);

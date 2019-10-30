@@ -66,6 +66,11 @@ class Goods extends Model implements Transformable
         return $this->hasMany('GuoJiangClub\EC\Open\Backend\Store\Model\GoodsPhoto', 'goods_id');
     }
 
+    public function GoodsQuestions()
+    {
+        return $this->hasMany('GuoJiangClub\EC\Open\Backend\Store\Model\GoodsQuestion', 'goods_id', 'id');
+    }
+
     public function SearchSpec()
     {
         return $this->hasMany('GuoJiangClub\EC\Open\Backend\Store\Model\SearchSpec', 'goods_id');

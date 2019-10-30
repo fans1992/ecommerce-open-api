@@ -4,7 +4,7 @@
     <div class="panel-body">
 
         <div class="table-responsive">
-            <table class="table table-bordered table-stripped" id="mp_menu_table">
+            <table class="table table-bordered table-stripped" id="question_menu_table">
                 <thead>
                 <tr>
                     <th>
@@ -22,23 +22,28 @@
                     </th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody id='qustion_box'>
                 @if(isset($goods_info))
-                    @foreach($goods_info->GoodsPhotos as $key => $val)
+                    @foreach($goods_info->GoodsQuestions as $key => $val)
                         <tr data-id="{{$val['code']}}" class="top_menu" id="menu_id_{{$val['code']}}">
                             <td>
-                                {{--<img src="{{$val['url']}}" style="max-width: 100px;">--}}
-                                问题
+{{--                                <input type="text" class="form-control" name="_questionlist[{{$val['code']}}][sort]" value="{{$val['sort']}}">--}}
+                                <textarea class="form-control" name="_questionlist[{{$val['code']}}][question]" placeholder="" rows="4">
+                                    {{$val['question']}}
+                                </textarea>
                             </td>
                             <td>
-                                <input type="hidden" name="_imglist[{{$val['code']}}][url]" value="{{$val['url']}}">
-                                <input type="text" class="form-control" disabled="" value="{{$val['url']}}">
+                                <textarea class="form-control" name="_questionlist[{{$val['code']}}][answer]" placeholder="" rows="4">
+                                    {{$val['answer']}}
+                                </textarea>
+                                {{--<input type="hidden" name="_imglist[{{$val['code']}}][url]" value="{{$val['url']}}">--}}
+                                {{--<input type="text" class="form-control" disabled="" value="{{$val['url']}}">--}}
                             </td>
                             <td>
-                                <input type="text" class="form-control" name="_imglist[{{$val['code']}}][sort]" value="{{$val['sort']}}">
+                                <input type="text" class="form-control" name="_questionlist[{{$val['code']}}][sort]" value="{{$val['sort']}}">
                             </td>
                             <td>
-                                <a href="javascript:;" class="btn btn-white" onclick="delAlbumImg(this)"><i class="fa fa-trash"></i>
+                                <a href="javascript:;" class="btn btn-white" onclick="delQuestion(this)"><i class="fa fa-trash"></i>
                                 </a>
                             </td>
                         </tr>
@@ -49,32 +54,24 @@
         </div>
         <div class="form-group">
             <div class="col-sm-12">
-                <div id="upload" class="btn btn-primary">选择图片</div>
+                {{--<div id="upload" class="btn btn-primary">选择图片</div>--}}
+                <button id="questionAddButton" type="button" class="btn btn-w-m btn-primary">继续添加</button>
 
                 <div class="clearfix"></div>
             </div>
         </div>
-        <script type="text/x-template" id="top_menu_template">
+        <script type="text/x-template" id="question_menu_template">
             <tr data-id="{MENU_ID}" class="top_menu" id="menu_id_{MENU_ID}">
-                <td valign="middle">
-                    <input name="_is_default" type="radio" value="{MENU_ID}"  />
+                <td>
+                    <textarea class="form-control" name="_questionlist[{MENU_ID}][question] placeholder="" rows="4">
+                                </textarea>
                 </td>
                 <td>
-                    <img src="{url}" style="max-width: 100px;">
+                    <textarea class="form-control" name="_questionlist[{MENU_ID}][answer] placeholder="" rows="4">
+                    </textarea>
                 </td>
                 <td>
-                    <input type="hidden" name="_imglist[{MENU_ID}][url]" value="{url}">
-                    <input type="text" class="form-control" disabled="" value="{url}">
-                </td>
-
-                <td>
-                    <input type="text" class="form-control" name="_imglist[{MENU_ID}][sort]" value="9">
-                </td>
-                <td>
-                    <select class="form-control" name="_imglist[{MENU_ID}][type]">
-                        <option selected value="detail">详情页</option>
-                        <option value="home">首页</option>
-                    </select>
+                    <input type="text" class="form-control" name="_questionlist[{MENU_ID}][sort]" value="9">
                 </td>
                 <td>
                     <a href="javascript:;" class="btn btn-white"

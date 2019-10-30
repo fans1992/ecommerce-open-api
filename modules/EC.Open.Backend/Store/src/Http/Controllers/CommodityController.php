@@ -3,6 +3,7 @@
 namespace GuoJiangClub\EC\Open\Backend\Store\Http\Controllers;
 
 use GuoJiangClub\EC\Open\Backend\Store\Model\Goods;
+use GuoJiangClub\EC\Open\Backend\Store\Model\GoodsQuestion;
 use GuoJiangClub\EC\Open\Backend\Store\Model\Models;
 use GuoJiangClub\EC\Open\Backend\Store\Model\Product;
 use GuoJiangClub\EC\Open\Backend\Store\Model\GoodsPhoto;
@@ -287,8 +288,14 @@ class CommodityController extends Controller
                     $goods->specValue()->detach();
                 }
 
+                //商品橱窗图
                 GoodsPhoto::where('goods_id', request('id'))->delete();
                 $goods->GoodsPhotos()->createMany($data[3]);
+
+                //商品问答
+                GoodsQuestion::where('goods_id', request('id'))->delete();
+                $goods->GoodsQuestions()->createMany($data[8]);
+
 
                 $goods->categories()->sync($data[4]);
             } else {
@@ -303,6 +310,9 @@ class CommodityController extends Controller
 
                 //商品图片
                 $goods->GoodsPhotos()->createMany($data[3]);
+
+                //商品问答
+                $goods->GoodsQuestions()->createMany($data[8]);
 
                 //分类
                 $goods->categories()->sync($data[4]);
