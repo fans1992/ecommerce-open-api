@@ -75,7 +75,7 @@
                 </td>
                 <td>
                     <a href="javascript:;" class="btn btn-white"
-                       onclick="delAlbumImg(this)"><i class="fa fa-trash"></i>
+                       onclick="delQuestion(this)"><i class="fa fa-trash"></i>
                     </a>
                 </td>
             </tr>
