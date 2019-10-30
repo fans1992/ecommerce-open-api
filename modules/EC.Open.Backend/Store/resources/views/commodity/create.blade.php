@@ -108,6 +108,7 @@
 
         <li class=""><a data-id="5" class="app-action" aria-expanded="false">橱窗图</a></li>
         <li class=""><a data-id="6" class="app-action" aria-expanded="false">SEO设置</a></li>
+        <li class=""><a data-id="7" class="app-action" aria-expanded="false">热门问答</a></li>
 
     </ul>
 
@@ -328,6 +329,7 @@
             </div>
         </div><!-- /.tab-pane -->
 
+        @include('store-backend::commodity.includes.questions_answers')
 
     </div><!-- /.tab-content -->
     {!! Form::close() !!}
