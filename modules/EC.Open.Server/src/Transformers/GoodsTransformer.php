@@ -28,7 +28,7 @@ class GoodsTransformer extends BaseTransformer
      * @var array
      */
     protected $availableIncludes = [
-        'products', 'photos', 'oneComment',
+        'products', 'photos', 'oneComment', 'questions'
     ];
 
     public static $excludeable = [
@@ -72,9 +72,23 @@ class GoodsTransformer extends BaseTransformer
 
         return $this->collection($comments, new CommentTransformer(), '');
     }
+
+    public function includeQuestions($model)
+    {
+        $questions = $model->questions()->orderByDesc('sort')->get();
+        return $this->collection($questions, new GoodsQustionTransformer(), '');
+    }
 }
 
 class GoodsPhotoTransformer extends BaseTransformer
+{
+    public function transformData($model)
+    {
+        return $model->toArray();
+    }
+}
+
+class GoodsQustionTransformer extends BaseTransformer
 {
     public function transformData($model)
     {
