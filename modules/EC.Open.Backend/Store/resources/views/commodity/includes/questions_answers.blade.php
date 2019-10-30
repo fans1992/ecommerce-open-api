@@ -28,14 +28,10 @@
                         <tr data-id="{{$val['code']}}" class="top_menu" id="menu_id_{{$val['code']}}">
                             <td>
 {{--                                <input type="text" class="form-control" name="_questionlist[{{$val['code']}}][sort]" value="{{$val['sort']}}">--}}
-                                <textarea class="form-control" name="_questionlist[{{$val['code']}}][question]" placeholder="" rows="4">
-                                    {{$val['question']}}
-                                </textarea>
+                                <textarea class="form-control" name="_questionlist[{{$val['code']}}][question]" placeholder="" rows="4" style="text-align: left">{{$val['question']}}</textarea>
                             </td>
                             <td>
-                                <textarea class="form-control" name="_questionlist[{{$val['code']}}][answer]" placeholder="" rows="4">
-                                    {{$val['answer']}}
-                                </textarea>
+                                <textarea class="form-control" name="_questionlist[{{$val['code']}}][answer]" placeholder="" rows="4">{{$val['answer']}}</textarea>
                                 {{--<input type="hidden" name="_imglist[{{$val['code']}}][url]" value="{{$val['url']}}">--}}
                                 {{--<input type="text" class="form-control" disabled="" value="{{$val['url']}}">--}}
                             </td>
@@ -63,12 +59,10 @@
         <script type="text/x-template" id="question_menu_template">
             <tr data-id="{MENU_ID}" class="top_menu" id="menu_id_{MENU_ID}">
                 <td>
-                    <textarea class="form-control" name="_questionlist[{MENU_ID}][question] placeholder="" rows="4">
-                                </textarea>
+                    <textarea class="form-control" name="_questionlist[{MENU_ID}][question] placeholder="" rows="4"></textarea>
                 </td>
                 <td>
-                    <textarea class="form-control" name="_questionlist[{MENU_ID}][answer] placeholder="" rows="4">
-                    </textarea>
+                    <textarea class="form-control" name="_questionlist[{MENU_ID}][answer] placeholder="" rows="4"></textarea>
                 </td>
                 <td>
                     <input type="text" class="form-control" name="_questionlist[{MENU_ID}][sort]" value="9">
