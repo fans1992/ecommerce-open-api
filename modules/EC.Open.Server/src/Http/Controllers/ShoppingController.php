@@ -96,6 +96,7 @@ class ShoppingController extends Controller
             return $this->failed('订单提交失败，请重试');
         }
 
+//        dd($this->getOrderDiscounts($order));
         //3.get available discounts
         list($discounts, $bestDiscountAdjustmentTotal, $bestDiscountId) = $this->getOrderDiscounts($order);
 

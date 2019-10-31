@@ -149,9 +149,9 @@ class DiscountService
             $groups->push(['discount' => 0, 'coupon' => $item->id]);
         });
 
-        $normalDiscounts->each(function ($item, $key) use ($groups) {
-            $groups->push(['discount' => $item->id, 'coupon' => 0]);
-        });
+//        $normalDiscounts->each(function ($item, $key) use ($groups) {
+//            $groups->push(['discount' => $item->id, 'coupon' => 0]);
+//        });
 
         $normalCoupons->each(function ($item, $key) use ($groups) {
             $groups->push(['discount' => 0, 'coupon' => $item->id]);

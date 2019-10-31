@@ -57,15 +57,15 @@
 
     <script>
         $(document).ready(function () {
-             @if($specValue->spec_id==2)
-            var input = document.createElement('input');
-            input.setAttribute('name', 'rgb');
-            input.setAttribute('value', '{{$specValue->rgb}}');
-            input.setAttribute('class', 'form-control');
-            var picker = new jscolor(input);
-            picker.fromString('{{$specValue->rgb}}');
-            $('#color').append(input);
-            @endif
+             {{--@if($specValue->spec_id==2)--}}
+            {{--var input = document.createElement('input');--}}
+            {{--input.setAttribute('name', 'rgb');--}}
+            {{--input.setAttribute('value', '{{$specValue->rgb}}');--}}
+            {{--input.setAttribute('class', 'form-control');--}}
+            {{--var picker = new jscolor(input);--}}
+            {{--picker.fromString('{{$specValue->rgb}}');--}}
+            {{--$('#color').append(input);--}}
+            {{--@endif--}}
 
           $('#edit_spec_value_form').ajaxForm({
                 success: function (result) {
