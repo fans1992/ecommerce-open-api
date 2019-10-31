@@ -555,7 +555,7 @@ class GoodsService
         }
 
         //内容处理
-        $sync = 0;
+        $sync = $postData['sync'];
         if ($sync == 1 AND isset($goodsUpdateData['content'])) {
             $goodsUpdateData['contentpc'] = $goodsUpdateData['content'];
         } elseif ($sync == 2 AND isset($goodsUpdateData['contentpc'])) {
@@ -582,11 +582,11 @@ class GoodsService
         //产品数据
         $goodsSpecData = isset($goodsSpecData['_spec']) ? $goodsSpecData['_spec'] : [];
 
-//        foreach ($goodsSpecData as $item) {
-//            if (!$item['sku']) {
-//                return ['status' => false, 'msg' => 'SKU不能为空'];
-//            }
-//        }
+        foreach ($goodsSpecData as $item) {
+            if (!$item['sku']) {
+                return ['status' => false, 'msg' => 'SKU不能为空'];
+            }
+        }
 
         //库存
         $goodsUpdateData['store_nums'] = count($goodsSpecData) ? $this->sumStore($goodsSpecData, 'store_nums') : $goodsUpdateData['store_nums'];
