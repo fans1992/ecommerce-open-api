@@ -45,8 +45,8 @@ class HomeController extends Controller
         $goodsService = app(GoodsService::class);
 
         //商标品牌
-        $brandCategory = Category::query()->find(63);
-        $brandGoods = $goodsService->getGoodsByCategoryId(63)->where('is_del', 0);
+        $brandCategory = Category::query()->find(2);
+        $brandGoods = $goodsService->getGoodsByCategoryId(2)->where('is_del', 0);
 
         $brand = [
             'name' => '商标品牌',
@@ -56,8 +56,8 @@ class HomeController extends Controller
         ];
 
         //商标案件
-        $caseCategory = Category::query()->find(64);
-        $caseGoods = $goodsService->getGoodsByCategoryId(64)->where('is_del', 0);
+        $caseCategory = Category::query()->find(3);
+        $caseGoods = $goodsService->getGoodsByCategoryId(3)->where('is_del', 0);
         $case = [
             'name' => '商标案件',
             'description' => $caseCategory->description,
@@ -66,8 +66,8 @@ class HomeController extends Controller
         ];
 
         //国际商标
-        $internationalCategory = Category::query()->find(62);
-        $internationalGoods = $goodsService->getGoodsByCategoryId(62)->where('is_del', 0);
+        $internationalCategory = Category::query()->find(4);
+        $internationalGoods = $goodsService->getGoodsByCategoryId(4)->where('is_del', 0);
         $international = [
             'name' => '国际商标',
             'description' => $internationalCategory->description,
@@ -79,8 +79,8 @@ class HomeController extends Controller
         $trademark = compact('brand', 'case', 'international');
 
         //版权业务
-        $copyrightCategory =  Category::query()->find(68);
-        $copyrightGoods = $goodsService->getGoodsByCategoryId(68)->where('is_del', 0);
+        $copyrightCategory =  Category::query()->find(5);
+        $copyrightGoods = $goodsService->getGoodsByCategoryId(5)->where('is_del', 0);
         $copyright = [
             'name' => '版权业务',
             'description' => $copyrightCategory->description,
@@ -89,8 +89,8 @@ class HomeController extends Controller
         ];
 
         //商标工具
-        $tookCategory =  Category::query()->find(66);
-        $toolGoods = $goodsService->getGoodsByCategoryId(66)->where('is_del', 0);
+        $tookCategory =  Category::query()->find(6);
+        $toolGoods = $goodsService->getGoodsByCategoryId(6)->where('is_del', 0);
         $tool = [
             'name' => '商标工具',
             'description' => $tookCategory->description,
