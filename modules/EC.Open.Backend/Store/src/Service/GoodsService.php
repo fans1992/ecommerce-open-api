@@ -555,7 +555,7 @@ class GoodsService
         }
 
         //内容处理
-        $sync = $postData['sync'];
+        $sync = 0;
         if ($sync == 1 AND isset($goodsUpdateData['content'])) {
             $goodsUpdateData['contentpc'] = $goodsUpdateData['content'];
         } elseif ($sync == 2 AND isset($goodsUpdateData['contentpc'])) {
