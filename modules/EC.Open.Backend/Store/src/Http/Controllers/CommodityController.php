@@ -356,7 +356,7 @@ class CommodityController extends Controller
 //            'market_price' => 'required',
             'sell_price' => 'required',
             'category_id' => 'required',
-            '_imglist' => 'required',
+//            '_imglist' => 'required',
             'sort' => 'integer',
         ];
 
