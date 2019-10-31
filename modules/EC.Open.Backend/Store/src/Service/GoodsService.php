@@ -582,11 +582,11 @@ class GoodsService
         //产品数据
         $goodsSpecData = isset($goodsSpecData['_spec']) ? $goodsSpecData['_spec'] : [];
 
-        foreach ($goodsSpecData as $item) {
-            if (!$item['sku']) {
-                return ['status' => false, 'msg' => 'SKU不能为空'];
-            }
-        }
+//        foreach ($goodsSpecData as $item) {
+//            if (!$item['sku']) {
+//                return ['status' => false, 'msg' => 'SKU不能为空'];
+//            }
+//        }
 
         //库存
         $goodsUpdateData['store_nums'] = count($goodsSpecData) ? $this->sumStore($goodsSpecData, 'store_nums') : $goodsUpdateData['store_nums'];
