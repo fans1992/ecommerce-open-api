@@ -167,6 +167,19 @@
                         {{--<input type="text" class="form-control" name="market_price" placeholder="">--}}
                     {{--</div>--}}
                 {{--</div>--}}
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">服务费：</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="service_price" placeholder="">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">官费：</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="official_price" placeholder="">
+                    </div>
+                </div>
 
                 <div class="form-group">
                     <label class="col-sm-2 control-label">销售价：</label>

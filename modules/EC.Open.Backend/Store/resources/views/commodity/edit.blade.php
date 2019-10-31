@@ -151,6 +151,22 @@
                 </div>
 
                 <div class="form-group">
+                    <label class="col-sm-2 control-label">服务费：</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="service_price" placeholder=""
+                               value="{{$goods_info->service_price}}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">官费：</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="official_price" placeholder=""
+                               value="{{$goods_info->official_price}}">
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <label class="col-sm-2 control-label">销售价：</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" name="sell_price" placeholder=""
