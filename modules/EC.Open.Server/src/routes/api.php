@@ -11,7 +11,7 @@
 
 $router->get('test', 'BeanbunController@test');
 
-
+/************************* PC ******************************/
 //手机号短信登录
 $router->post('oauth/sms', 'AuthController@smsLogin')->name('api.oauth.sms');
 //用户注册
@@ -21,7 +21,7 @@ $router->post('oauth/login', 'AuthController@login')->name('api.oauth.login');
 //用户找回密码
 $router->post('oauth/password/reset', 'AuthController@resetPassword')->name('api.oauth.password.reset');
 
-
+/************************* 小程序 ****************************/
 //小程序快捷登陆
 $router->post('oauth/MiniProgramLogin', 'MiniProgramLoginController@login')->name('api.oauth.miniprogram.login');
 //小程序手机号授权登录
@@ -29,6 +29,7 @@ $router->post('oauth/MiniProgramMobileLogin', 'MiniProgramLoginController@mobile
 //小程序获取openId
 $router->get('oauth/miniprogram/openid', 'MiniProgramLoginController@getOpenIdByCode');
 
+/************************* 公众号扫码登录 **********************/
 //扫码关注公众号登录
 $router->get('oauth/qrcode', 'WechatController@getWxPic');
 //微信消息接入
@@ -36,17 +37,23 @@ $router->any('wechat', 'WechatController@serve');
 //微信登录绑定手机号
 $router->post('oauth/qrcode/check', 'WechatController@loginCheck');
 
+/************************* 商品详情 **********************/
 $router->get('store/list', 'GoodsController@index')->name('api.goods.list');
 $router->get('store/detail/{id}', 'GoodsController@show')->name('api.goods.detail');
 $router->get('store/detail/{id}/stock', 'GoodsController@getStock')->name('api.goods.detail.stock');
 $router->get('store/detail/{id}/share/img', 'GoodsController@shareImg')->name('api.goods.detail.share.img');
 
+/************************* 首页数据 **********************/
 $router->get('home', 'HomeController@index')->name('api.home.index');
 $router->get('category', 'HomeController@category')->name('api.home.category');
 $router->get('micro/page/{code}', 'MicroPageController@index')->name('api.micro.page.index');
 
-//尼斯分类
+/************************* 尼斯分类 **********************/
 $router->get('classification', 'NiceClassificationController@index')->name('api.classification.index');
+
+
+/************************* 其他 **********************/
+$router->post('guest/feedbacks', 'WechatPayNotifyController@notify');
 
 $router->post('wechat/notify', 'WechatPayNotifyController@notify');
 
@@ -112,4 +119,6 @@ $router->group(config('ibrand.ec-open-api.routeAuthAttributes'), function ($rout
     $router->post('discount', 'DiscountController@create')->name('api.discount.create');
     $router->post('coupon', 'CouponController@create')->name('api.coupon.create');
     $router->post('coupon/take', 'CouponController@take')->name('api.coupon.take');
+
+
 });
