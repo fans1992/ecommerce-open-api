@@ -53,7 +53,7 @@ $router->get('classification', 'NiceClassificationController@index')->name('api.
 
 
 /************************* 其他 **********************/
-$router->post('guest/feedbacks', 'WechatPayNotifyController@notify');
+$router->post('guest/feedbacks', 'CustomerServiceController@store');
 
 $router->post('wechat/notify', 'WechatPayNotifyController@notify');
 

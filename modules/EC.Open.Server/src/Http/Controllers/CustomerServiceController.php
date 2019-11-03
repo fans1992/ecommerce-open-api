@@ -11,6 +11,7 @@
 
 namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 
+use GuoJiangClub\Component\User\Models\CustomerFeedback;
 use Validator;
 
 class CustomerServiceController extends Controller
@@ -20,21 +21,17 @@ class CustomerServiceController extends Controller
         $input = request()->all();
 
         $validator = Validator::make($input, [
-            'message' => 'required',
-            'mobile' => 'required',
+            'message' => 'required|string',
+            'mobile' => 'required|regex:/^1[3456789]\d{9}$/',
         ]);
 
         if ($validator->fails()) {
             return $this->failed($validator->errors());
         }
 
-        $input['user_id'] = request()->user()->id;
+        CustomerFeedback::query()->create($input);
 
-        if (!$address = $this->addressRepository->create($input)) {
-            return $this->failed('创建地址失败');
-        }
-
-        return $this->success($address);
+        return $this->success();
     }
 
 
