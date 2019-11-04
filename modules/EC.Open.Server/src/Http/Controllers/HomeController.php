@@ -46,7 +46,7 @@ class HomeController extends Controller
 
         //商标品牌
         $brandCategory = Category::query()->find(2);
-        $brandGoods = $goodsService->getGoodsByCategoryId(2)->where('is_del', 0);
+        $brandGoods = $goodsService->getGoodsByCategoryId(2)->where('is_del', 0)->where('is_home_display', true);
 
         $brand = [
             'name' => '商标品牌',
@@ -57,7 +57,7 @@ class HomeController extends Controller
 
         //商标案件
         $caseCategory = Category::query()->find(3);
-        $caseGoods = $goodsService->getGoodsByCategoryId(3)->where('is_del', 0);
+        $caseGoods = $goodsService->getGoodsByCategoryId(3)->where('is_del', 0)->where('is_home_display', true);
         $case = [
             'name' => '商标案件',
             'description' => $caseCategory->description,
@@ -67,7 +67,7 @@ class HomeController extends Controller
 
         //国际商标
         $internationalCategory = Category::query()->find(4);
-        $internationalGoods = $goodsService->getGoodsByCategoryId(4)->where('is_del', 0);
+        $internationalGoods = $goodsService->getGoodsByCategoryId(4)->where('is_del', 0)->where('is_home_display', true);
         $international = [
             'name' => '国际商标',
             'description' => $internationalCategory->description,
@@ -80,7 +80,7 @@ class HomeController extends Controller
 
         //版权业务
         $copyrightCategory =  Category::query()->find(5);
-        $copyrightGoods = $goodsService->getGoodsByCategoryId(5)->where('is_del', 0);
+        $copyrightGoods = $goodsService->getGoodsByCategoryId(5)->where('is_del', 0)->where('is_home_display', true);
         $copyright = [
             'name' => '版权业务',
             'description' => $copyrightCategory->description,
@@ -90,7 +90,7 @@ class HomeController extends Controller
 
         //商标工具
         $tookCategory =  Category::query()->find(6);
-        $toolGoods = $goodsService->getGoodsByCategoryId(6)->where('is_del', 0);
+        $toolGoods = $goodsService->getGoodsByCategoryId(6)->where('is_del', 0)->where('is_home_display', true);
         $tool = [
             'name' => '商标工具',
             'description' => $tookCategory->description,

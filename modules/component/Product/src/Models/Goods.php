@@ -20,6 +20,10 @@ class Goods extends LaravelModel
 
     protected $hidden = ['cost_price'];
 
+    protected $casts = [
+        'is_home_display' => 'boolean',
+    ];
+
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
