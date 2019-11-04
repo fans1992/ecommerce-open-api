@@ -30,6 +30,12 @@
                                 <a href="{{ route('admin.industry.edit',['id' => $industry->id]) }}" class="btn btn-xs btn-primary">
                                     <i class="fa fa-pencil" data-toggle="tooltip" data-placement="top" title="编辑"></i>
                                 </a>
+                                <a class="btn btn-xs btn-primary"
+                                   href="{{route('admin.industry.classification.index',['id'=>$industry->id])}}">
+                                    <i data-toggle="tooltip" data-placement="top"
+                                       class="fa fa-pencil-square-o"
+                                       title="行业推荐"></i>
+                                </a>
                                 <button onclick="deleteIndustry({{$industry->id}})" class="btn btn-xs btn-danger">
                                     <i class="fa fa-trash" data-toggle="tooltip" data-placement="top" title="删除"></i>
                                 </button>

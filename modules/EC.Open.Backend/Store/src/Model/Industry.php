@@ -18,4 +18,10 @@ class Industry extends Model implements Transformable
         $this->setTable('industry');
     }
 
+    public function recommendClassifications()
+    {
+        return $this->belongsToMany(NiceClassification::class, 'industry_recommend_classifications', 'industry_id', 'nice_classification_id')
+            ->withPivot('nice_classification_parent_id', 'alias', 'sort')->withTimestamps();
+    }
+
 }

@@ -157,6 +157,18 @@ $router->group(['prefix' => 'admin/store'], function () use ($router) {
     $router->get('industry/check', 'IndustryController@check')->name('admin.industry.check');
     $router->post('industry/delete', 'IndustryController@destroy')->name('admin.industry.delete');
 
+
+    //行业推荐
+    $router->get('industry/{id}/classification', 'IndustryController@classifictionIndex')->name('admin.industry.classification.index');
+//    $router->post('getSpeValueData', 'IndustryController@getSpeValueData')->name('admin.goods.spec.getSpeValueData');
+    $router->post('industry/classification/store', 'IndustryController@classifictionStore')->name('admin.industry.classification.store');
+//
+//    $router->get('editSpecValue', 'IndustryController@editSpecValue')->name('admin.goods.spec.value.editSpecValue');
+//    $router->post('storeSpecValue', 'IndustryController@storeSpecValue')->name('admin.goods.spec.value.storeSpecValue');
+    $router->get('industry/{id}/addClassification', 'IndustryController@addClassification')->name('admin.industry.classification.addClassification');
+//
+//    $router->post('delSpecValue', 'IndustryController@delSpecValue')->name('admin.industry.classification.delete');
+//
     $router->get('industry/industry_sort', 'IndustryController@industry_sort')->name('admin.industry.industry_sort');
 });
 

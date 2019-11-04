@@ -5,6 +5,7 @@ namespace GuoJiangClub\EC\Open\Backend\Store\Http\Controllers;
 use GuoJiangClub\EC\Open\Backend\Store\Model\Category;
 use GuoJiangClub\EC\Open\Backend\Store\Model\GoodsCategory;
 use GuoJiangClub\EC\Open\Backend\Store\Model\Industry;
+use GuoJiangClub\EC\Open\Backend\Store\Model\NiceClassification;
 use GuoJiangClub\EC\Open\Backend\Store\Repositories\IndustryRepository;
 use iBrand\Backend\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -126,5 +127,76 @@ class IndustryController extends Controller
         $this->industryRepository->update($input, $id);
         return $this->ajaxJson();
     }
+
+
+    /**
+     * 推荐类别管理
+     * @param $id
+     */
+    public function classifictionIndex($id)
+    {
+        $industry = Industry::query()->find($id);
+
+        return LaravelAdmin::content(function (Content $content) use ($industry) {
+
+            $content->header('行业推荐类别列表');
+
+            $content->breadcrumb(
+                ['text' => '行业推荐类别管理', 'url' => 'store/specs', 'no-pjax' => 1],
+                ['text' => '编辑行业推荐类别', 'url' => '', 'no-pjax' => 1, 'left-menu-active' => '行业管理']
+
+            );
+
+            $content->body(view('store-backend::industry.value.edit', compact('industry')));
+        });
+    }
+
+
+    public function addClassification($industry_id)
+    {
+        $classifications = NiceClassification::query()->whereNull('parent_id')->orderBy('classification_code')->get();
+        return view('store-backend::industry.value.add_value', compact('industry_id', 'classifications'));
+    }
+
+
+    public function classifictionStore(Request $request)
+    {
+        $input = $request->except('_token');
+
+        if (isset($input['value'])) {
+            $updateData = $input['value'];
+            foreach ($updateData as $item) {
+                SpecsValue::find($item['id'])->update($item);
+            }
+        }
+
+
+        if (isset($input['delete_id'])) {
+            $deleteData = $input['delete_id'];
+            foreach ($deleteData as $item) {
+                SpecsValue::find($item)->update(['status' => 0]);
+            }
+        }
+
+        if (isset($input['add_value'])) {
+            $createData = $input['add_value'];
+            $industry = Industry::find($input['industry_id']);
+            foreach ($createData as &$item) {
+//                if (count(SpecsValue::judge($item['name'], $input['spec_id'])) OR !$item['name']) {
+//                    return $this->ajaxJson(false);
+//                }
+                $item['nice_classification_parent_id'] = 0;
+            }
+            $industry->recommendClassifications()->sync($createData);
+        }
+
+        return $this->ajaxJson();
+
+    }
+
+
+
+
+
 
 }
