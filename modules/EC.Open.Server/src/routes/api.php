@@ -42,6 +42,7 @@ $router->get('store/list', 'GoodsController@index')->name('api.goods.list');
 $router->get('store/detail/{id}', 'GoodsController@show')->name('api.goods.detail');
 $router->get('store/detail/{id}/stock', 'GoodsController@getStock')->name('api.goods.detail.stock');
 $router->get('store/detail/{id}/share/img', 'GoodsController@shareImg')->name('api.goods.detail.share.img');
+$router->get('store/question/list', 'GoodsController@questionIndex')->name('api.goods.question.list');
 
 /************************* 首页数据 **********************/
 $router->get('home', 'HomeController@index')->name('api.home.index');

@@ -17,13 +17,16 @@ use GuoJiangClub\Component\Category\RepositoryContract as CategoryRepository;
 use GuoJiangClub\Component\Discount\Repositories\CouponRepository;
 use GuoJiangClub\Component\Product\AttributeRelation;
 use GuoJiangClub\Component\Product\Models\Attribute;
+use GuoJiangClub\Component\Product\Models\GoodsQuestion;
 use GuoJiangClub\Component\Product\Models\Specification;
 use GuoJiangClub\Component\Product\Models\SpecificationRelation;
 use GuoJiangClub\Component\Product\Models\SpecificationValue;
 use GuoJiangClub\Component\Product\Repositories\GoodsRepository;
 use GuoJiangClub\EC\Open\Core\Services\DiscountService;
+use GuoJiangClub\EC\Open\Server\Transformers\GoodsQuestionTransformer;
 use GuoJiangClub\EC\Open\Server\Transformers\GoodsTransformer;
 use iBrand\Miniprogram\Poster\MiniProgramShareImg;
+use Illuminate\Http\Request;
 use Storage;
 
 class GoodsController extends Controller
@@ -377,5 +380,25 @@ class GoodsController extends Controller
         $result = MiniProgramShareImg::generateShareImage($url, 'share_goods');
 
         return $this->success($result['url']);
+    }
+
+    /**
+     * 商品问答搜索
+     * @param Request $request
+     * @param GoodsQuestion $goodsQuestion
+     * @return \Dingo\Api\Http\Response
+     */
+    public function  questionIndex(Request $request, GoodsQuestion $goodsQuestion)
+    {
+        // 创建一个查询构造器
+        $builder = $goodsQuestion->query();
+
+        if ($search = $request->input('search', '')) {
+            $like = '%' . $search . '%';
+            $builder->where('question', 'like', $like);
+        }
+
+        $questions = $builder->paginate(10);
+        return $this->response->paginator($questions, new GoodsQuestionTransformer());
     }
 }
