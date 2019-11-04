@@ -147,6 +147,17 @@ $router->group(['prefix' => 'admin/store'], function () use ($router) {
 
     //尼斯分类
     $router->get('classification', 'NiceClassificationController@index')->name('admin.classification.index');
+
+    //行业
+    $router->get('industry', 'IndustryController@index')->name('admin.industry.index');
+    $router->get('industry/create', 'IndustryController@create')->name('admin.industry.create');
+    $router->post('industry/store', 'IndustryController@store')->name('admin.industry.store');
+    $router->get('industry/edit/{id}', 'IndustryController@edit')->name('admin.industry.edit');
+    $router->post('industry/update/{id}', 'IndustryController@update')->name('admin.industry.update');
+    $router->get('industry/check', 'IndustryController@check')->name('admin.industry.check');
+    $router->post('industry/delete', 'IndustryController@destroy')->name('admin.industry.delete');
+
+    $router->get('industry/industry_sort', 'IndustryController@industry_sort')->name('admin.industry.industry_sort');
 });
 
 //促销

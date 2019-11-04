@@ -24,7 +24,6 @@ class NiceClassificationController extends Controller
     {
 //        $test = NiceClassification::descendantsAndSelf(1);
 //        $test = $cat->getDescendants()->toArray();
-//        dd($test);
 
         $parentClassifications = $this->niceClassificationRepository->getParentClassifications();
         $niceClassifications = $this->niceClassificationRepository->getLevelNiceClassification($parentClassifications->first());
@@ -34,7 +33,7 @@ class NiceClassificationController extends Controller
             $content->header('商标分类列表');
 
             $content->breadcrumb(
-                ['text' => '商标分类列表', 'url' => '', 'no-pjax' => 1, 'left-menu-active' => '分类管理']
+                ['text' => '商标分类列表', 'url' => '', 'no-pjax' => 1, 'left-menu-active' => '商标分类']
             );
 
             $content->body(view('store-backend::classification.index', compact('niceClassifications', 'parentClassifications')));
