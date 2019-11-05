@@ -398,7 +398,8 @@ class GoodsController extends Controller
             $builder->where('question', 'like', $like);
         }
 
-        $questions = $builder->paginate(10);
+        $perPage = $request->input('per_page') ?: 10;
+        $questions = $builder->paginate($perPage);
         return $this->response->paginator($questions, new GoodsQuestionTransformer());
     }
 }
