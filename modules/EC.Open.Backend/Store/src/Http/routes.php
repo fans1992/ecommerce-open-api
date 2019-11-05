@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2016-10-12
- * Time: 13:33
- */
 
 $router->group(['prefix' => 'admin/store'], function () use ($router) {
     $router->post('upload/image', 'ImageController@postUpload')->name('upload.image');

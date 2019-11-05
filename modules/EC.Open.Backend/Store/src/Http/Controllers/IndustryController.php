@@ -4,7 +4,6 @@ namespace GuoJiangClub\EC\Open\Backend\Store\Http\Controllers;
 
 use GuoJiangClub\EC\Open\Backend\Store\Model\Industry;
 use GuoJiangClub\EC\Open\Backend\Store\Model\NiceClassification;
-use GuoJiangClub\EC\Open\Backend\Store\Model\SpecsValue;
 use GuoJiangClub\EC\Open\Backend\Store\Repositories\IndustryRepository;
 use iBrand\Backend\Http\Controllers\Controller;
 use Illuminate\Http\Request;
