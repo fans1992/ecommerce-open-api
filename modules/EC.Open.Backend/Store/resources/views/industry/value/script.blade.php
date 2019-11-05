@@ -1,3 +1,178 @@
+{!! Html::script(env("APP_URL").'/assets/backend/libs/pop.js?v=20180807') !!}
+<script type="text/html" id="template">
+    <div class="category-wrap">
+        <input data-id="{#id#}" data-parent="{#parent_id#}" data-name="{#value#}"
+               data-uniqueId="categoryIds_{#id#}" class="category_checks" type="checkbox"/>
+        &nbsp;&nbsp;&nbsp;
+        <input class="btn btn-outline btn-primary category-btn" type="button" value="{#value#}"/>
+    </div>
+</script>
+
+<script>
+
+    $("body .td_c").on("change", ".type-s", function () {
+        var that = $(this);
+        var val = that.find("option:selected").val();
+
+        var category_checked = [];
+        var category_ids = [];
+        // 初始化
+        function initCategory() {
+            category_checked = [];
+            category_ids = [];
+            var data = {
+                _token: _token
+            };
+            $.get('{{route('admin.goods.get_category', ['parentID' => val])}}', data, function (html) {
+                $('#category-box').children().remove();
+                $('#category-box').append(html);
+                $('#category-box').find("input").iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                    increaseArea: '20%'
+                });
+            });
+        }
+
+        @if(!isset($goods_info))
+        initCategory();
+        @endif
+
+        $("#hidden-category-id input").each(function () {
+            category_ids.push(parseInt($(this).val()));
+        });
+        category_checked = $(".category_name").text().split("/");
+
+        initTheOrderCheckedCats();
+
+        function moveTheOrderCat($parentObject, template) {
+            if ($parentObject.length == 1) {
+                $parentObject.children('ul').append(template);
+            } else {
+                $(".category_name").children('ul').append(template);
+            }
+        }
+
+        function initTheOrderCheckedCats() {
+            $(".category_name li").each(function () {
+                var parentId = $(this).data('parent');
+                var $parentObject = $(".category_name").find('[data-id=' + parentId + ']');
+                moveTheOrderCat($parentObject, $(this));
+            });
+        }
+
+        function addTheOrderCheckedCat(dataId, dataParentId, dataName) {
+            var whetherExistNode = $(".category_name").find('[data-id=' + dataId + ']').length;
+            if (0 == whetherExistNode) {
+                var template = " <li data-id=" + dataId + " data-parent=" + dataParentId + "><span>" + dataName +
+                    "</span><ul></ul>" +
+                    " </li>";
+                var $parentObject = $(".category_name").find('[data-id=' + dataParentId + ']');
+                moveTheOrderCat($parentObject, template);
+            }
+        }
+
+        function removeTheOrderCheckedCat(dataId) {
+            var $node = $(".category_name").find('[data-id=' + dataId + ']');
+            var $childrenNode = $node.children('ul').children();
+            if ($childrenNode.length > 0) {
+                var $nodeParent = $node.parents('li').first();
+                moveTheOrderCat($nodeParent, $childrenNode);
+            }
+            $node.remove();
+        }
+
+        function operator($object, parentId, parentName, flag) {
+            // $flag =1 表示checked操作， $flag=2 表示unchecked操作， $flag=3表示点击钮
+            // $object 表示 category-content类对象
+
+            // 首先 写unchecked操作
+            if (2 == flag) {
+                // 在category_ids里面找parentId
+                var positionIndex = category_ids.indexOf(parentId);
+                category_ids.splice(positionIndex, 1);
+
+                // 同上， 将parentName从category_checked中移除
+                positionIndex = category_checked.indexOf(parentName);
+                category_checked.splice(positionIndex, 1);
+
+                //将表单中的hidden 某个category_id移除
+                $("#hidden-category-id").find("#category_" + parentId).remove();
+            } else {
+                // 在flag =1 或者 flag=3时 一定会向后台请求数据
+                // html
+                var html = "";
+                //var groupId = $("select[name=category_group]").children('option:selected').val();
+                var data = {
+                    "parentId": parentId,
+                    //"groupId": groupId,
+                    "type-click-category-button": true
+                };
+                $.get(
+                    "{{route('admin.goods.get_category')}}", data,
+                    function (json) {
+
+                        for (var i = 0; i < json.length; i++) {
+
+                            var data = {
+                                id: json[i].id,
+                                value: json[i].name,
+                                parent_id: json[i].parent_id,
+                            }
+                            html = html + $.convertTemplate('#template', data, '');
+                        }
+                        // 异步请求后， 模板数据全都存在于var html中 下一步获得 类为 category-content的位置 这里有个bug,  应该要放进 ajax里面
+                        var categoryContentPosition = $object.data('position');
+
+                        if (categoryContentPosition != "right") {
+                            // categoryContentPosition 不等于 right 找到它的next sibling
+                            var $nextObject = $object.next();
+                            // 首先将 $nextObject里面的内容清空
+                            $nextObject.children().remove();
+                            $nextObject.append(html);
+                            // debugger;
+                            $(".category_checks").iCheck({checkboxClass: 'icheckbox_square-green'});
+                            //将id存在于 category_ids里的 checkbox checked
+                            for (var i = 0; i < category_ids.length; i++) {
+                                $("input[data-uniqueId=categoryIds_" + category_ids[i] + "]").iCheck('check');
+                            }
+                        }
+                        if (1 == flag) {
+                            parentId = parseInt(parentId);
+                            if (category_ids.indexOf(parentId) < 0) {
+                                category_ids.push(parentId);
+                                category_checked.push(parentName);
+                                $("#hidden-category-id").append("<input  type=\"hidden\" name=\"category_id[]\" id=category_" + parentId + " value=" + parentId + ">");
+                            }
+                        }
+                    });
+            }
+        }
+
+        $('body').on('click', '.category-btn', function () {
+            // 获得相邻的checkbox
+            var $checkbox = $(this).prev().find(':checkbox');
+            var id = $checkbox.data('id');
+            var name = $checkbox.data('name');
+            var $parentCategoryContent = $checkbox.closest('.category-content');
+            operator($parentCategoryContent, id, name, 3);
+        });
+        $('body').on('ifChanged', '.category_checks', function () {
+            var id = $(this).data('id');
+            var name = $(this).data('name');
+            var parentId = $(this).data('parent');
+            var $parentCategoryContent = $(this).closest('.category-content');
+            if ($(this).is(':checked')) {
+                operator($parentCategoryContent, id, name, 1);
+                addTheOrderCheckedCat(id, parentId, name);
+            } else {
+                operator($parentCategoryContent, id, name, 2);
+                removeTheOrderCheckedCat(id);
+            }
+        });
+    });
+</script>
+
 <script>
     $('#spec-value-form').ajaxForm({
         success: function (result) {

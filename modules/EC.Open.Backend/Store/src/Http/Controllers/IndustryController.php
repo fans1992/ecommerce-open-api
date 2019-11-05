@@ -5,6 +5,7 @@ namespace GuoJiangClub\EC\Open\Backend\Store\Http\Controllers;
 use GuoJiangClub\EC\Open\Backend\Store\Model\Industry;
 use GuoJiangClub\EC\Open\Backend\Store\Model\NiceClassification;
 use GuoJiangClub\EC\Open\Backend\Store\Repositories\IndustryRepository;
+use GuoJiangClub\EC\Open\Backend\Store\Repositories\NiceClassificationRepository;
 use iBrand\Backend\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Encore\Admin\Facades\Admin as LaravelAdmin;
@@ -15,9 +16,13 @@ class IndustryController extends Controller
 {
     protected $industryRepository;
 
-    public function __construct(IndustryRepository $industryRepository)
+    protected $niceClassificationRepository;
+
+    public function __construct(IndustryRepository $industryRepository, NiceClassificationRepository $niceClassificationRepository)
     {
         $this->industryRepository = $industryRepository;
+        $this->niceClassificationRepository = $niceClassificationRepository;
+
     }
 
     public function index()
@@ -138,10 +143,10 @@ class IndustryController extends Controller
 
         return LaravelAdmin::content(function (Content $content) use ($industry) {
 
-            $content->header('行业推荐类别列表');
+            $content->header($industry->name. '---推荐类别列表');
 
             $content->breadcrumb(
-                ['text' => '行业推荐类别管理', 'url' => 'store/specs', 'no-pjax' => 1],
+                ['text' => '行业推荐类别管理', 'url' => 'store/industry', 'no-pjax' => 1],
                 ['text' => '编辑行业推荐类别', 'url' => '', 'no-pjax' => 1, 'left-menu-active' => '行业管理']
 
             );
@@ -285,6 +290,23 @@ class IndustryController extends Controller
 
         $industry->recommendClassifications()->detach($request->input('nice_classification_id'));
         return $this->ajaxJson(true);
+    }
+
+
+    /**
+     * 行业推荐获取商标分类数据
+     * @return mixed
+     */
+    public function getClassificationByGroupID()
+    {
+        if (request()->has('type-click-category-button')) {
+            $categories = $this->niceClassificationRepository->getOneLevelNiceClassification(request('parentId'));
+
+            return response()->json($categories);
+        } else {
+            $classifications = $this->niceClassificationRepository->getOneLevelNiceClassification();
+            return view('store-backend::industry.includes.category-item', compact('classifications'));
+        }
     }
 
 
