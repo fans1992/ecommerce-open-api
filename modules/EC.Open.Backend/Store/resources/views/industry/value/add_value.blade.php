@@ -56,10 +56,7 @@
     </div>
 @stop
 
-
-
 @section('footer')
-
     {!! Html::script(env("APP_URL").'/assets/backend/libs/ladda/spin.min.js') !!}
     {!! Html::script(env("APP_URL").'/assets/backend/libs/ladda/ladda.min.js') !!}
     {!! Html::script(env("APP_URL").'/assets/backend/libs/ladda/ladda.jquery.min.js') !!}

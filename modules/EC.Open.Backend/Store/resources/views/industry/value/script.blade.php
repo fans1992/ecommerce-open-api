@@ -20,7 +20,7 @@
     //根据显示类型返回格式
     function getTr(indexValue) {
         //数据
-        var specRow = '<tr class="td_c"><td>' + '<select class="form-control"  name="add_value[0][nice_classification_id]">'
+        var specRow = '<tr class="td_c"><td>' + '<select class="form-control"  name="add_value[' + indexValue + '][nice_classification_id]">'
             + '<option value="">请选择</option>' + @foreach($classifications as $item)' + <option value="{{$item->id}}">{{$item->classification_code. '-' .$item->classification_name}}</option>' +@endforeach' + </select>'
                 +'<td><input type="text" class="form-control" name="add_value[' + indexValue + '][alias]" />' +
                 '</td>' +

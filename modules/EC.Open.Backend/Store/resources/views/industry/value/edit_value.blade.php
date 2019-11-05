@@ -4,7 +4,7 @@
     modal-lg
 @stop
 @section('title')
-    编辑规格值
+    编辑别名
 @stop
 
 @section('after-styles-end')
@@ -13,25 +13,17 @@
 
 @section('body')
     <div class="row">
-        {!! Form::open( [ 'route' => ['admin.goods.spec.value.storeSpecValue'], 'method' => 'POST', 'id' => 'edit_spec_value_form','class'=>'form-horizontal'] ) !!}
-        <input type="hidden" name="id" value="{{$specValue->id}}">
-        <input type="hidden" name="spec_id" value="{{$specValue->spec_id}}">
+        {!! Form::open( [ 'route' => ['admin.industry.classification.storeClassification'], 'method' => 'POST', 'id' => 'edit_spec_value_form','class'=>'form-horizontal'] ) !!}
+        <input type="hidden" name="industry_id" value="{{$classification->pivot->industry_id}}">
+        <input type="hidden" name="nice_classification_id" value="{{$classification->pivot->nice_classification_id}}">
         <div class="col-md-12">
             <div class="form-group">
-                {!! Form::label('name','规格值：', ['class' => 'col-sm-3 control-label']) !!}
+                {!! Form::label('name','类别别名：', ['class' => 'col-sm-3 control-label']) !!}
                 <div class="col-sm-9">
-                    <input type="text" value="{{$specValue->name}}" class="form-control" name="name" placeholder=""
+                    <input type="text" value="{{$classification->pivot->alias}}" class="form-control" name="alias" placeholder=""
                            required>
                 </div>
             </div>
-            {{--@if($specValue->spec_id==2)--}}
-                {{--<div class="form-group">--}}
-                    {{--{!! Form::label('rgb','颜色值：', ['class' => 'col-sm-3 control-label']) !!}--}}
-                    {{--<div class="col-sm-9" id="color">--}}
-
-                    {{--</div>--}}
-                {{--</div>--}}
-            {{--@endif--}}
         </div>
 
         {!! Form::close() !!}

@@ -2,15 +2,15 @@
 
 namespace GuoJiangClub\EC\Open\Backend\Store\Http\Controllers;
 
-use GuoJiangClub\EC\Open\Backend\Store\Model\Category;
-use GuoJiangClub\EC\Open\Backend\Store\Model\GoodsCategory;
 use GuoJiangClub\EC\Open\Backend\Store\Model\Industry;
 use GuoJiangClub\EC\Open\Backend\Store\Model\NiceClassification;
+use GuoJiangClub\EC\Open\Backend\Store\Model\SpecsValue;
 use GuoJiangClub\EC\Open\Backend\Store\Repositories\IndustryRepository;
 use iBrand\Backend\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Encore\Admin\Facades\Admin as LaravelAdmin;
 use Encore\Admin\Layout\Content;
+use Validator;
 
 class IndustryController extends Controller
 {
@@ -163,37 +163,130 @@ class IndustryController extends Controller
     {
         $input = $request->except('_token');
 
-        if (isset($input['value'])) {
-            $updateData = $input['value'];
-            foreach ($updateData as $item) {
-                SpecsValue::find($item['id'])->update($item);
-            }
-        }
-
-
-        if (isset($input['delete_id'])) {
-            $deleteData = $input['delete_id'];
-            foreach ($deleteData as $item) {
-                SpecsValue::find($item)->update(['status' => 0]);
-            }
-        }
+//        if (isset($input['value'])) {
+//            $updateData = $input['value'];
+//            foreach ($updateData as $item) {
+//                SpecsValue::find($item['id'])->update($item);
+//            }
+//        }
+//
+//        if (isset($input['delete_id'])) {
+//            $deleteData = $input['delete_id'];
+//            foreach ($deleteData as $item) {
+//                SpecsValue::find($item)->update(['status' => 0]);
+//            }
+//        }
 
         if (isset($input['add_value'])) {
             $createData = $input['add_value'];
-            $industry = Industry::find($input['industry_id']);
-            foreach ($createData as &$item) {
-//                if (count(SpecsValue::judge($item['name'], $input['spec_id'])) OR !$item['name']) {
-//                    return $this->ajaxJson(false);
-//                }
-                $item['nice_classification_parent_id'] = 0;
+
+            /** @var Industry $industry */
+            $industry = Industry::query()->find($input['industry_id']);
+
+            foreach ($createData as $item) {
+                $classification = NiceClassification::query()->find($item['nice_classification_id']);
+
+                $industry->recommendClassifications()->attach($classification, [
+                    'alias' => $item['alias'],
+                    'nice_classification_parent_id' => $classification['parent_id'] ?: 0,
+                ]);
             }
-            $industry->recommendClassifications()->sync($createData);
         }
 
         return $this->ajaxJson();
 
     }
 
+
+    /**
+     * 获取推荐分类列表api
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getRecommendData(Request $request)
+    {
+        /** @var Industry $industry */
+        $industry = Industry::query()->find($request->input('industry_id'));
+        $data = $industry->recommendClassifications()->orderBy('id', 'desc')->paginate(10);
+
+        return $this->ajaxJson(true, $data);
+    }
+
+
+
+    /**
+     * 编辑单个推荐分类
+     *
+     * @return mixed
+     */
+    public function editClassification(Request $request)
+    {
+        /** @var Industry $industry */
+        $industry = Industry::query()->find($request->input('industry_id'));
+
+        $classification_id = $request->input('nice_classification_id');
+        $classification =  $industry->recommendClassifications()->wherePivot('nice_classification_id', $classification_id)->first();
+
+        return view('store-backend::industry.value.edit_value', compact('classification', 'classification_id'));
+    }
+
+
+    /**
+     * 保存单个推荐分类
+     * @param Request $request
+     * @return mixed
+     */
+    public function storeClassification(Request $request)
+    {
+        $input = $request->except('_token');
+        $industryId = $request->input('industry_id');
+
+        $rules = [
+            'alias' => 'required',
+        ];
+        $message = array(
+            "alias.required" => "分类别名 不能为空",
+        );
+
+        $attributes = array(
+            "alias" => '分类别名',
+        );
+
+        $validator = Validator::make(
+            $request->all(),
+            $rules,
+            $message,
+            $attributes
+        );
+        if ($validator->fails()) {
+            $warnings = $validator->messages();
+            $show_warning = $warnings->first();
+
+            return $this->ajaxJson(false, [], 300, $show_warning);
+
+        }
+
+        /** @var Industry $industry */
+        $industry = Industry::query()->find($industryId);
+        $industry->recommendClassifications()->updateExistingPivot($request->input('nice_classification_id'), $input);
+
+        return $this->ajaxJson();
+
+    }
+
+    /**
+     * 删除类别推荐
+     *
+     * @param $id
+     */
+    public function delClassification(Request $request)
+    {
+        /** @var Industry $industry */
+        $industry = Industry::query()->find($request->input('industry_id'));
+
+        $industry->recommendClassifications()->detach($request->input('nice_classification_id'));
+        return $this->ajaxJson(true);
+    }
 
 
 

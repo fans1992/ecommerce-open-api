@@ -23,10 +23,8 @@
                 <table class='border_table table table-bordered'>
                     <thead>
                     <tr>
-                        <th>规格值</th>
-                        {{--@if($industry->id == 2)--}}
-                            {{--<th>颜色值</th>--}}
-                        {{--@endif--}}
+                        <th>商标类别</th>
+                        <th>推荐别名</th>
                         <th>操作</th>
                     </tr>
                     </thead>
