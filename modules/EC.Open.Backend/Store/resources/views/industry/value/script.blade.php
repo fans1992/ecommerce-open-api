@@ -21,9 +21,10 @@
             category_checked = [];
             category_ids = [];
             var data = {
+                parentID:val,
                 _token: _token
             };
-            $.get('{{route('admin.goods.get_category', ['parentID' => val])}}', data, function (html) {
+            $.get('{{route('admin.goods.get_category')}}', data, function (html) {
                 $('#category-box').children().remove();
                 $('#category-box').append(html);
                 $('#category-box').find("input").iCheck({
