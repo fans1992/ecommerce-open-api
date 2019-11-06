@@ -295,6 +295,8 @@ class GoodsController extends Controller
                 $stores[$spec_id]['price'] = $item->sell_price;
                 $stores[$spec_id]['sku'] = $item->sku;
                 $stores[$spec_id]['ids'] = $item->spec_ids;
+                $stores[$spec_id]['service_price'] = $item->service_price;
+                $stores[$spec_id]['official_price'] = $item->official_price;
             });
 
             //生成规格信息
