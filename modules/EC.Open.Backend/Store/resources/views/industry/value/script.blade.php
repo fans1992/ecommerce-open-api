@@ -21,10 +21,11 @@
             category_checked = [];
             category_ids = [];
             var data = {
-                parentID:val,
+                parentId:val,
+                "type-select-category-button": true,
                 _token: _token
             };
-            $.get('{{route('admin.goods.get_category')}}', data, function (html) {
+            $.get('{{route('admin.industry.get_classification')}}', data, function (html) {
                 $('#category-box').children().remove();
                 $('#category-box').append(html);
                 $('#category-box').find("input").iCheck({
@@ -110,14 +111,14 @@
                     "type-click-category-button": true
                 };
                 $.get(
-                    "{{route('admin.goods.get_category')}}", data,
+                    "{{route('admin.industry.get_classification')}}", data,
                     function (json) {
-
+                        console.log(json);
                         for (var i = 0; i < json.length; i++) {
 
                             var data = {
                                 id: json[i].id,
-                                value: json[i].name,
+                                value: json[i].classification_name,
                                 parent_id: json[i].parent_id,
                             }
                             html = html + $.convertTemplate('#template', data, '');

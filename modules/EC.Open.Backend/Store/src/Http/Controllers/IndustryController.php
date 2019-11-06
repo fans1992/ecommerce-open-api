@@ -158,7 +158,7 @@ class IndustryController extends Controller
 
     public function addClassification($industry_id)
     {
-        $classifications = NiceClassification::query()->whereNull('parent_id')->orderBy('classification_code')->get();
+        $classifications = NiceClassification::query()->where('parent_id', 0)->orderBy('classification_code')->get();
         return view('store-backend::industry.value.add_value', compact('industry_id', 'classifications'));
     }
 
@@ -300,12 +300,17 @@ class IndustryController extends Controller
     public function getClassificationByGroupID()
     {
         if (request()->has('type-click-category-button')) {
-            $categories = $this->niceClassificationRepository->getOneLevelNiceClassification(request('parentId'));
+            $classifications = NiceClassification::query()->where('parent_id', request('parentId'))->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
 
-            return response()->json($categories);
+            return response()->json($classifications);
+        } elseif (request()->has('type-select-category-button')) {
+            $classifications = NiceClassification::query()->where('parent_id', request('parentId'))->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
+            return view('store-backend::industry.value.classification-item', compact('classifications'));
+
         } else {
-            $classifications = $this->niceClassificationRepository->getOneLevelNiceClassification();
-            return view('store-backend::industry.includes.category-item', compact('classifications'));
+            $classifications = NiceClassification::query()->where('parent_id', 0)->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
+//            $classifications = $this->niceClassificationRepository->getOneLevelNiceClassification();
+            return view('store-backend::industry.value.classification-item', compact('classifications'));
         }
     }
 
