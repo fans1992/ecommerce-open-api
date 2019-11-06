@@ -89,7 +89,8 @@ class NiceClassificationRepository extends BaseRepository
 
     public function getOneLevelNiceClassification($pid = 0)
     {
-        $niceClassifications = $this->getSortNiceClassification();
+        $niceClassifications = $this->orderBy('sort', 'asc')->all(['id', 'classification_name', 'parent_id', 'sort', 'level', 'path']);
+
         $result = array();
         foreach ($niceClassifications as $v) {
             if ($v['level'] > 2) {

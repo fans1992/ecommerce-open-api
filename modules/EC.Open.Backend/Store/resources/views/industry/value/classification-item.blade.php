@@ -10,8 +10,8 @@
 
 <div class="major">
     <div id="hidden-category-id">
-        @if(isset($cateIds))
-            @foreach($cateIds as $cate)
+        @if(isset($classIds))
+            @foreach($classIds as $class)
                 <input type="hidden" name="category_id[]" id=category_{{$cate}} value="{{$cate}}">
             @endforeach
         @endif
@@ -28,16 +28,16 @@
         </ul>
     </div>
     <div class="category-contents" style="display:flex;">
-        <div class="category-content col-md-3" data-position="left">
-            @foreach($categories as $key => $val)
+        <div class="category-content col-md-25" data-position="left">
+            @foreach($classifications as $key => $val)
                 <div class="category-wrap">
-                    <input data-id="{{$val->id}}" data-parent="{{$val->parent_id | 0}}" data-name="{{$val->name}}" data-uniqueId="categoryIds_{{$val->id}}" class="category_checks" type="checkbox" @if(isset($cateIds)) {{in_array($val->id, $cateIds) ? 'checked' : ''}} @endif />
+                    <input data-id="{{$val->id}}" data-parent="{{$val->parent_id | 0}}" data-name="{{$val->classification_name}}" data-uniqueId="categoryIds_{{$val->id}}" class="category_checks" type="checkbox" @if(isset($cateIds)) {{in_array($val->id, $cateIds) ? 'checked' : ''}} @endif />
                     &nbsp;&nbsp;&nbsp;
-                    <input class="btn btn-outline btn-primary category-btn" type="button" value="{{$val->name}}"/>
+                    <input class="btn btn-outline btn-primary category-btn" type="button" value="{{$val->classification_code . ' ' . $val->classification_name}}"/>
                 </div>
             @endforeach
         </div>
-        <div class="category-content col-md-3" data-position="middle">
+        <div class="category-content col-md-25" data-position="middle">
             @if(!empty($categoriesLevelTwo))
                 @foreach($categoriesLevelTwo as $val)
                     @foreach($val as $v)

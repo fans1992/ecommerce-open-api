@@ -31,7 +31,7 @@ class NiceClassificationController extends Controller
 
         $niceClassificationList = NiceClassification::query()
             ->where('parent_id', $request->input('pid'))
-//            ->orderBy('classification_code')
+            ->orderBy('classification_code')
             ->get();
 
         return $this->response()->collection($niceClassificationList, new NiceClassificationTransformer());

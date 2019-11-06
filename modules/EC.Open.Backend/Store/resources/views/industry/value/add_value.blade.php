@@ -17,8 +17,8 @@
         {!! Form::open( [ 'route' => ['admin.industry.classification.store'], 'method' => 'POST', 'id' => 'spec-value-form','class'=>'form-horizontal'] ) !!}
 
         <input type="hidden" name="industry_id" value="{{$industry_id}}">
-        <div class="col-md-12 clearfix">
-            <div class="form-group">
+        <div class="col-md-50 clearfix">
+            <div class="form-group col-md-50=25">
                 <table class='border_table table table-bordered'>
                     <thead>
                     <tr>
@@ -49,15 +49,13 @@
                 </table>
             </div>
 
-            <div class="form-group">
+            <div class="form-group col-md-25">
                 {{--<button id="specAddButton" type="button" class="btn btn-w-m btn-primary">继续添加</button>--}}
                 <label class="col-sm-2 control-label">所属分类：</label>
                 <div class="col-sm-20" id="category-box">
 
                 </div>
             </div>
-
-
 
             {{--<div class="form-group">--}}
                 {{--<button id="specAddButton" type="button" class="btn btn-w-m btn-primary">继续添加</button>--}}
