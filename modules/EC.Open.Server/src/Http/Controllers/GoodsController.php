@@ -17,6 +17,7 @@ use GuoJiangClub\Component\Category\RepositoryContract as CategoryRepository;
 use GuoJiangClub\Component\Discount\Repositories\CouponRepository;
 use GuoJiangClub\Component\Product\AttributeRelation;
 use GuoJiangClub\Component\Product\Models\Attribute;
+use GuoJiangClub\Component\Product\Models\Goods;
 use GuoJiangClub\Component\Product\Models\GoodsQuestion;
 use GuoJiangClub\Component\Product\Models\Specification;
 use GuoJiangClub\Component\Product\Models\SpecificationRelation;
@@ -268,11 +269,12 @@ class GoodsController extends Controller
         }
 
         return $this->response()->item($goods, new GoodsTransformer())
-            ->setMeta(['attributes' => $goods->attr, 'discounts' => $result]);
+            ->setMeta(['attributes' => $goods->atrributes, 'discounts' => $result]);
     }
 
     public function getStock($id)
     {
+        /** @var Goods $goods */
         $goods = $this->goodsRepository->findOneById($id);
 
         if (!$goods) {
@@ -332,8 +334,21 @@ class GoodsController extends Controller
             }
         }
 
+        //增值服务规格
+        $goodsAttributes = [];
+        $goods->atrributes->each(function ($item) use (&$goodsAttributes) {
+            $goodsAttributes[] = [
+                'attribute_id' => $item->pivot->attribute_id,
+                'attribute_value_id' => $item->pivot->attribute_value_id,
+                'attribute_value' => $item->pivot->attribute_value,
+                'name' => $item->name,
+
+            ];
+        });
+
         return $this->success([
             'specs' => $specs,
+            'option_service' => $goodsAttributes,
             'stores' => $stores,
         ]);
     }
@@ -388,7 +403,7 @@ class GoodsController extends Controller
      * @param GoodsQuestion $goodsQuestion
      * @return \Dingo\Api\Http\Response
      */
-    public function  questionIndex(Request $request, GoodsQuestion $goodsQuestion)
+    public function questionIndex(Request $request, GoodsQuestion $goodsQuestion)
     {
         // 创建一个查询构造器
         $builder = $goodsQuestion->query();

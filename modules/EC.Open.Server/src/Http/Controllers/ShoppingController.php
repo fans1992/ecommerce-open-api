@@ -479,8 +479,13 @@ class ShoppingController extends Controller
                 'specs_text' => $item->model->specs_text,
             ];
 
-            $orderItem = new OrderItem(['quantity' => $item->qty, 'unit_price' => $item->model->sell_price,
-                'item_id' => $item->id, 'type' => $item->__model, 'item_name' => $item->name, 'item_meta' => $item_meta,
+            $orderItem = new OrderItem([
+                'quantity' => $item->qty,
+                'unit_price' => $item->model->sell_price,
+                'item_id' => $item->id,
+                'type' => $item->__model,
+                'item_name' => $item->name,
+                'item_meta' => $item_meta,
             ]);
 
             $orderItem->recalculateUnitsTotal();

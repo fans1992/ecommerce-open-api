@@ -208,10 +208,10 @@
                                 <option {{$model_sel}} value="{{$item['id']}}">{{$item['name']}}</option>
                             @endforeach
                         </select>
-                        {{--<label>可以加入商品参数，比如：型号，年代，款式...</label>--}}
+                        <label>可以加入商品参数，比如：型号，年代，款式...</label>
                     </div>
                 </div>
-<!--
+
                 <div class="form-group">
                     <label class="col-sm-2 control-label">商品参数：</label>
                     <div class="col-sm-10">
@@ -253,7 +253,7 @@
                         </table>
                     </div>
                 </div>
--->
+
                 <div class="form-group">
                     <label class="col-sm-2 control-label">服务亮点：</label>
                     <div class="col-sm-10">

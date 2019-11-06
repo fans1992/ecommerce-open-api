@@ -115,4 +115,10 @@ class Goods extends LaravelModel
     {
         return 'goods';
     }
+
+    public function atrributes()
+    {
+        return $this->belongsToMany('GuoJiangClub\EC\Open\Backend\Store\Model\Attribute', config('ibrand.app.database.prefix', 'ibrand_').'goods_attribute_relation', 'goods_id', 'attribute_id')
+            ->withPivot('attribute_value_id', 'model_id', 'attribute_value');
+    }
 }

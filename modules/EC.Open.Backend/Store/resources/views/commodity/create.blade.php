@@ -228,12 +228,12 @@
 
                 </div>
 
-                {{--<div class="form-group">--}}
-                    {{--<label class="col-sm-2 control-label">商品参数：</label>--}}
-                    {{--<div class="col-sm-10" id="propert_table">--}}
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">商品参数：</label>
+                    <div class="col-sm-10" id="propert_table">
 
-                    {{--</div>--}}
-                {{--</div>--}}
+                    </div>
+                </div>
 
 
                 <div class="form-group">
