@@ -480,8 +480,12 @@ class ShoppingController extends Controller
                 'image' => $item->img,
                 'detail_id' => $item->model->detail_id,
                 'specs_text' => $item->model->specs_text,
-                'option_service' => $this->getOptionService($item['attribute_value_ids']),
             ];
+
+            //生成附加服务数据
+            if (isset($item['attribute_value_ids'])) {
+                $item_meta['option_service'] = $this->getOptionService($item['attribute_value_ids']);
+            }
 
             $orderItem = new OrderItem([
                 'quantity' => $item->qty,
