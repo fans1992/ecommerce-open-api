@@ -177,7 +177,8 @@ class Order extends Model implements DiscountSubjectContract
     public function hasItem(OrderItem $item)
     {
         return $this->items->contains(function ($value, $key) use ($item) {
-            return $item->item_id == $value->item_id and $item->type = $value->type;
+            return $item->item_id == $value->item_id and $item->type == $value->type and $item->item_meta['attribute_value_ids'] == $value->item_meta['attribute_value_ids'];
+//            return $item->item_id == $value->item_id and $item->type == $value->type;
         });
 
         // return $this->items->contains('goods_id', $item->goods_id);

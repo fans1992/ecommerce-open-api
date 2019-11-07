@@ -483,9 +483,8 @@ class ShoppingController extends Controller
             ];
 
             //生成附加服务数据
-            if (isset($item['attribute_value_ids'])) {
-                $item_meta['option_service'] = $this->getOptionService($item['attribute_value_ids']);
-            }
+            $item_meta['attribute_value_ids'] = $item['attribute_value_ids'] ? $item['attribute_value_ids'] : null;
+            $item_meta['option_service'] = $item['attribute_value_ids'] ? $this->getOptionService($item['attribute_value_ids']) : null;
 
             $orderItem = new OrderItem([
                 'quantity' => $item->qty,
