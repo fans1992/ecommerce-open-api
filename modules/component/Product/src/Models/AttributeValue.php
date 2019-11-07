@@ -23,4 +23,9 @@ class AttributeValue extends Model
 
         $this->setTable(config('ibrand.app.database.prefix', 'ibrand_').'goods_attribute_value');
     }
+
+    public function attribute()
+    {
+        return $this->belongsTo(Attribute::class, 'attribute_id', 'id');
+    }
 }

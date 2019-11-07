@@ -24,6 +24,8 @@ use GuoJiangClub\Component\Order\Models\Order;
 use GuoJiangClub\Component\Order\Models\OrderItem;
 use GuoJiangClub\Component\Order\Repositories\OrderRepository;
 use GuoJiangClub\Component\Point\Repository\PointRepository;
+use GuoJiangClub\Component\Product\Models\Attribute;
+use GuoJiangClub\Component\Product\Models\AttributeValue;
 use GuoJiangClub\Component\Product\Repositories\GoodsRepository;
 use GuoJiangClub\Component\Product\Repositories\ProductRepository;
 use GuoJiangClub\Component\Shipping\Models\Shipping;
@@ -34,6 +36,7 @@ use Illuminate\Support\Collection;
 use GuoJiangClub\Component\Product\Models\Goods;
 use GuoJiangClub\Component\Product\Models\Product;
 use iBrand\Shoppingcart\Item;
+use Log;
 
 class ShoppingController extends Controller
 {
@@ -477,6 +480,7 @@ class ShoppingController extends Controller
                 'image' => $item->img,
                 'detail_id' => $item->model->detail_id,
                 'specs_text' => $item->model->specs_text,
+                'option_service' => $this->getOptionService($item['attribute_value_ids']),
             ];
 
             $orderItem = new OrderItem([
@@ -564,6 +568,24 @@ class ShoppingController extends Controller
         if (request('product_id'))
             return 'Product';
         return 'Cart';
+    }
+
+    private function getOptionService($ids)
+    {
+        $optionServiceIds = explode(',', $ids);
+        $optionService = [];
+        foreach ($optionServiceIds as $id) {
+            $attributeValue = AttributeValue::query()->find($id);
+            $attribute = $attributeValue->attribute;
+            $optionService[] = [
+                'attribute_id' => $attribute->id,
+                'attribute_value_id' => $id,
+                'attribute_value' => $attributeValue['name'],
+                'name' => $attribute['name'],
+            ];
+        }
+
+        return collect($optionService);
     }
 
     private function getSelectedItemFromProduct()

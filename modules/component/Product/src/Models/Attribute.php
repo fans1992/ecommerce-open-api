@@ -32,4 +32,9 @@ class Attribute extends Model
     {
         return $query->with('values')->whereIn('model_id', $modelIds)->where('is_search', 1);
     }
+
+    public function attributeValues()
+    {
+        return $this->hasMany(AttributeValue::class, 'attribute_id', 'id');
+    }
 }
