@@ -24,7 +24,6 @@ use GuoJiangClub\Component\Order\Models\Order;
 use GuoJiangClub\Component\Order\Models\OrderItem;
 use GuoJiangClub\Component\Order\Repositories\OrderRepository;
 use GuoJiangClub\Component\Point\Repository\PointRepository;
-use GuoJiangClub\Component\Product\Models\Attribute;
 use GuoJiangClub\Component\Product\Models\AttributeValue;
 use GuoJiangClub\Component\Product\Repositories\GoodsRepository;
 use GuoJiangClub\Component\Product\Repositories\ProductRepository;

@@ -12,6 +12,7 @@
 namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 
 use Cart;
+use GuoJiangClub\Component\Product\Models\AttributeValue;
 use GuoJiangClub\Component\Product\Models\Goods;
 use GuoJiangClub\Component\Product\Models\Product;
 
@@ -40,6 +41,8 @@ class ShoppingCartController extends Controller
             } else {
                 $item['stock_qty'] = 0;
             }
+
+            $item['option_service'] = $item['attribute_value_ids'] ? $this->getOptionService($item['attribute_value_ids']) : null;
         }
 
         return $this->success($carts);
@@ -143,4 +146,29 @@ class ShoppingCartController extends Controller
 
         return $this->getIsInSaleQty($item, $qty - 1);
     }
+
+    /**
+     * 获取附加服务
+     *
+     * @param $ids
+     * @return \Illuminate\Support\Collection
+     */
+    private function getOptionService($ids)
+    {
+        $optionServiceIds = explode(',', $ids);
+        $optionService = [];
+        foreach ($optionServiceIds as $id) {
+            $attributeValue = AttributeValue::query()->find($id);
+            $attribute = $attributeValue->attribute;
+            $optionService[] = [
+                'attribute_id' => $attribute->id,
+                'attribute_value_id' => $id,
+                'attribute_value' => $attributeValue['name'],
+                'name' => $attribute['name'],
+            ];
+        }
+
+        return collect($optionService);
+    }
+
 }

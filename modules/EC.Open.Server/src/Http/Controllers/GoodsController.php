@@ -349,7 +349,7 @@ class GoodsController extends Controller
         });
 
         return $this->success([
-            'specs' => $specs,
+            'specs' => array_values($specs),
             'option_service' => $goodsAttributes,
             'stores' => $stores,
         ]);
