@@ -46,7 +46,8 @@ class ShoppingCartController extends Controller
             $item['option_service'] = isset($item['attribute_value_ids']) ? $this->getOptionService($item['attribute_value_ids']) : null;
         }
 
-        return $this->success(array_values($carts->all()));
+        $cartsList = array_values($carts->all());
+        return $this->success($cartsList);
     }
 
     public function store()
@@ -102,7 +103,8 @@ class ShoppingCartController extends Controller
             Cart::update($item->rawId(), ['status' => 'online', 'market_price' => $item->model->market_price, 'channel' => 'normal']);
         }
 
-        return $this->success(Cart::all());
+        $cartsList = array_values(Cart::all()->all());
+        return $this->success($cartsList);
     }
 
     public function update($id)
