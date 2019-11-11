@@ -100,7 +100,12 @@ class ShoppingCartController extends Controller
                 return $this->failed('商品库存不足,请重新选择');
             }
 
-            Cart::update($item->rawId(), ['status' => 'online', 'market_price' => $item->model->market_price, 'channel' => 'normal']);
+            Cart::update($item->rawId(), [
+                'status' => 'online',
+                'channel' => 'normal',
+                'service_price_total' => sprintf('%.2f', $item->service_price * $item->qty),
+                'official_price_total' => sprintf('%.2f', $item->official_price * $item->qty),
+            ]);
         }
 
         $cartsList = array_values(Cart::all()->all());
