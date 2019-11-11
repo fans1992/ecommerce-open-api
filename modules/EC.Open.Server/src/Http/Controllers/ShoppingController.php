@@ -481,13 +481,16 @@ class ShoppingController extends Controller
                 'specs_text' => $item->model->specs_text,
             ];
 
-            //生成附加服务数据
+            //TODO 附加服务待优化
             $item_meta['attribute_value_ids'] = $item['attribute_value_ids'] ? $item['attribute_value_ids'] : null;
-            $item_meta['option_service'] = $item['attribute_value_ids'] ? $this->getOptionService($item['attribute_value_ids']) : null;
+
+            $optionServices = $this->getOptionService($item['attribute_value_ids']);
+            $option_services_price = $optionServices->sum('attribute_value');
+            $item_meta['option_service'] = $item['attribute_value_ids'] ? $optionServices : null;
 
             $orderItem = new OrderItem([
                 'quantity' => $item->qty,
-                'unit_price' => $item->model->sell_price,
+                'unit_price' => $item->model->sell_price + $option_services_price,
                 'item_id' => $item->id,
                 'type' => $item->__model,
                 'item_name' => $item->name,
