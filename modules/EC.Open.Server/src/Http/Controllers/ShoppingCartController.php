@@ -42,10 +42,11 @@ class ShoppingCartController extends Controller
                 $item['stock_qty'] = 0;
             }
 
-            $item['option_service'] = $item['attribute_value_ids'] ? $this->getOptionService($item['attribute_value_ids']) : null;
+            //TODO 附加服务待优化
+            $item['option_service'] = isset($item['attribute_value_ids']) ? $this->getOptionService($item['attribute_value_ids']) : null;
         }
 
-        return $this->success($carts);
+        return $this->success(array_values($carts->all()));
     }
 
     public function store()
@@ -72,6 +73,11 @@ class ShoppingCartController extends Controller
                 continue;
             }
 
+            //TODO 设置商品单价
+            $option_services = explode(',', $cart['attributes']['attribute_value_ids']);
+            $option_services_price = AttributeValue::query()->whereIn('id', $option_services)->sum('name');
+            $cart['price'] += $option_services_price;
+
             $item = Cart::add($cart['id'], $cart['name'], $cart['qty'], $cart['price'], $attributes);
 
             if (!$item || !$item->model) {
@@ -90,7 +96,7 @@ class ShoppingCartController extends Controller
             } else {
                 Cart::remove($item->rawId());
 
-                return $this->failed( '商品库存不足,请重新选择');
+                return $this->failed('商品库存不足,请重新选择');
             }
 
             Cart::update($item->rawId(), ['status' => 'online', 'market_price' => $item->model->market_price, 'channel' => 'normal']);
@@ -155,6 +161,10 @@ class ShoppingCartController extends Controller
      */
     private function getOptionService($ids)
     {
+        if (!$ids) {
+            return null;
+        }
+
         $optionServiceIds = explode(',', $ids);
         $optionService = [];
         foreach ($optionServiceIds as $id) {
