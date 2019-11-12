@@ -83,13 +83,13 @@ $router->group(config('ibrand.ec-open-api.routeAuthAttributes'), function ($rout
     $router->post('shopping/order/review', 'ShoppingController@review')->name('api.shopping.order.review');
     $router->post('shopping/order/delivery', 'ShoppingController@delivery')->name('api.order.delivery');
 
-    /************************* 收货地址 **********************/
-    $router->get('address', 'AddressController@index')->name('api.address.list');
-    $router->post('address', 'AddressController@store')->name('api.address.store');
-    $router->put('address/{id}', 'AddressController@update')->name('api.address.update');
-    $router->get('address/{id}', 'AddressController@show')->where('id', '[0-9]+')->name('api.address.show');
-    $router->delete('address/{id}', 'AddressController@delete')->name('api.address.delete');
-    $router->get('address/default', 'AddressController@default')->name('api.address.default');
+    /************************* 订单联系人 **********************/
+    $router->get('contacts', 'ContactsController@index')->name('api.contact.list');
+    $router->post('contacts', 'ContactsController@store')->name('api.contact.store');
+    $router->patch('contacts/{contact}', 'ContactsController@update')->name('api.contact.update');
+    $router->get('contacts/{contact}', 'ContactsController@show')->where('id', '[0-9]+')->name('api.contact.show');
+    $router->delete('contacts/{contact}', 'ContactsController@delete')->name('api.contact.delete');
+    $router->get('contacts/default', 'ContactsController@default')->name('api.contact.default');
 
     /*************************** 我的收藏 ********************/
     $router->get('favorite', 'FavoriteController@index')->name('api.favorite');

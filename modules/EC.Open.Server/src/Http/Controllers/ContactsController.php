@@ -14,7 +14,7 @@ namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 use GuoJiangClub\Component\Address\RepositoryContract as AddressRepository;
 use Validator;
 
-class AddressController extends Controller
+class ContactsController extends Controller
 {
     protected $addressRepository;
 
@@ -23,6 +23,11 @@ class AddressController extends Controller
         $this->addressRepository = $addressRepository;
     }
 
+    /**
+     * 订单联系人列表
+     *
+     * @return \Dingo\Api\Http\Response
+     */
     public function index()
     {
         $AddressList = $this->addressRepository->getByUser(request()->user()->id);
