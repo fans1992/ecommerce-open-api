@@ -37,7 +37,7 @@ class OrdersController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Content
      */
     public function index()
     {
@@ -132,7 +132,8 @@ class OrdersController extends Controller
      *
      * @param  int $id
      *
-     * @return \Illuminate\Http\Response
+     * @return Content
+     * @throws \GuoJiangClub\EC\Open\Backend\Store\Exceptions\GeneralException
      */
     public function show($id)
     {
