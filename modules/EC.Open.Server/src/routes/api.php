@@ -86,10 +86,11 @@ $router->group(config('ibrand.ec-open-api.routeAuthAttributes'), function ($rout
     /************************* 订单联系人 **********************/
     $router->get('contacts', 'ContactsController@index')->name('api.contact.list');
     $router->post('contacts', 'ContactsController@store')->name('api.contact.store');
-    $router->patch('contacts/{contact}', 'ContactsController@update')->name('api.contact.update');
-    $router->get('contacts/{contact}', 'ContactsController@show')->where('id', '[0-9]+')->name('api.contact.show');
-    $router->delete('contacts/{contact}', 'ContactsController@delete')->name('api.contact.delete');
+    $router->patch('contacts/{id}', 'ContactsController@update')->name('api.contact.update');
+    $router->get('contacts/{id}', 'ContactsController@show')->where('id', '[0-9]+')->name('api.contact.show');
+    $router->delete('contacts/{id}', 'ContactsController@delete')->name('api.contact.delete');
     $router->get('contacts/default', 'ContactsController@default')->name('api.contact.default');
+
 
     /*************************** 我的收藏 ********************/
     $router->get('favorite', 'FavoriteController@index')->name('api.favorite');
