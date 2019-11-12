@@ -92,13 +92,13 @@ class ShoppingController extends Controller
         //2. 生成临时订单对象
         $order = $this->buildOrderItemsFromCartItems($cartItems, $order);
 
-        $defaultAddress = $this->addressRepository->getDefaultByUser(request()->user()->id);
+//        $defaultAddress = $this->addressRepository->getDefaultByUser(request()->user()->id);
+        $defaultContact = $this->addressRepository->getDefaultByUser(request()->user()->id);
 
         if (!$order->save()) {
             return $this->failed('订单提交失败，请重试');
         }
 
-//        dd($this->getOrderDiscounts($order));
         //3.get available discounts
         list($discounts, $bestDiscountAdjustmentTotal, $bestDiscountId) = $this->getOrderDiscounts($order);
 
@@ -117,7 +117,7 @@ class ShoppingController extends Controller
             'order' => $order,
             'discounts' => $discounts,
             'coupons' => $coupons,
-            'address' => $defaultAddress,
+            'order_contact' => $defaultContact,
             'discountGroup' => $discountGroup,
             'orderPoint' => $orderPoint,
             'best_discount_id' => $bestDiscountId,
