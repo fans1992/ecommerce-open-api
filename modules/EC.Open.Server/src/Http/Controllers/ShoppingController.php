@@ -194,17 +194,18 @@ class ShoppingController extends Controller
                 }
             }
 
-            //5. 保存收获地址信息。
-            if (request('address_id') && $address = $this->addressRepository->find(request('address_id'))) {
-                $order->accept_name = $address->accept_name;
-                $order->mobile = $address->mobile;
-                $order->address = $address->address;
-                $order->address_name = $address->address_name;
+            //5. 保存订单联系人信息
+            if ($inputContact = request('order_contact')) {
+                $contact = $this->addressRepository->firstOrCreate(array_merge($inputContact, ['user_id' => request()->user()->id]));
+
+                $order->accept_name = $contact->accept_name;
+                $order->mobile = $contact->mobile;
+                $order->address = $contact->address;
+                $order->address_name = $contact->address_name;
             }
 
             //5. 保存订单状态
             $this->orderProcessor->submit($order);
-
 
             //6. remove goods store.
             foreach ($order->getItems() as $item) {
