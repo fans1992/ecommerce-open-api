@@ -44,6 +44,7 @@ class ShoppingCartController extends Controller
 
             //TODO 附加服务待优化
             $item['option_service'] = isset($item['attribute_value_ids']) ? $this->getOptionService($item['attribute_value_ids']) : null;
+            $item['specs_text'] = $item->model->specs_text;
         }
 
         $cartsList = array_values($carts->all());
