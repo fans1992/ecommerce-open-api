@@ -16,6 +16,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Point extends Model
 {
+    const POINT_ACTION_ORDER_ITEM = 'order_item';
+    const POINT_ACTION_ORDER_DISCOUNT = 'order_discount';
+    const POINT_ACTION_ORDER_CANCELED = 'order_canceled';
+    const POINT_ACTION_COUPON_EXCHANGE = 'coupon_exchange';
+
+    public static $pointActionMap = [
+        self::POINT_ACTION_ORDER_ITEM => '订单商品获得积分',
+        self::POINT_ACTION_ORDER_DISCOUNT => '订单折扣使用积分',
+        self::POINT_ACTION_ORDER_CANCELED => '取消订单返还积分',
+        self::POINT_ACTION_COUPON_EXCHANGE => '兑换优惠券消耗积分',
+    ];
+
     protected $guarded = ['id'];
 
     public function __construct(array $attributes = [])
