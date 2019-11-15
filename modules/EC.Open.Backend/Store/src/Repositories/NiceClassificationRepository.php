@@ -38,7 +38,7 @@ class NiceClassificationRepository extends BaseRepository
     public function getParentClassifications()
     {
         $parentClassifications = NiceClassification::query()
-            ->whereNull('parent_id')
+            ->where('parent_id', 0)
             ->orderBy('id', 'asc')->paginate(1);
 
         return $parentClassifications;
