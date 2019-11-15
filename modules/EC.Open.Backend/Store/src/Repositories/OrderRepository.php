@@ -2,6 +2,7 @@
 
 namespace GuoJiangClub\EC\Open\Backend\Store\Repositories;
 
+use GuoJiangClub\Component\Discount\Models\Coupon;
 use GuoJiangClub\Component\Point\Models\Point;
 use GuoJiangClub\EC\Open\Backend\Store\Model\OrderItem;
 use GuoJiangClub\EC\Open\Backend\Store\Model\Product;
