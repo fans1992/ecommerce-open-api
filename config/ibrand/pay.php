@@ -51,7 +51,7 @@ return [
                     'max_file' => 30,
                 ],
                 // optional，设置此参数，将进入沙箱模式
-                // 'mode' => 'dev',
+                 'mode' => 'dev',
             ],
         ],
 
