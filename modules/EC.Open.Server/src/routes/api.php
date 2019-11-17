@@ -73,9 +73,10 @@ $router->group(config('ibrand.ec-open-api.routeAuthAttributes'), function ($rout
     $router->get('shopping/cart/count', 'ShoppingCartController@count')->name('api.shopping.cart.count');
 
     /************************* 购物流程 **********************/
-    $router->post('shopping/order/checkout', 'ShoppingController@checkout')->name('api.shopping.order.checkout');
-    $router->post('shopping/order/confirm', 'ShoppingController@confirm')->name('api.shopping.order.confirm');
-    $router->post('shopping/order/charge', 'WechatPayController@createCharge')->name('api.shopping.order.charge');
+    $router->post('shopping/order/checkout', 'ShoppingController@checkout')->name('api.shopping.order.checkout');    //结算
+    $router->post('shopping/order/confirm', 'ShoppingController@confirm')->name('api.shopping.order.confirm');       //提交订单
+    $router->post('shopping/order/charge', 'PaymentController@createCharge')->name('api.shopping.order.charge');     //支付
+//    $router->post('shopping/order/charge', 'WechatPayController@createCharge')->name('api.shopping.order.charge');
     $router->post('shopping/order/paid', 'PaymentController@paidSuccess')->name('api.shopping.order.paid');
     $router->post('shopping/order/cancel', 'ShoppingController@cancel')->name('api.shopping.order.cancel');
     $router->post('shopping/order/received', 'ShoppingController@received')->name('api.shopping.order.received');

@@ -18,19 +18,56 @@ use iBrand\Component\Pay\Facades\Charge;
 use iBrand\Component\Pay\Facades\PayNotify;
 use GuoJiangClub\Component\Payment\Models\Payment;
 use GuoJiangClub\Component\Payment\Services\PaymentService;
-use EasyWeChat;
 
 class PaymentController extends Controller
 {
     private $payment;
     private $orderRepository;
 
-    public function __construct(PaymentService $paymentService,
-                                OrderRepository $orderRepository
-    )
+    public function __construct(PaymentService $paymentService, OrderRepository $orderRepository)
     {
         $this->payment = $paymentService;
         $this->orderRepository = $orderRepository;
+    }
+
+    /**
+     * @return \Dingo\Api\Http\Response|mixed
+     * @throws \Exception
+     */
+    public function createCharge()
+    {
+        $user = request()->user();
+
+        $order_no = request('order_no');
+
+        if (!$order_no || !$order = $this->orderRepository->getOrderByNo($order_no)) {
+            return $this->failed('订单不存在');
+        }
+
+        if ($user->cant('pay', $order)) {
+            return $this->failed('无权操作此订单');
+        }
+
+        if (Order::STATUS_INVALID == $order->status) {
+            return $this->failed('无法支付');
+        }
+
+        if (0 === $order->getNeedPayAmount()) {
+            return $this->failed('无法支付，需支付金额为零');
+        }
+
+        //发起一次支付请求时需要创建一个新的 charge 对象，获取一个可用的支付凭据用于客户端向第三方渠道发起支付请求。
+        $charge = Charge::create([
+            'channel' => request('channel'),
+            'order_no' => $order_no,
+            'amount' => $order->getNeedPayAmount(),
+            'client_ip' => \request()->getClientIp(),
+            'subject' => $order->getSubject(),
+            'body' => $order->getSubject(),
+            'extra' => ['openid' => \request('openid')],
+        ]);
+
+        return $this->success(compact('charge'));
     }
 
     public function paidSuccess()

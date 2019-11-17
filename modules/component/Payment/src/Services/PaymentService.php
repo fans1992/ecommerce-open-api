@@ -14,9 +14,9 @@ namespace GuoJiangClub\Component\Payment\Services;
 use Carbon\Carbon;
 use GuoJiangClub\Component\Order\Models\Order;
 use GuoJiangClub\Component\Order\Repositories\OrderRepository;
-use GuoJiangClub\Component\Pay\Contracts\PayNotifyContract;
-use GuoJiangClub\Component\Pay\Models\Charge;
 use GuoJiangClub\Component\Payment\Models\Payment;
+use iBrand\Component\Pay\Contracts\PayNotifyContract;
+use iBrand\Component\Pay\Models\Charge;
 
 /**
  * Created by PhpStorm.
