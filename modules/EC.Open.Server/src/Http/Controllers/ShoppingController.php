@@ -81,6 +81,7 @@ class ShoppingController extends Controller
 
         $checkoutType = $this->getCheckoutType();
 
+        //1.获取购物车条目
         $cartItems = call_user_func(array($this, 'getSelectedItemFrom' . $checkoutType));
 
         if (0 == $cartItems->count()) {
@@ -607,16 +608,19 @@ class ShoppingController extends Controller
             'total' => isset($item['total']) ? $item['total'] : '',
         ];
         if (isset($item['attributes']['sku'])) {
-            $product = Product::find($productId);
-            $input['name'] = $product->name;
+            $product = Product::query()->find($productId);
+
             $input['price'] = $product->sell_price;
-            $input['color'] = isset($item['attributes']['color']) ? $item['attributes']['color'] : [];
-            $input['size'] = isset($item['attributes']['size']) ? $item['attributes']['size'] : [];
-            $input['com_id'] = isset($item['attributes']['com_id']) ? $item['attributes']['com_id'] : [];
             $input['type'] = 'sku';
             $input['__model'] = Product::class;
+
+            $input += $item['attributes'];
+//            $input['name'] = $product->name;
+//            $input['type'] = isset($item['attributes']['type']) ? $item['attributes']['type'] : [];
+//            $input['time'] = isset($item['attributes']['time']) ? $item['attributes']['time'] : [];
+//            $input['com_id'] = isset($item['attributes']['com_id']) ? $item['attributes']['com_id'] : [];
         } else {
-            $goods = Goods::find($productId);
+            $goods = Goods::query()->find($productId);
             $input['name'] = $goods->name;
             $input['price'] = $goods->sell_price;
             $input['size'] = isset($item['size']) ? $item['size'] : '';
@@ -625,7 +629,7 @@ class ShoppingController extends Controller
             $input['__model'] = Goods::class;
             $input['com_id'] = $item['id'];
         }
-        $data = new Item(array_merge($input), $item);
+        $data = new Item(array_merge($input, $item));
         $cartItems->put($__raw_id, $data);
         return $cartItems;
     }
