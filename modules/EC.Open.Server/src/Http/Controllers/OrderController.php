@@ -25,7 +25,7 @@ class OrderController extends Controller
 
     public function getOrders()
     {
-        $orderConditions['channel'] = \request('channel') ? \request('channel') : 'ec';
+//        $orderConditions['channel'] = \request('channel') ? \request('channel') : 'ec';
 
         if (request('order_no')) {
             $orderConditions['order_no'] = request('order_no');

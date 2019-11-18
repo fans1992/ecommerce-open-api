@@ -54,9 +54,12 @@ $router->get('classification', 'NiceClassificationController@index')->name('api.
 
 
 /************************* 其他 **********************/
+//客户留言
 $router->post('guest/feedbacks', 'CustomerServiceController@store');
-
+//微信服务器回调
 $router->post('wechat/notify', 'WechatPayNotifyController@notify');
+//支付宝服务器回调
+$router->post('payment/alipay/notify', 'PaymentController@alipayNotify')->name('payment.alipay.notify');
 
 $router->post('shoppingCart/discount', 'DiscountController@shoppingCartDiscount')->name('api.shopping.cart.discount');
 

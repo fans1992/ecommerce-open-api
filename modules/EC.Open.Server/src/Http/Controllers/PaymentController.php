@@ -124,7 +124,7 @@ class PaymentController extends Controller
         //在pay_debug=true 状态下，可以调用此接口直接更改订单支付状态
         if (config('ibrand.app.pay_debug')) {
 
-            $charge = \GuoJiangClub\Component\Pay\Models\Charge::where('order_no', $order_no)->orderBy('created_at', 'desc')->first();
+            $charge = \iBrand\Component\Pay\Models\Charge::query()->where('order_no', $order_no)->orderBy('created_at', 'desc')->first();
             $charge->transaction_no = '';
             $charge->time_paid = Carbon::now();
             $charge->paid = 1;
@@ -135,9 +135,9 @@ class PaymentController extends Controller
             $order = PayNotify::success($charge->type, $charge);
 
         } else {
-            //同步查询微信订单状态，防止异步通信失败导致订单状态更新失败
+            //同步查询订单状态，防止异步通信失败导致订单状态更新失败
 
-            $charge = Charge::find(request('charge_id'));
+            $charge = \iBrand\Component\Pay\Models\Charge::query()->find(request('charge_id'));
 
             $order = PayNotify::success($charge->type, $charge);
 
