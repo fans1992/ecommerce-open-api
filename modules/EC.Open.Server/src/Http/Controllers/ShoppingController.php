@@ -481,6 +481,8 @@ class ShoppingController extends Controller
                 'image' => $item->img,
                 'detail_id' => $item->model->detail_id,
                 'specs_text' => $item->model->specs_text,
+                'service_price' => $item->service_price,
+                'official_price' => $item->official_price,
             ];
 
             //TODO 附加服务待优化
