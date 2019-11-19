@@ -38,7 +38,7 @@ class WechatPayNotifyController extends Controller
                     $charge['details'] = json_encode($message);
                     $charge['channel'] = 'wx_lite';
 
-                    $this->payment->paySuccess($charge);
+                    $this->payment->success($charge);
 
                     return true; // 返回处理完成
 

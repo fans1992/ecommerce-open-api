@@ -17,6 +17,7 @@ use GuoJiangClub\Component\Order\Repositories\OrderRepository;
 use iBrand\Component\Pay\Facades\Charge;
 use iBrand\Component\Pay\Facades\PayNotify;
 use GuoJiangClub\Component\Payment\Services\PaymentService;
+use Yansongda\Pay\Pay;
 
 class PaymentController extends Controller
 {
@@ -78,32 +79,64 @@ class PaymentController extends Controller
      */
     public function alipayNotify()
     {
-        // 校验输入参数
-        $data  = app('alipay')->verify();
-        // 如果订单状态不是成功或者结束，则不走后续的逻辑
-        // 所有交易状态：https://docs.open.alipay.com/59/103672
-        if(!in_array($data->trade_status, ['TRADE_SUCCESS', 'TRADE_FINISHED'])) {
-            return app('alipay')->success();
+        $config = config('ibrand.pay.default.alipay.default');
+//        dd($config);
+        $pay = Pay::alipay($config);
+
+        $data = $pay->verify();
+
+        \Log::debug('Alipay notify', $data->all());
+
+        if ($data['trade_status'] == "TRADE_SUCCESS" || $data['trade_status'] == "TRADE_FINISHED") {
+
+            $charge = \iBrand\Component\Pay\Models\Charge::ofOutTradeNo($data['out_trade_no'])->first();
+
+            if (!$charge) {
+                return response('支付失败', 500);
+            }
+
+            $charge->transaction_meta = json_encode($data);
+            $charge->transaction_no = $data['trade_no'];
+            $charge->time_paid = Carbon::createFromTimestamp(strtotime($data['gmt_payment']));
+            $charge->paid = 1;
+            $charge->save();
+
+            if ($charge->amount !== intval($data['total_amount'] * 100)) {
+                return response('支付失败', 500);
+            }
+
+            PayNotify::success($charge->type, $charge);
+
+            return $pay->success();
         }
-        // $data->out_trade_no 拿到订单流水号，并在数据库中查询
-        $order = Order::where('no', $data->out_trade_no)->first();
-        // 正常来说不太可能出现支付了一笔不存在的订单，这个判断只是加强系统健壮性。
-        if (!$order) {
-            return 'fail';
-        }
-        // 如果这笔订单的状态已经是已支付
-        if ($order->paid_at) {
-            // 返回数据给支付宝
-            return app('alipay')->success();
+        return response('alipay notify fail.', 500);
+
+
+        $payment = EasyWeChat::payment();
+
+        if ('SUCCESS' === $message['return_code']) { // return_code 表示通信状态，不代表支付状态
+            // 用户是否支付成功
+            if ('SUCCESS' === array_get($message, 'result_code')) {
+                $charge['metadata']['order_no'] = $message['out_trade_no'];
+                $charge['amount'] = $message['total_fee'];
+                $charge['transaction_no'] = $message['transaction_id'];
+                $charge['time_paid'] = strtotime($message['time_end']);
+                $charge['details'] = json_encode($message);
+                $charge['channel'] = 'wx_lite';
+
+                $this->payment->success($charge);
+
+                return true; // 返回处理完成
+
+                // 用户支付失败
+            } elseif ('FAIL' === array_get($message, 'result_code')) {
+                return $fail('支付失败');
+            }
+        } else {
+            return $fail('通信失败，请稍后再通知我');
         }
 
-        $order->update([
-            'paid_at'        => Carbon::now(), // 支付时间
-            'payment_method' => 'alipay', // 支付方式
-            'payment_no'     => $data->trade_no, // 支付宝订单号
-        ]);
-
-        return app('alipay')->success();
+        return $fail('支付失败');
     }
 
 
@@ -142,29 +175,29 @@ class PaymentController extends Controller
             $order = PayNotify::success($charge->type, $charge);
 
 
-            /*$payment = EasyWeChat::payment();
-            $result = $payment->order->queryByOutTradeNumber($order_no);
-
-            if ('FAIL' == $result['return_code']) {
-                return $this->failed($result['return_msg']);
-            }
-
-            if ('FAIL' == $result['result_code']) {
-                return $this->failed($result['err_code_des']);
-            }
-
-            if ('SUCCESS' != $result['trade_state']) {
-                return $this->failed($result['trade_state_desc']);
-            }
-
-            $charge['metadata']['order_no'] = $result['out_trade_no'];
-            $charge['amount'] = $result['total_fee'];
-            $charge['transaction_no'] = $result['transaction_id'];
-            $charge['time_paid'] = strtotime($result['time_end']);
-            $charge['details'] = json_encode($result);
-            $charge['channel'] = 'wx_lite';
-
-            $order = $this->payment->paySuccess($charge);*/
+//            $payment = EasyWeChat::payment();
+//            $result = $payment->order->queryByOutTradeNumber($order_no);
+//
+//            if ('FAIL' == $result['return_code']) {
+//                return $this->failed($result['return_msg']);
+//            }
+//
+//            if ('FAIL' == $result['result_code']) {
+//                return $this->failed($result['err_code_des']);
+//            }
+//
+//            if ('SUCCESS' != $result['trade_state']) {
+//                return $this->failed($result['trade_state_desc']);
+//            }
+//
+//            $charge['metadata']['order_no'] = $result['out_trade_no'];
+//            $charge['amount'] = $result['total_fee'];
+//            $charge['transaction_no'] = $result['transaction_id'];
+//            $charge['time_paid'] = strtotime($result['time_end']);
+//            $charge['details'] = json_encode($result);
+//            $charge['channel'] = 'wx_lite';
+//
+//            $order = $this->payment->paySuccess($charge);
         }
 
         if (Order::STATUS_PAY == $order->status) {
