@@ -486,11 +486,16 @@ class ShoppingController extends Controller
             ];
 
             //TODO 附加服务待优化
-            $item_meta['attribute_value_ids'] = $item['attribute_value_ids'] ? $item['attribute_value_ids'] : null;
-
-            $optionServices = $this->getOptionService($item['attribute_value_ids']);
-            $option_services_price = $optionServices->sum('attribute_value');
-            $item_meta['option_service'] = $item['attribute_value_ids'] ? $optionServices : null;
+            if ($item['attribute_value_ids']) {
+                $optionServices = $this->getOptionService($item['attribute_value_ids']);
+                $option_services_price = $optionServices->sum('attribute_value');
+                $item_meta['attribute_value_ids'] = $item['attribute_value_ids'];
+                $item_meta['option_service'] =  $optionServices;
+            } else {
+                $option_services_price = 0;
+                $item_meta['attribute_value_ids'] = null;
+                $item_meta['option_service'] = null;
+            }
 
             $orderItem = new OrderItem([
                 'quantity' => $item->qty,
