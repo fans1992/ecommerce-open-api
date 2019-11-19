@@ -481,8 +481,8 @@ class ShoppingController extends Controller
                 'image' => $item->img,
                 'detail_id' => $item->model->detail_id,
                 'specs_text' => $item->model->specs_text,
-                'service_price' => $item->service_price,
-                'official_price' => $item->official_price,
+                'service_price' => $item->service_price * 100,
+                'official_price' => $item->official_price * 100,
             ];
 
             //TODO 附加服务待优化
@@ -499,7 +499,7 @@ class ShoppingController extends Controller
 
             $orderItem = new OrderItem([
                 'quantity' => $item->qty,
-                'unit_price' => $item->model->sell_price + $option_services_price,
+                'unit_price' => $item->model->sell_price + $option_services_price / 100,
                 'item_id' => $item->id,
                 'type' => $item->__model,
                 'item_name' => $item->name,
@@ -594,7 +594,7 @@ class ShoppingController extends Controller
             $optionService[] = [
                 'attribute_id' => $attribute->id,
                 'attribute_value_id' => $id,
-                'attribute_value' => $attributeValue['name'],
+                'attribute_value' => $attributeValue['name'] * 100,
                 'name' => $attribute['name'],
             ];
         }
