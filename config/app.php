@@ -125,6 +125,19 @@ return [
 
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Others
+    |--------------------------------------------------------------------------
+    |
+    | Here you may configure the other settings for your application.
+    |
+    */
+
+    'ngrok_url' => env('NGROK_URL'),
+
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
