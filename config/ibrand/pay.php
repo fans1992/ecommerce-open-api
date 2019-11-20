@@ -36,7 +36,7 @@ return [
                 // 支付宝分配的 APPID
                 'app_id' => env('ALI_PAYMENT_APP_ID', ''),
                 // 支付宝异步通知地址
-                'notify_url' => 'http://requestbin.net/r/q5zu6uq6',
+                'notify_url' => 'http://8d447e44.ngrok.io/api/alipay/notify',
                 // 支付成功后同步通知地址
                 'return_url' => 'https://www.baidu.com',
                 // 阿里公共密钥，验证签名时使用
