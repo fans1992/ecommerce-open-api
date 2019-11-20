@@ -201,9 +201,8 @@ class ShoppingController extends Controller
 
                 $order->accept_name = $contact->accept_name;
                 $order->mobile = $contact->mobile;
-                $order->contact_email = $contact->contact_email;
-//                $order->address = $contact->address;
-//                $order->address_name = $contact->address_name;
+                $order->address = $contact->address;
+                $order->address_name = $contact->address_name;
             }
 
             //5. 保存订单状态
