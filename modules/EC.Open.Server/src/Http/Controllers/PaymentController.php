@@ -67,7 +67,7 @@ class PaymentController extends Controller
             'subject' => $order->getSubject(),
             'body' => $order->getSubject(),
             'extra' => [
-                'success_url' => request('extra')['success_url'],
+                'successUrl' => request('extra')['success_url'],
             ],
         ]);
 
@@ -203,7 +203,7 @@ class PaymentController extends Controller
         }
 
         if (Order::STATUS_PAY == $order->status) {
-            return $this->success(['order' => $order, 'payment' => '微信支付']);
+            return $this->success(['order' => $order, 'payment' => '支付宝支付']);
         }
 
         return $this->failed('支付失败');
