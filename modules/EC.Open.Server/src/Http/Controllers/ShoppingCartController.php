@@ -3,17 +3,18 @@
 /*
  * This file is part of ibrand/EC-Open-Server.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace iBrand\EC\Open\Server\Http\Controllers;
+namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 
 use Cart;
-use iBrand\Component\Product\Models\Goods;
-use iBrand\Component\Product\Models\Product;
+use GuoJiangClub\Component\Product\Models\AttributeValue;
+use GuoJiangClub\Component\Product\Models\Goods;
+use GuoJiangClub\Component\Product\Models\Product;
 
 class ShoppingCartController extends Controller
 {
@@ -40,9 +41,14 @@ class ShoppingCartController extends Controller
             } else {
                 $item['stock_qty'] = 0;
             }
+
+            //TODO 附加服务待优化
+            $item['option_service'] = isset($item['attribute_value_ids']) ? $this->getOptionService($item['attribute_value_ids']) : null;
+            $item['specs_text'] = $item->model->specs_text;
         }
 
-        return $this->success($carts);
+        $cartsList = array_values($carts->all());
+        return $this->success($cartsList);
     }
 
     public function store()
@@ -69,6 +75,11 @@ class ShoppingCartController extends Controller
                 continue;
             }
 
+            //TODO 设置商品单价
+            $option_services = explode(',', $cart['attributes']['attribute_value_ids']);
+            $option_services_price = AttributeValue::query()->whereIn('id', $option_services)->sum('name');
+            $cart['price'] += $option_services_price;
+
             $item = Cart::add($cart['id'], $cart['name'], $cart['qty'], $cart['price'], $attributes);
 
             if (!$item || !$item->model) {
@@ -87,13 +98,19 @@ class ShoppingCartController extends Controller
             } else {
                 Cart::remove($item->rawId());
 
-                return $this->failed( '商品库存不足,请重新选择');
+                return $this->failed('商品库存不足,请重新选择');
             }
 
-            Cart::update($item->rawId(), ['status' => 'online', 'market_price' => $item->model->market_price, 'channel' => 'normal']);
+            Cart::update($item->rawId(), [
+                'status' => 'online',
+                'channel' => 'normal',
+                'service_price_total' => sprintf('%.2f', $item->service_price * $item->qty),
+                'official_price_total' => sprintf('%.2f', $item->official_price * $item->qty),
+            ]);
         }
 
-        return $this->success(Cart::all());
+        $cartsList = array_values(Cart::all()->all());
+        return $this->success($cartsList);
     }
 
     public function update($id)
@@ -143,4 +160,33 @@ class ShoppingCartController extends Controller
 
         return $this->getIsInSaleQty($item, $qty - 1);
     }
+
+    /**
+     * 获取附加服务
+     *
+     * @param $ids
+     * @return \Illuminate\Support\Collection
+     */
+    private function getOptionService($ids)
+    {
+        if (!$ids) {
+            return null;
+        }
+
+        $optionServiceIds = explode(',', $ids);
+        $optionService = [];
+        foreach ($optionServiceIds as $id) {
+            $attributeValue = AttributeValue::query()->find($id);
+            $attribute = $attributeValue->attribute;
+            $optionService[] = [
+                'attribute_id' => $attribute->id,
+                'attribute_value_id' => $id,
+                'attribute_value' => $attributeValue['name'],
+                'name' => $attribute['name'],
+            ];
+        }
+
+        return collect($optionService);
+    }
+
 }

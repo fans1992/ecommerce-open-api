@@ -3,34 +3,39 @@
 /*
  * This file is part of ibrand/EC-Open-Server.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace iBrand\EC\Open\Server\Http\Controllers;
+namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 
 use Carbon\Carbon;
 use Cart;
 use DB;
-use iBrand\Component\Address\RepositoryContract as AddressRepository;
-use iBrand\Component\Discount\Applicators\DiscountApplicator;
-use iBrand\Component\Discount\Models\Coupon;
-use iBrand\Component\Discount\Models\Discount;
-use iBrand\Component\Discount\Repositories\CouponRepository;
-use iBrand\Component\Order\Models\Comment;
-use iBrand\Component\Order\Models\Order;
-use iBrand\Component\Order\Models\OrderItem;
-use iBrand\Component\Order\Repositories\OrderRepository;
-use iBrand\Component\Point\Repository\PointRepository;
-use iBrand\Component\Product\Repositories\GoodsRepository;
-use iBrand\Component\Product\Repositories\ProductRepository;
-use iBrand\Component\Shipping\Models\Shipping;
-use iBrand\EC\Open\Core\Applicators\PointApplicator;
-use iBrand\EC\Open\Core\Processor\OrderProcessor;
-use iBrand\EC\Open\Core\Services\DiscountService;
+use GuoJiangClub\Component\Address\RepositoryContract as AddressRepository;
+use GuoJiangClub\Component\Discount\Applicators\DiscountApplicator;
+use GuoJiangClub\Component\Discount\Models\Coupon;
+use GuoJiangClub\Component\Discount\Models\Discount;
+use GuoJiangClub\Component\Discount\Repositories\CouponRepository;
+use GuoJiangClub\Component\Order\Models\Comment;
+use GuoJiangClub\Component\Order\Models\Order;
+use GuoJiangClub\Component\Order\Models\OrderItem;
+use GuoJiangClub\Component\Order\Repositories\OrderRepository;
+use GuoJiangClub\Component\Point\Repository\PointRepository;
+use GuoJiangClub\Component\Product\Models\AttributeValue;
+use GuoJiangClub\Component\Product\Repositories\GoodsRepository;
+use GuoJiangClub\Component\Product\Repositories\ProductRepository;
+use GuoJiangClub\Component\Shipping\Models\Shipping;
+use GuoJiangClub\EC\Open\Core\Applicators\PointApplicator;
+use GuoJiangClub\EC\Open\Core\Processor\OrderProcessor;
+use GuoJiangClub\EC\Open\Core\Services\DiscountService;
 use Illuminate\Support\Collection;
+use GuoJiangClub\Component\Product\Models\Goods;
+use GuoJiangClub\Component\Product\Models\Product;
+use iBrand\Shoppingcart\Item;
+use Log;
 
 class ShoppingController extends Controller
 {
@@ -74,7 +79,10 @@ class ShoppingController extends Controller
     {
         $user = request()->user();
 
-        $cartItems = $this->getSelectedItemFromCart();
+        $checkoutType = $this->getCheckoutType();
+
+        //1.获取购物车条目
+        $cartItems = call_user_func(array($this, 'getSelectedItemFrom' . $checkoutType));
 
         if (0 == $cartItems->count()) {
             return $this->failed('未选中商品，无法提交订单');
@@ -85,7 +93,8 @@ class ShoppingController extends Controller
         //2. 生成临时订单对象
         $order = $this->buildOrderItemsFromCartItems($cartItems, $order);
 
-        $defaultAddress = $this->addressRepository->getDefaultByUser(request()->user()->id);
+//        $defaultAddress = $this->addressRepository->getDefaultByUser(request()->user()->id);
+        $defaultContact = $this->addressRepository->getDefaultByUser(request()->user()->id);
 
         if (!$order->save()) {
             return $this->failed('订单提交失败，请重试');
@@ -103,11 +112,14 @@ class ShoppingController extends Controller
         //6.生成运费
         $order->payable_freight = 0;
 
+        $discountGroup = $this->discountService->getOrderDiscountGroup($order, new Collection($discounts), new Collection($coupons));
+
         return $this->success([
             'order' => $order,
             'discounts' => $discounts,
             'coupons' => $coupons,
-            'address' => $defaultAddress,
+            'order_contact' => $defaultContact,
+            'discountGroup' => $discountGroup,
             'orderPoint' => $orderPoint,
             'best_discount_id' => $bestDiscountId,
             'best_coupon_id' => $bestCouponID,
@@ -183,17 +195,18 @@ class ShoppingController extends Controller
                 }
             }
 
-            //5. 保存收获地址信息。
-            if (request('address_id') && $address = $this->addressRepository->find(request('address_id'))) {
-                $order->accept_name = $address->accept_name;
-                $order->mobile = $address->mobile;
-                $order->address = $address->address;
-                $order->address_name = $address->address_name;
+            //5. 保存订单联系人信息
+            if ($inputContact = request('order_contact')) {
+                $contact = $this->addressRepository->firstOrCreate(array_merge($inputContact, ['user_id' => request()->user()->id]));
+
+                $order->accept_name = $contact->accept_name;
+                $order->mobile = $contact->mobile;
+                $order->address = $contact->address;
+                $order->address_name = $contact->address_name;
             }
 
             //5. 保存订单状态
             $this->orderProcessor->submit($order);
-
 
             //6. remove goods store.
             foreach ($order->getItems() as $item) {
@@ -468,10 +481,29 @@ class ShoppingController extends Controller
                 'image' => $item->img,
                 'detail_id' => $item->model->detail_id,
                 'specs_text' => $item->model->specs_text,
+                'service_price' => $item->service_price * 100,
+                'official_price' => $item->official_price * 100,
             ];
 
-            $orderItem = new OrderItem(['quantity' => $item->qty, 'unit_price' => $item->model->sell_price,
-                'item_id' => $item->id, 'type' => $item->__model, 'item_name' => $item->name, 'item_meta' => $item_meta,
+            //TODO 附加服务待优化
+            if ($item['attribute_value_ids']) {
+                $optionServices = $this->getOptionService($item['attribute_value_ids']);
+                $option_services_price = $optionServices->sum('attribute_value');
+                $item_meta['attribute_value_ids'] = $item['attribute_value_ids'];
+                $item_meta['option_service'] =  $optionServices;
+            } else {
+                $option_services_price = 0;
+                $item_meta['attribute_value_ids'] = null;
+                $item_meta['option_service'] = null;
+            }
+
+            $orderItem = new OrderItem([
+                'quantity' => $item->qty,
+                'unit_price' => $item->model->sell_price + $option_services_price / 100,
+                'item_id' => $item->id,
+                'type' => $item->__model,
+                'item_name' => $item->name,
+                'item_meta' => $item_meta,
             ]);
 
             $orderItem->recalculateUnitsTotal();
@@ -541,5 +573,71 @@ class ShoppingController extends Controller
         }
 
         return true;
+    }
+
+    private function getCheckoutType()
+    {
+        if ($ids = request('cart_ids') AND count($ids) > 0)
+            return 'Cart';
+        if (request('product_id'))
+            return 'Product';
+        return 'Cart';
+    }
+
+    private function getOptionService($ids)
+    {
+        $optionServiceIds = explode(',', $ids);
+        $optionService = [];
+        foreach ($optionServiceIds as $id) {
+            $attributeValue = AttributeValue::query()->find($id);
+            $attribute = $attributeValue->attribute;
+            $optionService[] = [
+                'attribute_id' => $attribute->id,
+                'attribute_value_id' => $id,
+                'attribute_value' => $attributeValue['name'] * 100,
+                'name' => $attribute['name'],
+            ];
+        }
+
+        return collect($optionService);
+    }
+
+    private function getSelectedItemFromProduct()
+    {
+        $cartItems = new Collection();
+        $productId = request('product_id');
+        $__raw_id = md5(time() . request('product_id'));
+        $item = request()->all();
+        $input = ['__raw_id' => $__raw_id,
+            'id' => $productId,    //如果是SKU，表示SKU id，否则是SPU ID
+            'img' => isset($item['attributes']['img']) ? $item['attributes']['img'] : '',
+            'qty' => request('qty'),
+            'total' => isset($item['total']) ? $item['total'] : '',
+        ];
+        if (isset($item['attributes']['sku'])) {
+            $product = Product::query()->find($productId);
+
+            $input['price'] = $product->sell_price;
+            $input['type'] = 'sku';
+            $input['__model'] = Product::class;
+
+            $input += $item['attributes'];
+//            $input['name'] = $product->name;
+//            $input['type'] = isset($item['attributes']['type']) ? $item['attributes']['type'] : [];
+//            $input['time'] = isset($item['attributes']['time']) ? $item['attributes']['time'] : [];
+//            $input['com_id'] = isset($item['attributes']['com_id']) ? $item['attributes']['com_id'] : [];
+        } else {
+            $goods = Goods::query()->find($productId);
+            $input['name'] = $goods->name;
+            $input['price'] = $goods->sell_price;
+            $input['size'] = isset($item['size']) ? $item['size'] : '';
+            $input['color'] = isset($item['color']) ? $item['color'] : '';
+            $input['type'] = 'spu';
+            $input['__model'] = Goods::class;
+            $input['com_id'] = $item['id'];
+        }
+        $data = new Item(array_merge($input, $item));
+        $cartItems->put($__raw_id, $data);
+        return $cartItems;
     }
 }

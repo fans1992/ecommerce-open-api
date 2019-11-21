@@ -3,15 +3,15 @@
 /*
  * This file is part of ibrand/member-backend.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace iBrand\EC\Open\Backend\Member;
+namespace GuoJiangClub\EC\Open\Backend\Member;
 
-use iBrand\EC\Open\Backend\Member\Seeds\MemberBackendTablesSeeder;
+use GuoJiangClub\EC\Open\Backend\Member\Seeds\MemberBackendTablesSeeder;
 use Encore\Admin\Admin;
 use Encore\Admin\Extension;
 use Illuminate\Support\Facades\Artisan;

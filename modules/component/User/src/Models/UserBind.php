@@ -3,13 +3,13 @@
 /*
  * This file is part of ibrand/user.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace iBrand\Component\User\Models;
+namespace GuoJiangClub\Component\User\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,7 +17,13 @@ class UserBind extends Model
 {
     protected $guarded = ['id'];
 
-    const TYPE_WECHAT = 'wechat';
+    protected $casts = [
+        'subscribe' => 'boolean', // subscribe 是一个布尔类型的字段
+    ];
+
+    const WECHAT_FLAG = 'weChatFlag_';
+
+    const QR_URL = 'qrCode_';
 
     /**
      * Address constructor.
@@ -28,7 +34,12 @@ class UserBind extends Model
     {
         parent::__construct($attributes);
 
-        $this->setTable(config('ibrand.app.database.prefix', 'ibrand_').'user_bind');
+        $this->setTable(config('ibrand.app.database.prefix', 'ibrand_') . 'user_bind');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(\GuoJiangClub\EC\Open\Core\Auth\User::class, 'user_id', 'id');
     }
 
     public static function ByOpenIdAndType($openId, $openType)

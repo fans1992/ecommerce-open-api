@@ -3,17 +3,17 @@
 /*
  * This file is part of ibrand/discount.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace iBrand\EC\Open\Core\Discount\Checkers;
+namespace GuoJiangClub\EC\Open\Core\Discount\Checkers;
 
-use iBrand\Component\Discount\Contracts\DiscountContract;
-use iBrand\Component\Discount\Checkers\DiscountEligibilityChecker as BaseDiscountEligibilityChecker ;
-use iBrand\EC\Open\Core\Discount\Contracts\DiscountItemContract;
+use GuoJiangClub\Component\Discount\Contracts\DiscountContract;
+use GuoJiangClub\Component\Discount\Checkers\DiscountEligibilityChecker as BaseDiscountEligibilityChecker ;
+use GuoJiangClub\EC\Open\Core\Discount\Contracts\DiscountItemContract;
 
 class DiscountEligibilityChecker extends BaseDiscountEligibilityChecker
 {

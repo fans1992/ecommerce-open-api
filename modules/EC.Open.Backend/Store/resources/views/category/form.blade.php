@@ -1,7 +1,25 @@
+    <input type="hidden" name="id" value="{{$category->id}}">
     <div class="form-group">
         {!! Form::label('name','分类名称：', ['class' => 'col-lg-2 control-label']) !!}
         <div class="col-lg-9">
-            {!! Form::text('name', null, ['class' => 'form-control', 'placeholder' => '']) !!}
+            {!! Form::text('name', null, ['class' => 'form-control', 'placeholder' => '请填写分类名称']) !!}
+        </div>
+    </div>
+
+    <div class="form-group">
+        {!! Form::label('description','分类描述：', ['class' => 'col-lg-2 control-label']) !!}
+        <div class="col-lg-9">
+            {!! Form::text('description', null, ['class' => 'form-control', 'placeholder' => '请填写分类描述']) !!}
+        </div>
+    </div>
+
+    <div class="form-group">
+        {!! Form::label('image','分类图片：', ['class' => 'col-lg-2 control-label']) !!}
+        <div class="col-md-9">
+            <input type="hidden" name="image" value="{{$category->image}}"/>
+            <img class="banner-image" src="{{$category->image}}">
+            <div id="filePicker">选择图片</div>
+
         </div>
     </div>
 
@@ -39,5 +57,8 @@
         </div>
     </div>
 
+    {!! Html::script(env("APP_URL").'/vendor/libs/jquery.form.min.js') !!}
+    {!! Html::script(env("APP_URL").'/vendor/libs/webuploader-0.1.5/webuploader.js') !!}
+    @include('store-backend::category.script')
 
 

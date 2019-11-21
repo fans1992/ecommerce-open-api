@@ -3,15 +3,15 @@
 /*
  * This file is part of ibrand/discount.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace iBrand\Component\Discount\Policies;
+namespace GuoJiangClub\Component\Discount\Policies;
 
-use iBrand\Component\Discount\Models\Coupon;
+use GuoJiangClub\Component\Discount\Models\Coupon;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Foundation\Auth\User;
 

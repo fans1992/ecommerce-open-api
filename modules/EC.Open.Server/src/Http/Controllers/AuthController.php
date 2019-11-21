@@ -3,19 +3,19 @@
 /*
  * This file is part of ibrand/EC-Open-Server.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace iBrand\EC\Open\Server\Http\Controllers;
+namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 
 use Carbon\Carbon;
-use iBrand\Component\User\Repository\UserBindRepository;
-use iBrand\Component\User\Repository\UserRepository;
-use iBrand\EC\Open\Core\Auth\User;
-use iBrand\Component\User\UserService;
+use GuoJiangClub\Component\User\Repository\UserBindRepository;
+use GuoJiangClub\Component\User\Repository\UserRepository;
+use GuoJiangClub\EC\Open\Core\Auth\User;
+use GuoJiangClub\Component\User\UserService;
 use iBrand\Sms\Facade as Sms;
 use Illuminate\Http\Request;
 use Validator;
@@ -40,20 +40,29 @@ class AuthController extends Controller
         $this->userService = $userService;
     }
 
-    public function smsLogin()
+    /**
+     * 验证码登录
+     *
+     * @param Request $request
+     * @return \Dingo\Api\Http\Response|mixed
+     */
+    public function smsLogin(Request $request)
     {
-        $mobile = request('mobile');
-        $code = request('code');
+        $mobile = $request->input('mobile');
+        $code = $request->input('code');
 
         if (!Sms::checkCode($mobile, $code)) {
             return $this->failed('验证码错误');
         }
 
-        $is_new = false;
-
         if (!$user = $this->userRepository->getUserByCredentials(['mobile' => $mobile])) {
             $user = $this->userRepository->create(['mobile' => $mobile]);
-            $is_new = true;
+        }
+
+        //微信登录绑定手机号
+        if ($request->has('socialite_key')) {
+            $open_id = decrypt($request->input('socialite_key'));
+            $this->userBindRepository->bindToUser($open_id, $user->id);
         }
 
         if (User::STATUS_FORBIDDEN == $user->status) {
@@ -66,11 +75,13 @@ class AuthController extends Controller
         //2. bind user bind data to user.
 //        $this->userService->bindPlatform($user->id, request('open_id'), config('wechat.mini_program.default.app_id'), 'miniprogram');
 
+        $wechatUser = $this->userService->checkWeChatUser($user->id);
+
         return $this->success([
             'token_type' => 'Bearer',
             'access_token' => $tokenResult->accessToken,
             'expires_at' => Carbon::parse($tokenResult->token->expires_at)->toDateTimeString(),
-            'is_new_user' => $is_new
+            'wechat_user' => $wechatUser,
         ]);
     }
 
@@ -114,7 +125,8 @@ class AuthController extends Controller
         return $this->success([
             'token_type' => 'Bearer',
             'access_token' => $tokenResult->accessToken,
-            'expires_at' => Carbon::parse($tokenResult->token->expires_at)->toDateTimeString()
+            'expires_at' => Carbon::parse($tokenResult->token->expires_at)->toDateTimeString(),
+            'wechat_user' => false,
         ], 201);
 
     }
@@ -147,10 +159,13 @@ class AuthController extends Controller
         $tokenResult = $user->createToken('Personal Access Token');
         $tokenResult->token->save();
 
+        $wechatUser = $this->userService->checkWeChatUser($user->id);
+
         return $this->success([
             'token_type' => 'Bearer',
             'access_token' => $tokenResult->accessToken,
-            'expires_at' => Carbon::parse($tokenResult->token->expires_at)->toDateTimeString()
+            'expires_at' => Carbon::parse($tokenResult->token->expires_at)->toDateTimeString(),
+            'wechat_user' => $wechatUser,
         ]);
     }
 

@@ -77,7 +77,7 @@
         right: 25px;
         left: 226px;
         width: auto;
-        padding: 20px 0;
+        padding: 15px 0;
         background: #ffc;
         margin: 50px 0;
         z-index: 999;
@@ -96,6 +96,8 @@
 
         <li class=""><a data-id="5" class="app-action" aria-expanded="false">橱窗图</a></li>
         <li class=""><a data-id="6" class="app-action" aria-expanded="false">SEO设置</a></li>
+        <li class=""><a data-id="7" class="app-action" aria-expanded="false">热门问答</a></li>
+
     </ul>
     {!! Form::open( [ 'url' => [route('admin.goods.store')], 'method' => 'POST', 'id' => 'base-form','class'=>'form-horizontal'] ) !!}
     <div class="tab-content">
@@ -110,11 +112,11 @@
                                value="{{$goods_info->name}}">
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group hidden">
                     <label class="col-sm-2 control-label">商品品牌：</label>
                     <div class="col-sm-10">
                         <select class="form-control" name="brand_id" id="brand_id">
-                            <option value="">请选择</option>
+                            <option value="1">请选择</option>
                             @foreach($brands as $item)
                                 <?php
                                 $brand_select = $goods_info->brand_id == $item->id ? 'selected' : '';
@@ -149,10 +151,18 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">市场价：</label>
+                    <label class="col-sm-2 control-label">服务费：</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="market_price" placeholder=""
-                               value="{{$goods_info->market_price}}">
+                        <input type="text" class="form-control" name="service_price" placeholder=""
+                               value="{{$goods_info->service_price}}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">官费：</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="official_price" placeholder=""
+                               value="{{$goods_info->official_price}}">
                     </div>
                 </div>
 
@@ -175,7 +185,7 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+<!--                <div class="form-group">
                     <label class="col-sm-2 control-label">是否推荐：</label>
                     <div class="col-sm-10">
                         <?php $commend = $goods_info->is_commend == 1 ? 'checked' : '';
@@ -185,7 +195,7 @@
                         <input name="is_commend" type="radio" value="0" {{$uncommend}}/> 否
                     </div>
                 </div>
-
+-->
                 <div class="form-group">
                     <label class="col-sm-2 control-label">商品模型：</label>
                     <div class="col-sm-10">
@@ -241,6 +251,13 @@
                                 </tbody>
                             @endif
                         </table>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">服务亮点：</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="service_highlights" placeholder="">
                     </div>
                 </div>
 
@@ -343,12 +360,14 @@
             </div>
 
             <div class="app-actions">
-                <a data-id="6" data-action="next" class="btn btn-success app-action-prev">«上一步</a>
-                <a data-id="8" data-action="next" class="btn btn-success app-action">下一步»</a>
+                <a data-id="5" data-action="next" class="btn btn-success app-action-prev">«上一步</a>
+                <a data-id="7" data-action="next" class="btn btn-success app-action">下一步»</a>
                 <input type="submit" class="btn btn-success app-action-save" data-toggle="form-submit" data-target="#base-form"
                        value="保存">
             </div>
         </div><!-- /.tab-pane -->
+
+        @include('store-backend::commodity.includes.questions_answers')
 
         <div class="popup">
             <div class="sortContainer">

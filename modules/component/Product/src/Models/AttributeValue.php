@@ -3,13 +3,13 @@
 /*
  * This file is part of ibrand/product.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace iBrand\Component\Product\Models;
+namespace GuoJiangClub\Component\Product\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,5 +22,10 @@ class AttributeValue extends Model
         parent::__construct($attributes);
 
         $this->setTable(config('ibrand.app.database.prefix', 'ibrand_').'goods_attribute_value');
+    }
+
+    public function attribute()
+    {
+        return $this->belongsTo(Attribute::class, 'attribute_id', 'id');
     }
 }

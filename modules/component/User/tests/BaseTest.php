@@ -3,19 +3,19 @@
 /*
  * This file is part of ibrand/balace.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace iBrand\Component\User\Test;
+namespace GuoJiangClub\Component\User\Test;
 
-use iBrand\Component\User\Models\User;
-use iBrand\Component\User\Models\UserBind;
+use GuoJiangClub\Component\User\Models\User;
+use GuoJiangClub\Component\User\Models\UserBind;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use iBrand\Component\User\Repository\UserRepository;
-use iBrand\Component\User\Repository\UserBindRepository;
+use GuoJiangClub\Component\User\Repository\UserRepository;
+use GuoJiangClub\Component\User\Repository\UserBindRepository;
 use Orchestra\Testbench\TestCase;
 
 /**
@@ -65,7 +65,7 @@ abstract class BaseTest extends TestCase
 	{
 		return [
 			\Orchestra\Database\ConsoleServiceProvider::class,
-			\iBrand\Component\User\UserServiceProvider::class,
+			\GuoJiangClub\Component\User\UserServiceProvider::class,
 		];
 	}
 

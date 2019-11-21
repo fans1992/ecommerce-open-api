@@ -1,19 +1,19 @@
 <?php
 
-namespace iBrand\EC\Open\Backend\Store\Service;
+namespace GuoJiangClub\EC\Open\Backend\Store\Service;
 
-use iBrand\EC\Open\Backend\Store\Model\AttributeValue;
-use iBrand\EC\Open\Backend\Store\Model\Brand;
-use iBrand\EC\Open\Backend\Store\Model\Category;
-use iBrand\EC\Open\Backend\Store\Model\Spec;
-use iBrand\EC\Open\Backend\Store\Model\SpecsValue;
-use iBrand\EC\Open\Backend\Store\Repositories\CategoryRepository;
-use iBrand\EC\Open\Backend\Store\Model\Attribute;
-use iBrand\EC\Open\Backend\Store\Model\Models;
-use iBrand\EC\Open\Backend\Store\Repositories\GoodsRepository;
-use iBrand\EC\Open\Backend\Store\Repositories\ProductRepository;
-use iBrand\EC\Open\Backend\Store\Repositories\SpecRepository;
-use iBrand\EC\Open\Backend\Store\Repositories\GoodsCategoryRepository;
+use GuoJiangClub\EC\Open\Backend\Store\Model\AttributeValue;
+use GuoJiangClub\EC\Open\Backend\Store\Model\Brand;
+use GuoJiangClub\EC\Open\Backend\Store\Model\Category;
+use GuoJiangClub\EC\Open\Backend\Store\Model\Spec;
+use GuoJiangClub\EC\Open\Backend\Store\Model\SpecsValue;
+use GuoJiangClub\EC\Open\Backend\Store\Repositories\CategoryRepository;
+use GuoJiangClub\EC\Open\Backend\Store\Model\Attribute;
+use GuoJiangClub\EC\Open\Backend\Store\Model\Models;
+use GuoJiangClub\EC\Open\Backend\Store\Repositories\GoodsRepository;
+use GuoJiangClub\EC\Open\Backend\Store\Repositories\ProductRepository;
+use GuoJiangClub\EC\Open\Backend\Store\Repositories\SpecRepository;
+use GuoJiangClub\EC\Open\Backend\Store\Repositories\GoodsCategoryRepository;
 
 class GoodsService
 {
@@ -109,7 +109,8 @@ class GoodsService
             $imgdata[] = ['sort' => $val['sort'],
                 'url' => $val['url'],
                 'code' => $key,
-                'is_default' => $default
+                'is_default' => $default,
+                'type' => $val['type'],
             ];
         }
 
@@ -127,6 +128,26 @@ class GoodsService
         }
 
         return [$imgdata, $goodsDefaultImg];
+    }
+
+    /**
+     * 处理问答数据
+     *
+     * @param $questionlist
+     * @return array
+     */
+    public function handleQuestion($questionlist)
+    {
+        $questionData = [];
+        foreach ($questionlist as $key => $val) {
+            $questionData[] = ['sort' => $val['sort'],
+                'question' => $val['question'],
+                'code' => $key,
+                'answer' => $val['answer'],
+            ];
+        }
+
+        return $questionData;
     }
 
     /**
@@ -433,7 +454,9 @@ class GoodsService
                 $skuData[$key]['sku'] = $item->sku;
                 $skuData[$key]['is_show'] = $item->is_show;
                 $skuData[$key]['specID'] = $item->spec_ids;
-                $skuData[$key]['market_price'] = $item->market_price ? $item->market_price : $goods->market_price;
+//                $skuData[$key]['market_price'] = $item->market_price ? $item->market_price : $goods->market_price;
+                $skuData[$key]['service_price'] = $item->service_price;
+                $skuData[$key]['official_price'] = $item->official_price;
             }
 
             foreach ($goods->specValue as $val) {
@@ -546,6 +569,10 @@ class GoodsService
         $imgdata = $images[0];
         $goodsUpdateData['img'] = $images[1];
 
+        //问题数据
+        $questionlist = isset($postData['_questionlist']) ? $postData['_questionlist'] : [];
+        $questionData = $this->handleQuestion($questionlist);
+
         //属性
         $goodsAttrData = $this->attrArray($goodsAttrData, $goodsUpdateData['model_id']);
 
@@ -566,9 +593,9 @@ class GoodsService
 
         $goodsUpdateData['min_price'] = $goodsUpdateData['sell_price'];
         $goodsUpdateData['max_price'] = $goodsUpdateData['sell_price'];
-        $goodsUpdateData['min_market_price'] = $goodsUpdateData['market_price'];
+        $goodsUpdateData['min_market_price'] = $goodsUpdateData['sell_price'];
 
-        return $data = [$goodsUpdateData, $goodsAttrData, $postData, $imgdata, $catedata, $goodsSpecData, $goodsSpecIdsRelation, $goodsPoint];
+        return $data = [$goodsUpdateData, $goodsAttrData, $postData, $imgdata, $catedata, $goodsSpecData, $goodsSpecIdsRelation, $goodsPoint, $questionData];
     }
 
     /**

@@ -3,18 +3,18 @@
 /*
  * This file is part of ibrand/product.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace iBrand\Component\Product;
+namespace GuoJiangClub\Component\Product;
 
-use iBrand\Component\Product\Repositories\Eloquent\GoodsRepositoryEloquent;
-use iBrand\Component\Product\Repositories\Eloquent\ProductRepositoryEloquent;
-use iBrand\Component\Product\Repositories\GoodsRepository;
-use iBrand\Component\Product\Repositories\ProductRepository;
+use GuoJiangClub\Component\Product\Repositories\Eloquent\GoodsRepositoryEloquent;
+use GuoJiangClub\Component\Product\Repositories\Eloquent\ProductRepositoryEloquent;
+use GuoJiangClub\Component\Product\Repositories\GoodsRepository;
+use GuoJiangClub\Component\Product\Repositories\ProductRepository;
 use Illuminate\Support\ServiceProvider;
 
 class ProductServiceProvider extends ServiceProvider

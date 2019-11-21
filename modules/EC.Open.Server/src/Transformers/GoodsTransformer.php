@@ -3,15 +3,15 @@
 /*
  * This file is part of ibrand/EC-Open-Server.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace iBrand\EC\Open\Server\Transformers;
+namespace GuoJiangClub\EC\Open\Server\Transformers;
 
-use iBrand\Component\Order\Repositories\CommentRepository;
+use GuoJiangClub\Component\Order\Repositories\CommentRepository;
 
 class GoodsTransformer extends BaseTransformer
 {
@@ -28,7 +28,7 @@ class GoodsTransformer extends BaseTransformer
      * @var array
      */
     protected $availableIncludes = [
-        'products', 'photos', 'oneComment',
+        'products', 'photos', 'oneComment', 'questions'
     ];
 
     public static $excludeable = [
@@ -72,9 +72,23 @@ class GoodsTransformer extends BaseTransformer
 
         return $this->collection($comments, new CommentTransformer(), '');
     }
+
+    public function includeQuestions($model)
+    {
+        $questions = $model->questions()->orderByDesc('sort')->get();
+        return $this->collection($questions, new GoodsQustionTransformer(), '');
+    }
 }
 
 class GoodsPhotoTransformer extends BaseTransformer
+{
+    public function transformData($model)
+    {
+        return $model->toArray();
+    }
+}
+
+class GoodsQustionTransformer extends BaseTransformer
 {
     public function transformData($model)
     {

@@ -1,5 +1,5 @@
 <?php
-namespace iBrand\EC\Open\Backend\Album\Providers;
+namespace GuoJiangClub\EC\Open\Backend\Album\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -8,7 +8,7 @@ use Event;
 
 class AlbumBackendServiceProvider extends ServiceProvider
 {
-    protected $namespace = 'iBrand\EC\Open\Backend\Album\Http\Controllers';
+    protected $namespace = 'GuoJiangClub\EC\Open\Backend\Album\Http\Controllers';
 
 
     /**
@@ -33,13 +33,13 @@ class AlbumBackendServiceProvider extends ServiceProvider
             $this->registerMigrations();
         }
 
-        Event::subscribe('iBrand\EC\Open\Backend\Album\Listeners\UploadListeners');
+        Event::subscribe('GuoJiangClub\EC\Open\Backend\Album\Listeners\UploadListeners');
     }
 
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__.'/../config.php', 'dmp-file-manage'
+            __DIR__.'/../config.php', 'file-manage'
         );
     }
 
@@ -49,7 +49,7 @@ class AlbumBackendServiceProvider extends ServiceProvider
     protected function loadConfig()
     {
         $this->publishes([
-            __DIR__.'/../config.php' => config_path('dmp-file-manage.php'),
+            __DIR__.'/../config.php' => config_path('ibrand/file-manage.php'),
         ]);
     }
 

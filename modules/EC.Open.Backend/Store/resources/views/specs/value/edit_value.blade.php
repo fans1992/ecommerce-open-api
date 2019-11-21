@@ -24,14 +24,14 @@
                            required>
                 </div>
             </div>
-            @if($specValue->spec_id==2)
-                <div class="form-group">
-                    {!! Form::label('rgb','颜色值：', ['class' => 'col-sm-3 control-label']) !!}
-                    <div class="col-sm-9" id="color">
+            {{--@if($specValue->spec_id==2)--}}
+                {{--<div class="form-group">--}}
+                    {{--{!! Form::label('rgb','颜色值：', ['class' => 'col-sm-3 control-label']) !!}--}}
+                    {{--<div class="col-sm-9" id="color">--}}
 
-                    </div>
-                </div>
-            @endif
+                    {{--</div>--}}
+                {{--</div>--}}
+            {{--@endif--}}
         </div>
 
         {!! Form::close() !!}
@@ -57,15 +57,15 @@
 
     <script>
         $(document).ready(function () {
-             @if($specValue->spec_id==2)
-            var input = document.createElement('input');
-            input.setAttribute('name', 'rgb');
-            input.setAttribute('value', '{{$specValue->rgb}}');
-            input.setAttribute('class', 'form-control');
-            var picker = new jscolor(input);
-            picker.fromString('{{$specValue->rgb}}');
-            $('#color').append(input);
-            @endif
+             {{--@if($specValue->spec_id==2)--}}
+            {{--var input = document.createElement('input');--}}
+            {{--input.setAttribute('name', 'rgb');--}}
+            {{--input.setAttribute('value', '{{$specValue->rgb}}');--}}
+            {{--input.setAttribute('class', 'form-control');--}}
+            {{--var picker = new jscolor(input);--}}
+            {{--picker.fromString('{{$specValue->rgb}}');--}}
+            {{--$('#color').append(input);--}}
+            {{--@endif--}}
 
           $('#edit_spec_value_form').ajaxForm({
                 success: function (result) {

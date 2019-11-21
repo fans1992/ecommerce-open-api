@@ -3,15 +3,15 @@
 /*
  * This file is part of ibrand/product.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace iBrand\Component\Product\Models;
+namespace GuoJiangClub\Component\Product\Models;
 
-use iBrand\Component\Product\Brand;
+use GuoJiangClub\Component\Product\Brand;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
 
 class Goods extends LaravelModel
@@ -19,6 +19,10 @@ class Goods extends LaravelModel
     protected $guarded = ['id'];
 
     protected $hidden = ['cost_price'];
+
+    protected $casts = [
+        'is_home_display' => 'boolean',
+    ];
 
     public function __construct(array $attributes = [])
     {
@@ -71,6 +75,11 @@ class Goods extends LaravelModel
         return $this->hasMany(GoodsPhoto::class, 'goods_id');
     }
 
+    public function questions()
+    {
+        return $this->hasMany(GoodsQuestion::class, 'goods_id', 'id');
+    }
+
     public function reduceStock($quantity)
     {
         $this->store_nums = $this->products()->sum('store_nums');
@@ -105,5 +114,11 @@ class Goods extends LaravelModel
     public function getItemType()
     {
         return 'goods';
+    }
+
+    public function atrributes()
+    {
+        return $this->belongsToMany('GuoJiangClub\EC\Open\Backend\Store\Model\Attribute', config('ibrand.app.database.prefix', 'ibrand_').'goods_attribute_relation', 'goods_id', 'attribute_id')
+            ->withPivot('attribute_value_id', 'model_id', 'attribute_value');
     }
 }

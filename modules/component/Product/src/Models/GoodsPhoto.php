@@ -3,18 +3,21 @@
 /*
  * This file is part of ibrand/product.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace iBrand\Component\Product\Models;
+namespace GuoJiangClub\Component\Product\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class GoodsPhoto extends Model
 {
+    const PHOTO_TYPE_PRODUCT_DETAIL = 'detail';
+    const PHOTO_TYPE_HOME = 'home';
+
     protected $guarded = ['id'];
 
     public function __construct(array $attributes = [])

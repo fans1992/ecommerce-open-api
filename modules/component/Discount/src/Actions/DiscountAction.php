@@ -3,17 +3,17 @@
 /*
  * This file is part of ibrand/discount.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace iBrand\Component\Discount\Actions;
+namespace GuoJiangClub\Component\Discount\Actions;
 
-use iBrand\Component\Discount\Contracts\AdjustmentContract;
-use iBrand\Component\Discount\Contracts\DiscountActionContract;
-use iBrand\Component\Discount\Contracts\DiscountContract;
+use GuoJiangClub\Component\Discount\Contracts\AdjustmentContract;
+use GuoJiangClub\Component\Discount\Contracts\DiscountActionContract;
+use GuoJiangClub\Component\Discount\Contracts\DiscountContract;
 
 abstract class DiscountAction implements DiscountActionContract
 {

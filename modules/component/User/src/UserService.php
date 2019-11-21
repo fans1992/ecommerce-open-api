@@ -3,15 +3,16 @@
 /*
  * This file is part of ibrand/user.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace iBrand\Component\User;
+namespace GuoJiangClub\Component\User;
 
-use iBrand\Component\User\Repository\UserBindRepository;
+use GuoJiangClub\Component\User\Models\UserBind;
+use GuoJiangClub\Component\User\Repository\UserBindRepository;
 
 class UserService
 {
@@ -40,5 +41,24 @@ class UserService
         } else {
             $repository->create(['open_id' => $openId, 'type' => $type, 'user_id' => $userId, 'app_id' => $appId]);
         }
+    }
+
+    /**
+     * 微信绑定状态
+     *
+     * @param $userId
+     * @return bool
+     */
+    public function checkWeChatUser($userId)
+    {
+        $userBind = UserBind::query()
+            ->where('user_id', $userId)
+            ->where('type', 'official_account')
+            ->first();
+
+        if ($userBind) {
+            return true;
+        }
+        return false;
     }
 }

@@ -6,9 +6,10 @@
  * Time: 21:03
  */
 
-namespace iBrand\EC\Open\Backend\Store\Http\Controllers;
+namespace GuoJiangClub\EC\Open\Backend\Store\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use GuoJiangClub\EC\Open\Backend\Store\Handlers\ImageUploadHandler;
 use Illuminate\Http\Request;
 use Validator;
 use Storage;
@@ -24,14 +25,12 @@ class ImageController extends Controller
     {
     }
 
-    public function postUpload(Request $request)
+    public function postUpload(Request $request, ImageUploadHandler $uploader)
     {
-        $prefix = 'storage/';
         $file = $request->file('upload_image');
-        $path = $prefix . $file->store('uploads/images/' . date('Y_m_d'), 'public');
-        $url = $this->replaceImgCDN(asset($path));
+        $url = $uploader->save($file);
 
-        return response()->json(['success' => true, 'file' => asset($path), 'url' => $url]);
+        return response()->json(['success' => true, 'file' => $url, 'url' => $url]);
     }
 
     public function ExcelUpload(Request $request)

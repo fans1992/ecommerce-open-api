@@ -1,12 +1,12 @@
 <?php
 
-namespace iBrand\EC\Open\Backend\Store\Http\Controllers;
+namespace GuoJiangClub\EC\Open\Backend\Store\Http\Controllers;
 
-use iBrand\EC\Open\Backend\Store\Model\Category;
-use iBrand\EC\Open\Backend\Store\Model\GoodsCategory;
+use GuoJiangClub\EC\Open\Backend\Store\Model\Category;
+use GuoJiangClub\EC\Open\Backend\Store\Model\GoodsCategory;
 use iBrand\Backend\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use iBrand\EC\Open\Backend\Store\Repositories\CategoryRepository;
+use GuoJiangClub\EC\Open\Backend\Store\Repositories\CategoryRepository;
 use Encore\Admin\Facades\Admin as LaravelAdmin;
 use Encore\Admin\Layout\Content;
 
@@ -60,7 +60,7 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
-        $input = $request->except('_token');
+        $input = $request->except('_token', 'file');
         if (!$input['name']) {
             return $this->ajaxJson(false, [], 500, '请填写分类名称');
         }
@@ -96,7 +96,7 @@ class CategoryController extends Controller
 
     public function update(Request $request, $id)
     {
-        $input = $request->except('_token');
+        $input = $request->except(['_token', 'file']);
         if (!$input['name']) {
             return $this->ajaxJson(false, [], 500, '请填写分类名称');
         }

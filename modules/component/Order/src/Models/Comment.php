@@ -3,15 +3,15 @@
 /*
  * This file is part of ibrand/order.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace iBrand\Component\Order\Models;
+namespace GuoJiangClub\Component\Order\Models;
 
-use iBrand\Component\User\Models\User;
+use GuoJiangClub\Component\User\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 

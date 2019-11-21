@@ -3,17 +3,17 @@
 /*
  * This file is part of ibrand/point.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace iBrand\Component\Point\Repository\Eloquent;
+namespace GuoJiangClub\Component\Point\Repository\Eloquent;
 
 use Carbon\Carbon;
-use iBrand\Component\Point\Models\Point;
-use iBrand\Component\Point\Repository\PointRepository;
+use GuoJiangClub\Component\Point\Models\Point;
+use GuoJiangClub\Component\Point\Repository\PointRepository;
 use Prettus\Repository\Eloquent\BaseRepository;
 
 class PointRepositoryEloquent extends BaseRepository implements PointRepository

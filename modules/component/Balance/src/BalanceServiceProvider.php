@@ -3,16 +3,16 @@
 /*
  * This file is part of ibrand/balance.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace iBrand\Component\Balance;
+namespace GuoJiangClub\Component\Balance;
 
 use Event;
-use iBrand\Component\Balance\Listeners\BalanceOrderPaidSuccess;
+use GuoJiangClub\Component\Balance\Listeners\BalanceOrderPaidSuccess;
 use Illuminate\Support\ServiceProvider;
 
 class BalanceServiceProvider extends ServiceProvider

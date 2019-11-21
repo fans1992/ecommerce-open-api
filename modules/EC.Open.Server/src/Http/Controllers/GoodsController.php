@@ -3,27 +3,31 @@
 /*
  * This file is part of ibrand/EC-Open-Server.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace iBrand\EC\Open\Server\Http\Controllers;
+namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 
 use DB;
 use EasyWeChat;
-use iBrand\Component\Category\RepositoryContract as CategoryRepository;
-use iBrand\Component\Discount\Repositories\CouponRepository;
-use iBrand\Component\Product\AttributeRelation;
-use iBrand\Component\Product\Models\Attribute;
-use iBrand\Component\Product\Models\Specification;
-use iBrand\Component\Product\Models\SpecificationRelation;
-use iBrand\Component\Product\Models\SpecificationValue;
-use iBrand\Component\Product\Repositories\GoodsRepository;
-use iBrand\EC\Open\Core\Services\DiscountService;
-use iBrand\EC\Open\Server\Transformers\GoodsTransformer;
+use GuoJiangClub\Component\Category\RepositoryContract as CategoryRepository;
+use GuoJiangClub\Component\Discount\Repositories\CouponRepository;
+use GuoJiangClub\Component\Product\AttributeRelation;
+use GuoJiangClub\Component\Product\Models\Attribute;
+use GuoJiangClub\Component\Product\Models\Goods;
+use GuoJiangClub\Component\Product\Models\GoodsQuestion;
+use GuoJiangClub\Component\Product\Models\Specification;
+use GuoJiangClub\Component\Product\Models\SpecificationRelation;
+use GuoJiangClub\Component\Product\Models\SpecificationValue;
+use GuoJiangClub\Component\Product\Repositories\GoodsRepository;
+use GuoJiangClub\EC\Open\Core\Services\DiscountService;
+use GuoJiangClub\EC\Open\Server\Transformers\GoodsQuestionTransformer;
+use GuoJiangClub\EC\Open\Server\Transformers\GoodsTransformer;
 use iBrand\Miniprogram\Poster\MiniProgramShareImg;
+use Illuminate\Http\Request;
 use Storage;
 
 class GoodsController extends Controller
@@ -265,11 +269,12 @@ class GoodsController extends Controller
         }
 
         return $this->response()->item($goods, new GoodsTransformer())
-            ->setMeta(['attributes' => $goods->attr, 'discounts' => $result]);
+            ->setMeta(['attributes' => $goods->atrributes, 'discounts' => $result]);
     }
 
     public function getStock($id)
     {
+        /** @var Goods $goods */
         $goods = $this->goodsRepository->findOneById($id);
 
         if (!$goods) {
@@ -292,6 +297,8 @@ class GoodsController extends Controller
                 $stores[$spec_id]['price'] = $item->sell_price;
                 $stores[$spec_id]['sku'] = $item->sku;
                 $stores[$spec_id]['ids'] = $item->spec_ids;
+                $stores[$spec_id]['service_price'] = $item->service_price;
+                $stores[$spec_id]['official_price'] = $item->official_price;
             });
 
             //生成规格信息
@@ -329,8 +336,21 @@ class GoodsController extends Controller
             }
         }
 
+        //增值服务规格
+        $goodsAttributes = [];
+        $goods->atrributes->each(function ($item) use (&$goodsAttributes) {
+            $goodsAttributes[] = [
+                'attribute_id' => $item->pivot->attribute_id,
+                'attribute_value_id' => $item->pivot->attribute_value_id,
+                'attribute_value' => $item->pivot->attribute_value,
+                'name' => $item->name,
+
+            ];
+        });
+
         return $this->success([
-            'specs' => $specs,
+            'specs' => array_values($specs),
+            'option_service' => $goodsAttributes,
             'stores' => $stores,
         ]);
     }
@@ -377,5 +397,26 @@ class GoodsController extends Controller
         $result = MiniProgramShareImg::generateShareImage($url, 'share_goods');
 
         return $this->success($result['url']);
+    }
+
+    /**
+     * 商品问答搜索
+     * @param Request $request
+     * @param GoodsQuestion $goodsQuestion
+     * @return \Dingo\Api\Http\Response
+     */
+    public function questionIndex(Request $request, GoodsQuestion $goodsQuestion)
+    {
+        // 创建一个查询构造器
+        $builder = $goodsQuestion->query();
+
+        if ($search = $request->input('search', '')) {
+            $like = '%' . $search . '%';
+            $builder->where('question', 'like', $like);
+        }
+
+        $perPage = $request->input('per_page') ?: 10;
+        $questions = $builder->paginate($perPage);
+        return $this->response->paginator($questions, new GoodsQuestionTransformer());
     }
 }

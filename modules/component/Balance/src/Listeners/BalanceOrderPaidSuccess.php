@@ -3,17 +3,17 @@
 /*
  * This file is part of ibrand/balance.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace iBrand\Component\Balance\Listeners;
+namespace GuoJiangClub\Component\Balance\Listeners;
 
 use Carbon\Carbon;
-use iBrand\Component\Balance\Balance;
-use iBrand\Component\Balance\BalanceOrder;
+use GuoJiangClub\Component\Balance\Balance;
+use GuoJiangClub\Component\Balance\BalanceOrder;
 
 class BalanceOrderPaidSuccess
 {
@@ -41,7 +41,7 @@ class BalanceOrderPaidSuccess
     {
         $events->listen(
             'balance.order.paid.success',
-            'iBrand\Component\Balance\Listeners\BalanceOrderPaidSuccess@balanceOrderPaidSuccess'
+            'GuoJiangClub\Component\Balance\Listeners\BalanceOrderPaidSuccess@balanceOrderPaidSuccess'
         );
     }
 }

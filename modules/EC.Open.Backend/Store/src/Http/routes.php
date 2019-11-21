@@ -1,15 +1,44 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2016-10-12
- * Time: 13:33
- */
 
 $router->group(['prefix' => 'admin/store'], function () use ($router) {
     $router->post('upload/image', 'ImageController@postUpload')->name('upload.image');
     $router->post('upload/excel', 'ImageController@ExcelUpload')->name('upload.excel');
     $router->post('upload/uploadExcelFile', 'ImageController@uploadExcelFile')->name('upload.uploadExcelFile');
+
+    $router->group(['prefix' => 'setting'], function () use ($router) {
+        $router->group(['prefix' => 'micro/page','namespace' => 'MicroPage'], function () use ($router) {
+            $router->get('/', 'MicroPageController@index')->name('admin.setting.micro.page.index');
+            $router->get('/store', 'MicroPageController@store')->name('admin.setting.micro.page.store');
+            $router->post('/{id}/delete', 'MicroPageController@delete')->name('admin.setting.micro.page.delete');
+            $router->post('/{id}/setIndexPage', 'MicroPageController@setIndexPage')->name('admin.setting.micro.page.setIndexPage');
+            $router->post('/{id}/setCategoryPage', 'MicroPageController@setCategoryPage')->name('admin.setting.micro.page.setCategoryPage');
+
+            $router->post('/name/update', 'MicroPageController@update')->name('admin.setting.micro.page.name.update');
+            $router->post('/{id}/updateMicroPageAd', 'MicroPageController@updateMicroPageAd')->name('admin.setting.micro.page.updateMicroPageAd');
+            $router->get('/{id}/edit', 'MicroPageController@edit')->name('admin.setting.micro.page.name.edit');
+            $router->get('/get/advert', 'MicroPageController@getAdvertByType')->name('admin.setting.micro.page.get.advert');
+            $router->post('compoent/{id}/delete', 'CompoentController@delete')->name('admin.setting.micro.page.compoent.delete');
+            $router->post('/update', 'CompoentController@update')->name('admin.setting.micro.page.compoent.update');
+            $router->post('/store', 'CompoentController@store')->name('admin.setting.micro.page.compoent.store');
+            $router->get('/model/goods', 'CompoentController@modelGoods')->name('admin.setting.micro.page.compoent.model.goods');
+            $router->get('/model/coupons', 'CompoentController@modelCoupons')->name('admin.setting.micro.page.compoent.model.coupons');
+            $router->get('/model/categorys', 'CompoentController@modelCategorys')->name('admin.setting.micro.page.compoent.model.categorys');
+            $router->get('/model/pages', 'CompoentController@modelPages')->name('admin.setting.micro.page.compoent.model.pages');
+            $router->get('/model/images', 'CompoentController@modelImages')->name('admin.setting.micro.page.compoent.model.images');
+            $router->get('compoent/getGoodsData', 'CompoentController@getGoodsData')->name('admin.setting.micro.page.compoent.getGoodsData');
+            $router->get('compoent/getPagesData', 'CompoentController@getPagesData')->name('admin.setting.micro.page.compoent.getPagesData');
+            $router->get('compoent/getCategorysData', 'CompoentController@getCategorysData')->name('admin.setting.micro.page.compoent.getCategorysData');
+            $router->get('compoent/getCouponsData', 'CompoentController@getCouponsData')->name('admin.setting.micro.page.compoent.getCouponsData');
+
+            $router->group(['prefix' => 'compoent/'], function () use ($router) {
+                $router->get('/', 'CompoentController@index')->name('admin.setting.micro.page.compoent.index');
+                $router->get('{type}/', 'CompoentController@index')->name('admin.setting.micro.page.compoent.index');
+                $router->get('{type}/create', 'CompoentController@create')->name('admin.setting.micro.page.compoent.create');
+                $router->get('{type}/{code}/edit', 'CompoentController@edit')->name('admin.setting.micro.page.compoent.edit');
+            });
+        });
+
+    });
 
     //新的规格管理
     $router->group(['prefix' => 'specs'], function () use ($router) {
@@ -109,6 +138,34 @@ $router->group(['prefix' => 'admin/store'], function () use ($router) {
     $router->post('category/delete', 'CategoryController@destroy')->name('admin.category.delete');
 
     $router->get('category/category_sort', 'CategoryController@category_sort')->name('admin.category.category_sort');
+
+    //尼斯分类
+    $router->get('classification', 'NiceClassificationController@index')->name('admin.classification.index');
+
+    //行业
+    $router->get('industry', 'IndustryController@index')->name('admin.industry.index');
+    $router->get('industry/create', 'IndustryController@create')->name('admin.industry.create');
+    $router->post('industry/store', 'IndustryController@store')->name('admin.industry.store');
+    $router->get('industry/edit/{id}', 'IndustryController@edit')->name('admin.industry.edit');
+    $router->post('industry/update/{id}', 'IndustryController@update')->name('admin.industry.update');
+    $router->get('industry/check', 'IndustryController@check')->name('admin.industry.check');
+    $router->post('industry/delete', 'IndustryController@destroy')->name('admin.industry.delete');
+
+
+    //行业推荐
+    $router->get('industry/{id}/classification', 'IndustryController@classifictionIndex')->name('admin.industry.classification.index');
+    $router->post('industry/getRecommendData', 'IndustryController@getRecommendData')->name('admin.industry.classification.getRecommendData');
+    $router->post('industry/classification/store', 'IndustryController@classifictionStore')->name('admin.industry.classification.store');
+
+    $router->get('industry/editClassification', 'IndustryController@editClassification')->name('admin.industry.classification.editClassification');
+    $router->post('industry/storeClassification', 'IndustryController@storeClassification')->name('admin.industry.classification.storeClassification');
+    $router->get('industry/{id}/addClassification', 'IndustryController@addClassification')->name('admin.industry.classification.addClassification');
+
+    $router->post('industry/delClassification', 'IndustryController@delClassification')->name('admin.industry.classification.delete');
+
+    $router->get('industry/get_classification', 'IndustryController@getClassificationByGroupID')->name('admin.industry.get_classification');
+
+    $router->get('industry/industry_sort', 'IndustryController@industry_sort')->name('admin.industry.industry_sort');
 });
 
 //促销

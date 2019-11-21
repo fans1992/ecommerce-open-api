@@ -1,16 +1,16 @@
 <script>
-    @if($spec_id==2)
-    $(document).ready(function () {
+    {{--@if($spec_id==2)--}}
+    {{--$(document).ready(function () {--}}
 
-        var input = document.createElement('input');
-        input.setAttribute('name', 'add_value[0][rgb]');
-        input.setAttribute('value', '444444');
-        input.setAttribute('class', 'form-control');
-        var picker = new jscolor(input);
-        picker.fromString('444444');
-        $('#rgb_0').append(input);
-    });
-    @endif
+        {{--var input = document.createElement('input');--}}
+        {{--input.setAttribute('name', 'add_value[0][rgb]');--}}
+        {{--input.setAttribute('value', '444444');--}}
+        {{--input.setAttribute('class', 'form-control');--}}
+        {{--var picker = new jscolor(input);--}}
+        {{--picker.fromString('444444');--}}
+        {{--$('#rgb_0').append(input);--}}
+    {{--});--}}
+    {{--@endif--}}
 
     $('#spec-value-form').ajaxForm({
         success: function (result) {
@@ -60,10 +60,10 @@
                 '<input type="text" class="form-control" name="add_value[' + indexValue + '][name]" />' +
                 '</td>' +
 
-                @if($spec_id == 2)
-                        '<td id="rgb_' + indexValue + '"></td>' +
-                '<td id="color_' + indexValue + '"></td>' +
-                @endif
+                {{--@if($spec_id == 2)--}}
+                        {{--'<td id="rgb_' + indexValue + '"></td>' +--}}
+                {{--'<td id="color_' + indexValue + '"></td>' +--}}
+                {{--@endif--}}
 
                         '<td><a href="javascript:;" class="btn btn-xs btn-primary operatorPhy">' +
                 '<i class="fa fa-trash" data-toggle="tooltip" data-placement="top" data-original-title="删除"></i></a></td></tr>';
@@ -90,9 +90,9 @@
 
                 $('#spec_box').append(specRow);
 
-                @if($spec_id == 2)
-                getColorHtml(specSize);
-                @endif
+                {{--@if($spec_id == 2)--}}
+                {{--getColorHtml(specSize);--}}
+                {{--@endif--}}
 
             initButton(specSize);
             }

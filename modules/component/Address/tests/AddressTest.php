@@ -3,7 +3,7 @@
 /*
  * This file is part of ibrand/address.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -40,7 +40,7 @@ class AddressTest extends \Orchestra\Testbench\TestCase
         return [
             Prettus\Repository\Providers\RepositoryServiceProvider::class
             , Orchestra\Database\ConsoleServiceProvider::class
-            , iBrand\Component\Address\ServiceProvider::class];
+            , GuoJiangClub\Component\Address\ServiceProvider::class];
     }
 
     protected function setUp()
@@ -49,7 +49,7 @@ class AddressTest extends \Orchestra\Testbench\TestCase
 
         $this->loadMigrationsFrom(__DIR__ . '/database');
 
-        $this->repository = $this->app->make(\iBrand\Component\Address\RepositoryContract::class);
+        $this->repository = $this->app->make(\GuoJiangClub\Component\Address\RepositoryContract::class);
     }
 
     public function testCreate()
@@ -60,7 +60,7 @@ class AddressTest extends \Orchestra\Testbench\TestCase
 
         $result = $this->repository->create($attributes);
 
-        $this->assertEquals(\iBrand\Component\Address\Address::class, get_class($result));
+        $this->assertEquals(\GuoJiangClub\Component\Address\Address::class, get_class($result));
 
         $this->assertEquals(1, $result->is_default);
 

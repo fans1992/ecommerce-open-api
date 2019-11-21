@@ -3,16 +3,16 @@
 /*
  * This file is part of ibrand/product.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace iBrand\Component\Product\Repositories\Eloquent;
+namespace GuoJiangClub\Component\Product\Repositories\Eloquent;
 
-use iBrand\Component\Product\Models\Goods;
-use iBrand\Component\Product\Repositories\GoodsRepository;
+use GuoJiangClub\Component\Product\Models\Goods;
+use GuoJiangClub\Component\Product\Repositories\GoodsRepository;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Traits\CacheableRepository;
 

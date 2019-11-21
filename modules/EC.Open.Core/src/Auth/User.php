@@ -3,15 +3,15 @@
 /*
  * This file is part of ibrand/EC-Open-Core.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace iBrand\EC\Open\Core\Auth;
+namespace GuoJiangClub\EC\Open\Core\Auth;
 
-use iBrand\Component\User\Models\User as BaseUser;
+use GuoJiangClub\Component\User\Models\User as BaseUser;
 use Laravel\Passport\HasApiTokens;
 
 class User extends BaseUser

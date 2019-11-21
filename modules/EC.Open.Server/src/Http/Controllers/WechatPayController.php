@@ -3,18 +3,18 @@
 /*
  * This file is part of ibrand/EC-Open-Server.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace iBrand\EC\Open\Server\Http\Controllers;
+namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 
 use EasyWeChat;
-use iBrand\Component\Order\Models\Order;
-use iBrand\Component\Order\Repositories\OrderRepository;
-use iBrand\Component\Payment\Models\Payment;
+use GuoJiangClub\Component\Order\Models\Order;
+use GuoJiangClub\Component\Order\Repositories\OrderRepository;
+use GuoJiangClub\Component\Payment\Models\Payment;
 use Illuminate\Http\Request;
 use iBrand\Component\Pay\Facades\Charge;
 

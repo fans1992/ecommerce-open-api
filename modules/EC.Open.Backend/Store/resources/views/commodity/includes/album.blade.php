@@ -22,6 +22,9 @@
                         排序(数字越大排在越前)
                     </th>
                     <th>
+                        类型
+                    </th>
+                    <th>
                         操作
                     </th>
                 </tr>
@@ -41,6 +44,17 @@
 
                             <td>
                                 <input type="text" class="form-control" name="_imglist[{{$val['code']}}][sort]" value="{{$val['sort']}}">
+                            </td>
+                            <td>
+                                <select class="form-control" name="_imglist[{{$val['code']}}][type]">
+                                    @if($val['type'] === 'home')
+                                        <option value="detail">详情页</option>
+                                        <option selected value="home">首页</option>
+                                    @else
+                                        <option selected value="detail">详情页</option>
+                                        <option value="home">首页</option>
+                                    @endif
+                                </select>
                             </td>
                             <td>
                                 <a href="javascript:;" class="btn btn-white" onclick="delAlbumImg(this)"><i class="fa fa-trash"></i>
@@ -76,6 +90,12 @@
                     <input type="text" class="form-control" name="_imglist[{MENU_ID}][sort]" value="9">
                 </td>
                 <td>
+                    <select class="form-control" name="_imglist[{MENU_ID}][type]">
+                        <option selected value="detail">详情页</option>
+                        <option value="home">首页</option>
+                    </select>
+                </td>
+                <td>
                     <a href="javascript:;" class="btn btn-white"
                        onclick="delAlbumImg(this)"><i class="fa fa-trash"></i>
                     </a>
@@ -84,8 +104,8 @@
         </script>
     </div>
     <div class="app-actions">
-        <a data-id="5" data-action="next" class="btn btn-success app-action-prev">«上一步</a>
-        <a data-id="7" data-action="next" class="btn btn-success app-action">下一步»</a>
+        <a data-id="4" data-action="next" class="btn btn-success app-action-prev">«上一步</a>
+        <a data-id="6" data-action="next" class="btn btn-success app-action">下一步»</a>
         <input type="submit" class="btn btn-success app-action-save" data-toggle="form-submit" data-target="#base-form"
                value="保存">
     </div>

@@ -8,6 +8,7 @@
         <th>优惠金额</th>
         <th>总价</th>
         <th>参数</th>
+        <th>附加服务</th>
         <th>SKU</th>
         <th>发货状态</th>
     </tr>
@@ -26,6 +27,9 @@
             <td>{{$item->total}}</td>
 
             <td>{{!empty($item->item_info['specs_text'])?$item->item_info['specs_text']:''}}</td>
+            <td>
+                {{implode(' ', array_column($item->item_info['option_service'], 'name'))}}
+            </td>
             <td>
                 {{$item->getModel() ? $item->getModel()->sku : ''}}
             </td>

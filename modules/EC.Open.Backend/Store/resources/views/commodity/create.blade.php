@@ -76,7 +76,7 @@
         right: 0;
         left: 200px;
         width: auto;
-        padding: 20px 0;
+        padding: 15px 0;
         background: #ffc;
 
         z-index: 999;
@@ -108,6 +108,7 @@
 
         <li class=""><a data-id="5" class="app-action" aria-expanded="false">橱窗图</a></li>
         <li class=""><a data-id="6" class="app-action" aria-expanded="false">SEO设置</a></li>
+        <li class=""><a data-id="7" class="app-action" aria-expanded="false">热门问答</a></li>
 
     </ul>
 
@@ -126,11 +127,11 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group hidden">
                     <label class="col-sm-2 control-label">商品品牌：</label>
                     <div class="col-sm-10">
                         <select class="form-control" id="brand_id" name="brand_id">
-                            <option value="">请选择</option>
+                            <option value="1">请选择</option>
                             @foreach($brands as $item)
                                 <option value="{{$item->id}}">{{$item->name}}</option>
                             @endforeach
@@ -160,10 +161,23 @@
                     </div>
                 </div>
 
+                {{--<div class="form-group">--}}
+                    {{--<label class="col-sm-2 control-label">市场价：</label>--}}
+                    {{--<div class="col-sm-10">--}}
+                        {{--<input type="text" class="form-control" name="market_price" placeholder="">--}}
+                    {{--</div>--}}
+                {{--</div>--}}
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">市场价：</label>
+                    <label class="col-sm-2 control-label">服务费：</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="market_price" placeholder="">
+                        <input type="text" class="form-control" name="service_price" placeholder="">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">官费：</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="official_price" placeholder="">
                     </div>
                 </div>
 
@@ -183,13 +197,13 @@
                 </div>
 
 
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">是否推荐：</label>
-                    <div class="col-sm-10">
-                        <input name="is_commend" type="radio" value="1"/> 是
-                        <input name="is_commend" type="radio" value="0" checked/> 否
-                    </div>
-                </div>
+                {{--<div class="form-group">--}}
+                    {{--<label class="col-sm-2 control-label">是否推荐：</label>--}}
+                    {{--<div class="col-sm-10">--}}
+                        {{--<input name="is_commend" type="radio" value="1"/> 是--}}
+                        {{--<input name="is_commend" type="radio" value="0" checked/> 否--}}
+                    {{--</div>--}}
+                {{--</div>--}}
 
                 <div class="form-group hide">
                     <label class="col-sm-2 control-label">是否赠品：</label>
@@ -218,6 +232,14 @@
                     <label class="col-sm-2 control-label">商品参数：</label>
                     <div class="col-sm-10" id="propert_table">
 
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">服务亮点：</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="service_highlights" placeholder="">
                     </div>
                 </div>
 
@@ -320,6 +342,7 @@
             </div>
         </div><!-- /.tab-pane -->
 
+        @include('store-backend::commodity.includes.questions_answers')
 
     </div><!-- /.tab-content -->
     {!! Form::close() !!}

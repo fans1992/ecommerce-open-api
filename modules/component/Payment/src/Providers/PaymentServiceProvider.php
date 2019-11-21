@@ -3,15 +3,15 @@
 /*
  * This file is part of ibrand/payment.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace iBrand\Component\Payment\Providers;
+namespace GuoJiangClub\Component\Payment\Providers;
 
-use iBrand\Component\Payment\Services\PaymentService;
+use GuoJiangClub\Component\Payment\Services\PaymentService;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 

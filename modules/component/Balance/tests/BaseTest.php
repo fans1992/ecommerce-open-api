@@ -3,15 +3,15 @@
 /*
  * This file is part of ibrand/balace.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace iBrand\Component\Balance\Test;
+namespace GuoJiangClub\Component\Balance\Test;
 
-use iBrand\Component\Balance\Balance;
+use GuoJiangClub\Component\Balance\Balance;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Orchestra\Testbench\TestCase;
 
@@ -63,8 +63,8 @@ abstract class BaseTest extends TestCase
 	{
 		return [
 			\Orchestra\Database\ConsoleServiceProvider::class,
-			\iBrand\Component\Balance\BalanceServiceProvider::class,
-			\iBrand\Component\Balance\Test\BalanceServiceProvider::class,
+			\GuoJiangClub\Component\Balance\BalanceServiceProvider::class,
+			\GuoJiangClub\Component\Balance\Test\BalanceServiceProvider::class,
 		];
 	}
 

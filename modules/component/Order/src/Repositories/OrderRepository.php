@@ -3,15 +3,15 @@
 /*
  * This file is part of ibrand/order.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace iBrand\Component\Order\Repositories;
+namespace GuoJiangClub\Component\Order\Repositories;
 
-use iBrand\Component\Order\Models\Order;
+use GuoJiangClub\Component\Order\Models\Order;
 use Prettus\Repository\Contracts\RepositoryInterface;
 
 interface OrderRepository extends RepositoryInterface

@@ -3,17 +3,17 @@
 /*
  * This file is part of ibrand/discount.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace iBrand\Component\Discount\Repositories\Eloquent;
+namespace GuoJiangClub\Component\Discount\Repositories\Eloquent;
 
 use Carbon\Carbon;
-use iBrand\Component\Discount\Models\Coupon;
-use iBrand\Component\Discount\Repositories\CouponRepository;
+use GuoJiangClub\Component\Discount\Models\Coupon;
+use GuoJiangClub\Component\Discount\Repositories\CouponRepository;
 use Prettus\Repository\Eloquent\BaseRepository;
 
 /**

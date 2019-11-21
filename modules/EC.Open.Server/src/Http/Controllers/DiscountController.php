@@ -3,18 +3,18 @@
 /*
  * This file is part of ibrand/EC-Open-Server.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace iBrand\EC\Open\Server\Http\Controllers;
+namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 
 
-use iBrand\Component\Discount\Repositories\DiscountRepository;
-use iBrand\EC\Open\Core\Models\Goods;
-use iBrand\EC\Open\Core\Services\DiscountService;
+use GuoJiangClub\Component\Discount\Repositories\DiscountRepository;
+use GuoJiangClub\EC\Open\Core\Models\Goods;
+use GuoJiangClub\EC\Open\Core\Services\DiscountService;
 
 class DiscountController extends Controller
 {

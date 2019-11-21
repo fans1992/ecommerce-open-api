@@ -3,15 +3,15 @@
 /*
  * This file is part of ibrand/member-backend.
  *
- * (c) iBrand <https://www.ibrand.cc>
+ * (c) 果酱社区 <https://guojiang.club>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace iBrand\EC\Open\Backend\Member\Providers;
+namespace GuoJiangClub\EC\Open\Backend\Member\Providers;
 
-use iBrand\EC\Open\Backend\Member\MemberBackend;
+use GuoJiangClub\EC\Open\Backend\Member\MemberBackend;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Menu;
@@ -25,7 +25,7 @@ class BackendServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    protected $namespace = 'iBrand\EC\Open\Backend\Member\Http\Controllers';
+    protected $namespace = 'GuoJiangClub\EC\Open\Backend\Member\Http\Controllers';
 
     /**
      * Define your route model bindings, pattern filters, etc.

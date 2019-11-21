@@ -34,8 +34,16 @@ return [
         'admin' => [
             'driver' => 'qiniu',
             'root' => storage_path('app/public/backend'),
-            'url' => env('APP_URL').'/storage/backend',
+            'url' => env('APP_URL') . '/storage/backend',
             'visibility' => 'public',
         ],
     ],
+
+    'sms_login' => env('BACKEND_SMS_LOGIN', false),
+
+    'technical_support' => '百一知识产权：https://www.foridom.com',
+
+    'copyright' => '百一知识产权',
+
+    'scenario' => env('BACKEND_SCENARIO', 'normal')
 ];
