@@ -66,7 +66,9 @@ class PaymentController extends Controller
             'client_ip' => \request()->getClientIp(),
             'subject' => $order->getSubject(),
             'body' => $order->getSubject(),
-            'extra' => ['openid' => \request('openid')],
+            'extra' => [
+                'success_url' => request('extra')['success_url'],
+            ],
         ]);
 
         return $this->success(compact('charge'));
