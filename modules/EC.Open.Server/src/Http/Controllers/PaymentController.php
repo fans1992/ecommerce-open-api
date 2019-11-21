@@ -81,68 +81,39 @@ class PaymentController extends Controller
      */
     public function alipayNotify()
     {
-        $config = config('ibrand.pay.default.alipay.default');
-//        dd($config);
-        $pay = Pay::alipay($config);
-
-        $data = $pay->verify();
-
-        \Log::debug('Alipay notify', $data->all());
-
-        if ($data['trade_status'] == "TRADE_SUCCESS" || $data['trade_status'] == "TRADE_FINISHED") {
-
-            $charge = \iBrand\Component\Pay\Models\Charge::ofOutTradeNo($data['out_trade_no'])->first();
-
-            if (!$charge) {
-                return response('支付失败', 500);
-            }
-
-            $charge->transaction_meta = json_encode($data);
-            $charge->transaction_no = $data['trade_no'];
-            $charge->time_paid = Carbon::createFromTimestamp(strtotime($data['gmt_payment']));
-            $charge->paid = 1;
-            $charge->save();
-
-            if ($charge->amount !== intval($data['total_amount'] * 100)) {
-                return response('支付失败', 500);
-            }
-
-            PayNotify::success($charge->type, $charge);
-
-            return $pay->success();
-        }
-        return response('alipay notify fail.', 500);
-
-
-        $payment = EasyWeChat::payment();
-
-        if ('SUCCESS' === $message['return_code']) { // return_code 表示通信状态，不代表支付状态
-            // 用户是否支付成功
-            if ('SUCCESS' === array_get($message, 'result_code')) {
-                $charge['metadata']['order_no'] = $message['out_trade_no'];
-                $charge['amount'] = $message['total_fee'];
-                $charge['transaction_no'] = $message['transaction_id'];
-                $charge['time_paid'] = strtotime($message['time_end']);
-                $charge['details'] = json_encode($message);
-                $charge['channel'] = 'wx_lite';
-
-                $this->payment->success($charge);
-
-                return true; // 返回处理完成
-
-                // 用户支付失败
-            } elseif ('FAIL' === array_get($message, 'result_code')) {
-                return $fail('支付失败');
-            }
-        } else {
-            return $fail('通信失败，请稍后再通知我');
-        }
-
-        return $fail('支付失败');
+//        $payment = EasyWeChat::payment();
+//
+//        if ('SUCCESS' === $message['return_code']) { // return_code 表示通信状态，不代表支付状态
+//            // 用户是否支付成功
+//            if ('SUCCESS' === array_get($message, 'result_code')) {
+//                $charge['metadata']['order_no'] = $message['out_trade_no'];
+//                $charge['amount'] = $message['total_fee'];
+//                $charge['transaction_no'] = $message['transaction_id'];
+//                $charge['time_paid'] = strtotime($message['time_end']);
+//                $charge['details'] = json_encode($message);
+//                $charge['channel'] = 'wx_lite';
+//
+//                $this->payment->success($charge);
+//
+//                return true; // 返回处理完成
+//
+//                // 用户支付失败
+//            } elseif ('FAIL' === array_get($message, 'result_code')) {
+//                return $fail('支付失败');
+//            }
+//        } else {
+//            return $fail('通信失败，请稍后再通知我');
+//        }
+//
+//        return $fail('支付失败');
     }
 
 
-
+    /**
+     * 验证支付状态
+     *
+     * @return \Dingo\Api\Http\Response|mixed
+     */
     public function paidSuccess()
     {
         $user = request()->user();
