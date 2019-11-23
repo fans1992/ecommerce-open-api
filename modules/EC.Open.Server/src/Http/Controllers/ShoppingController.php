@@ -319,7 +319,8 @@ class ShoppingController extends Controller
     public function review()
     {
         $user = request()->user();
-        $comments = request()->except('_token');
+//        $comments = request()->except('_token');
+        $comments = request('reviews');
 
         if (!is_array($comments)) {
             return $this->failed('提交参数错误');
@@ -334,9 +335,9 @@ class ShoppingController extends Controller
                 return $this->failed('请选择具体评价的商品');
             }
 
-            if ($user->cant('review', [$order, $orderItem])) {
-                return $this->failed('无权对该商品进行评价');
-            }
+//            if ($user->cant('review', [$order, $orderItem])) {
+//                return $this->failed('无权对该商品进行评价');
+//            }
 
             if ($order->comments()->where('order_item_id', $comment['order_item_id'])->count() > 0) {
                 return $this->failed('该产品已经评论，无法再次评论');
@@ -346,7 +347,15 @@ class ShoppingController extends Controller
             $point = isset($comment['point']) ? $comment['point'] : 5;
             $pic_list = isset($comment['images']) ? $comment['images'] : [];
 
-            $comment = new Comment(['user_id' => $user->id, 'order_item_id' => $comment['order_item_id'], 'item_id' => $orderItem->item_id, 'item_meta' => $orderItem->item_meta, 'contents' => $content, 'point' => $point, 'status' => 'show', 'pic_list' => $pic_list, 'goods_id' => $orderItem->item_meta['detail_id'],
+            $comment = new Comment([
+                'user_id' => $user->id,
+                'order_item_id' => $comment['order_item_id'],
+                'item_id' => $orderItem->item_id,
+                'item_meta' => $orderItem->item_meta,
+                'contents' => $content,
+                'point' => $point, 'status' => 'show',
+                'pic_list' => $pic_list,
+//                'goods_id' => $orderItem->item_meta['detail_id'],
             ]);
 
             $order->comments()->save($comment);

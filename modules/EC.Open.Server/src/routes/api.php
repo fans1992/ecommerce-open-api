@@ -76,16 +76,16 @@ $router->group(config('ibrand.ec-open-api.routeAuthAttributes'), function ($rout
     $router->get('shopping/cart/count', 'ShoppingCartController@count')->name('api.shopping.cart.count');
 
     /************************* 购物流程 **********************/
-    $router->post('shopping/order/checkout', 'ShoppingController@checkout')->name('api.shopping.order.checkout');    //结算
+    $router->post('shopping/order/checkout', 'ShoppingController@checkout')->name('api.shopping.order.checkout');    //购物车结算||直接下单
     $router->post('shopping/order/confirm', 'ShoppingController@confirm')->name('api.shopping.order.confirm');       //提交订单
-    $router->post('shopping/order/charge', 'PaymentController@createCharge')->name('api.shopping.order.charge');     //支付
+    $router->post('shopping/order/charge', 'PaymentController@createCharge')->name('api.shopping.order.charge');     //创建支付请求
 //    $router->post('shopping/order/charge', 'WechatPayController@createCharge')->name('api.shopping.order.charge');
-    $router->post('shopping/order/paid', 'PaymentController@paidSuccess')->name('api.shopping.order.paid');
-    $router->post('shopping/order/cancel', 'ShoppingController@cancel')->name('api.shopping.order.cancel');
-    $router->post('shopping/order/received', 'ShoppingController@received')->name('api.shopping.order.received');
-    $router->post('shopping/order/delete', 'ShoppingController@delete')->name('api.shopping.order.delete');
-    $router->post('shopping/order/review', 'ShoppingController@review')->name('api.shopping.order.review');
-    $router->post('shopping/order/delivery', 'ShoppingController@delivery')->name('api.order.delivery');
+    $router->post('shopping/order/paid', 'PaymentController@paidSuccess')->name('api.shopping.order.paid');          //验证支付状态
+    $router->post('shopping/order/cancel', 'ShoppingController@cancel')->name('api.shopping.order.cancel');          //取消订单
+    $router->post('shopping/order/received', 'ShoppingController@received')->name('api.shopping.order.received');    //确认收货
+    $router->post('shopping/order/delete', 'ShoppingController@delete')->name('api.shopping.order.delete');          //删除订单
+    $router->post('shopping/order/review', 'ShoppingController@review')->name('api.shopping.order.review');          //订单评价
+    $router->post('shopping/order/delivery', 'ShoppingController@delivery')->name('api.order.delivery');             //发货
 
     /************************* 订单联系人 **********************/
     $router->get('contacts', 'ContactsController@index')->name('api.contact.list');
