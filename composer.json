@@ -17,7 +17,7 @@
 		"doctrine/dbal": "^2.10",
 		"encore/laravel-admin": "1.5.19",
 		"fideloper/proxy": "~3.3",
-		"ibrand/backend": "dev-guojiang",
+		"foridom/backend": "dev-master",
 		"ibrand/laravel-active": "~2.0",
 		"ibrand/laravel-miniprogram-poster": "^1.1",
 		"ibrand/laravel-shopping-cart": "^1.3",

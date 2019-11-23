@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "81f6766c64218725381448f05f99faf9",
+    "content-hash": "7f49897b3144e17f187e76b56039a68c",
     "packages": [
         {
             "name": "anam/phantomjs-linux-x86-binary",
@@ -1330,6 +1330,78 @@
             "time": "2017-06-27T22:17:23+00:00"
         },
         {
+            "name": "foridom/backend",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/foridom/backend.git",
+                "reference": "3a9628825944c4629684a250226d94d51957bea4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/foridom/backend/zipball/3a9628825944c4629684a250226d94d51957bea4",
+                "reference": "3a9628825944c4629684a250226d94d51957bea4",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "encore/laravel-admin": "1.5.19",
+                "ibrand/laravel-sms": "~1.0",
+                "ibrand/setting": "~1.0",
+                "laravel-admin-ext/backup": "1.0.2",
+                "laravel-admin-ext/helpers": "1.0.2",
+                "laravel-admin-ext/log-viewer": "1.0.2",
+                "laravel-admin-ext/redis-manager": "1.0.1",
+                "laravel-admin-ext/scheduling": "1.0.1",
+                "maatwebsite/excel": "~2.1.23",
+                "php": ">=7.0.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "~3.5",
+                "phpunit/phpunit": "~6.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "iBrand\\Backend\\BackendServiceProvider"
+                    ],
+                    "aliases": {
+                        "BackendMenu": "iBrand\\Backend\\Facades\\Menu"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "iBrand\\Backend\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "fanzhuo",
+                    "email": "henbuhai@hotmail.com"
+                }
+            ],
+            "description": "foridom backend base laravel-admin",
+            "homepage": "https://github.com/foridom/backend",
+            "keywords": [
+                "backend",
+                "form",
+                "grid",
+                "laravel"
+            ],
+            "time": "2019-11-23T18:26:17+00:00"
+        },
+        {
             "name": "graham-campbell/manager",
             "version": "v3.0.0",
             "source": {
@@ -1731,78 +1803,6 @@
                 "nanoid-php"
             ],
             "time": "2019-09-25T07:00:58+00:00"
-        },
-        {
-            "name": "ibrand/backend",
-            "version": "dev-guojiang",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/guojiangclub/backend.git",
-                "reference": "2d9070e70b38e9a95c9b0caf9cc7ea4199c59c14"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/guojiangclub/backend/zipball/2d9070e70b38e9a95c9b0caf9cc7ea4199c59c14",
-                "reference": "2d9070e70b38e9a95c9b0caf9cc7ea4199c59c14",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
-            },
-            "require": {
-                "encore/laravel-admin": "1.5.19",
-                "ibrand/laravel-sms": "~1.0",
-                "ibrand/setting": "~1.0",
-                "laravel-admin-ext/backup": "1.0.2",
-                "laravel-admin-ext/helpers": "1.0.2",
-                "laravel-admin-ext/log-viewer": "1.0.2",
-                "laravel-admin-ext/redis-manager": "1.0.1",
-                "laravel-admin-ext/scheduling": "1.0.1",
-                "maatwebsite/excel": "~2.1.23",
-                "php": ">=7.0.0"
-            },
-            "require-dev": {
-                "orchestra/testbench": "~3.5",
-                "phpunit/phpunit": "~6.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "iBrand\\Backend\\BackendServiceProvider"
-                    ],
-                    "aliases": {
-                        "BackendMenu": "iBrand\\Backend\\Facades\\Menu"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "iBrand\\Backend\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "shjchen",
-                    "email": "ibrand.shjchen@foxmail.com"
-                }
-            ],
-            "description": "ibrand backend base laravel-admin",
-            "homepage": "https://github.com/ibrandcc/backend",
-            "keywords": [
-                "backend",
-                "form",
-                "grid",
-                "laravel"
-            ],
-            "time": "2019-10-25T11:23:13+00:00"
         },
         {
             "name": "ibrand/laravel-active",
@@ -2638,7 +2638,7 @@
             "time": "2019-01-19T21:32:55+00:00"
         },
         {
-            "name": "jeremeamia/SuperClosure",
+            "name": "jeremeamia/superclosure",
             "version": "2.4.0",
             "source": {
                 "type": "git",
@@ -4432,16 +4432,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v4.2.4",
+            "version": "v4.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "97e59c7a16464196a8b9c77c47df68e4a39a45c4"
+                "reference": "9a9981c347c5c49d6dfe5cf826bb882b824080dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/97e59c7a16464196a8b9c77c47df68e4a39a45c4",
-                "reference": "97e59c7a16464196a8b9c77c47df68e4a39a45c4",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/9a9981c347c5c49d6dfe5cf826bb882b824080dc",
+                "reference": "9a9981c347c5c49d6dfe5cf826bb882b824080dc",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -4455,6 +4455,7 @@
                 "php": ">=7.0"
             },
             "require-dev": {
+                "ircmaxell/php-yacc": "0.0.5",
                 "phpunit/phpunit": "^6.5 || ^7.0 || ^8.0"
             },
             "bin": [
@@ -4463,7 +4464,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.2-dev"
+                    "dev-master": "4.3-dev"
                 }
             },
             "autoload": {
@@ -4485,7 +4486,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2019-09-01T07:51:21+00:00"
+            "time": "2019-11-08T13:50:10+00:00"
         },
         {
             "name": "overtrue/easy-sms",
@@ -6139,9 +6140,9 @@
             "authors": [
                 {
                     "name": "Freek Van der Herten",
-                    "role": "Developer",
                     "email": "freek@spatie.be",
-                    "homepage": "https://spatie.be"
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
                 }
             ],
             "description": "Dump databases",
@@ -6582,16 +6583,16 @@
         },
         {
             "name": "symfony/css-selector",
-            "version": "v4.3.5",
+            "version": "v5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/css-selector.git",
-                "reference": "f4b3ff6a549d9ed28b2b0ecd1781bf67cf220ee9"
+                "reference": "19d29e7098b7b2c3313cb03902ca30f100dcb837"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/css-selector/zipball/f4b3ff6a549d9ed28b2b0ecd1781bf67cf220ee9",
-                "reference": "f4b3ff6a549d9ed28b2b0ecd1781bf67cf220ee9",
+                "url": "https://api.github.com/repos/symfony/css-selector/zipball/19d29e7098b7b2c3313cb03902ca30f100dcb837",
+                "reference": "19d29e7098b7b2c3313cb03902ca30f100dcb837",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -6601,12 +6602,12 @@
                 ]
             },
             "require": {
-                "php": "^7.1.3"
+                "php": "^7.2.5"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.3-dev"
+                    "dev-master": "5.0-dev"
                 }
             },
             "autoload": {
@@ -6637,7 +6638,7 @@
             ],
             "description": "Symfony CssSelector Component",
             "homepage": "https://symfony.com",
-            "time": "2019-10-02T08:36:26+00:00"
+            "time": "2019-11-18T17:27:11+00:00"
         },
         {
             "name": "symfony/debug",
@@ -6906,16 +6907,16 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v3.4.32",
+            "version": "v3.4.35",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "2b6a666d6ff7fb65d10b97d817c8e7930944afb9"
+                "reference": "3e915e5ce305f8bc8017597f71f1f4095092ddf8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/2b6a666d6ff7fb65d10b97d817c8e7930944afb9",
-                "reference": "2b6a666d6ff7fb65d10b97d817c8e7930944afb9",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/3e915e5ce305f8bc8017597f71f1f4095092ddf8",
+                "reference": "3e915e5ce305f8bc8017597f71f1f4095092ddf8",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -6957,7 +6958,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2019-09-01T21:32:23+00:00"
+            "time": "2019-10-30T12:43:22+00:00"
         },
         {
             "name": "symfony/http-foundation",
@@ -7624,16 +7625,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v3.4.32",
+            "version": "v3.4.35",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "344dc588b163ff58274f1769b90b75237f32ed16"
+                "reference": "c19da50bc3e8fa7d60628fdb4ab5d67de534cf3e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/344dc588b163ff58274f1769b90b75237f32ed16",
-                "reference": "344dc588b163ff58274f1769b90b75237f32ed16",
+                "url": "https://api.github.com/repos/symfony/process/zipball/c19da50bc3e8fa7d60628fdb4ab5d67de534cf3e",
+                "reference": "c19da50bc3e8fa7d60628fdb4ab5d67de534cf3e",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -7675,7 +7676,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2019-09-25T14:09:38+00:00"
+            "time": "2019-10-24T15:33:53+00:00"
         },
         {
             "name": "symfony/psr-http-message-bridge",
@@ -7896,16 +7897,16 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v4.3.5",
+            "version": "v4.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "fe6193b066c457c144333c06aaa869a2d42a167f"
+                "reference": "bbce239b35b0cd47bd75848b23e969f17dd970e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/fe6193b066c457c144333c06aaa869a2d42a167f",
-                "reference": "fe6193b066c457c144333c06aaa869a2d42a167f",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/bbce239b35b0cd47bd75848b23e969f17dd970e7",
+                "reference": "bbce239b35b0cd47bd75848b23e969f17dd970e7",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -7974,7 +7975,7 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2019-09-27T14:37:39+00:00"
+            "time": "2019-11-06T23:21:49+00:00"
         },
         {
             "name": "symfony/translation-contracts",
@@ -11491,7 +11492,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "dingo/api": 15,
-        "ibrand/backend": 20
+        "foridom/backend": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
