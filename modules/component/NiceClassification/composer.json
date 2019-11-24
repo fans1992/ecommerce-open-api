@@ -1,17 +1,17 @@
 {
-  "name": "ibrand/nice-classification",
+  "name": "foridom/nice-classification",
   "type": "library",
-  "description": "ibrand address component",
+  "description": "foridom nice-classification component",
   "keywords": [
-    "iBrand",
-    "Address",
+    "foridom",
+    "nice-classification",
     "component"
   ],
   "license": "MIT",
   "authors": [
     {
-      "name": "shjchen",
-      "email": "ibrand.shjchen@foxmail.com"
+      "name": "fanzhuo",
+      "email": "fanzhuo@foridom.com"
     }
   ],
   "require": {
