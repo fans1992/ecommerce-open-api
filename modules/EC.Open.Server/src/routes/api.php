@@ -11,7 +11,7 @@
 
 $router->get('test', 'BeanbunController@test');
 
-/************************* PC ******************************/
+/************************************************************* PC注册登录 ************************************************/
 //手机号短信登录
 $router->post('oauth/sms', 'AuthController@smsLogin')->name('api.oauth.sms');
 //用户注册
@@ -21,7 +21,7 @@ $router->post('oauth/login', 'AuthController@login')->name('api.oauth.login');
 //用户找回密码
 $router->post('oauth/password/reset', 'AuthController@resetPassword')->name('api.oauth.password.reset');
 
-/************************* 小程序 ****************************/
+/************************************************************* 小程序 ****************************************************/
 //小程序快捷登陆
 $router->post('oauth/MiniProgramLogin', 'MiniProgramLoginController@login')->name('api.oauth.miniprogram.login');
 //小程序手机号授权登录
@@ -29,7 +29,7 @@ $router->post('oauth/MiniProgramMobileLogin', 'MiniProgramLoginController@mobile
 //小程序获取openId
 $router->get('oauth/miniprogram/openid', 'MiniProgramLoginController@getOpenIdByCode');
 
-/************************* 公众号扫码登录 **********************/
+/*********************************************************** 公众号扫码登录 ************************************************/
 //扫码关注公众号登录
 $router->get('oauth/qrcode', 'WechatController@getWxPic');
 //微信消息接入
@@ -37,23 +37,23 @@ $router->any('wechat', 'WechatController@serve');
 //微信登录绑定手机号
 $router->post('oauth/qrcode/check', 'WechatController@loginCheck');
 
-/************************* 商品详情 **********************/
+/************************************************************ 商品详情 ****************************************************/
 $router->get('store/list', 'GoodsController@index')->name('api.goods.list');
 $router->get('store/detail/{id}', 'GoodsController@show')->name('api.goods.detail');
 $router->get('store/detail/{id}/stock', 'GoodsController@getStock')->name('api.goods.detail.stock');
 $router->get('store/detail/{id}/share/img', 'GoodsController@shareImg')->name('api.goods.detail.share.img');
 $router->get('store/question/list', 'GoodsController@questionIndex')->name('api.goods.question.list');
 
-/************************* 首页数据 **********************/
+/************************************************************ 首页数据 ****************************************************/
 $router->get('home', 'HomeController@index')->name('api.home.index');
 $router->get('category', 'HomeController@category')->name('api.home.category');
 $router->get('micro/page/{code}', 'MicroPageController@index')->name('api.micro.page.index');
 
-/************************* 尼斯分类 **********************/
+/************************************************************* 尼斯分类 ****************************************************/
 $router->get('classification', 'NiceClassificationController@index')->name('api.classification.index');
 
 
-/************************* 其他 **********************/
+/************************************************************* 其他 **********************************************************/
 //客户留言
 $router->post('guest/feedbacks', 'CustomerServiceController@store');
 //微信服务器回调
@@ -67,7 +67,7 @@ $router->group(config('ibrand.ec-open-api.routeAuthAttributes'), function ($rout
     //手机登录扫码绑定微信
     $router->post('oauth/qrcode/binding', 'WechatController@wechatBind');
 
-    /************************* 购物车 **********************/
+    /************************************************* 购物车 ****************************************************/
     $router->post('shopping/cart', 'ShoppingCartController@store')->name('api.shopping.cart.store');
     $router->get('shopping/cart', 'ShoppingCartController@index')->name('api.shopping.cart');
     $router->put('shopping/cart/{id}', 'ShoppingCartController@update')->name('api.shopping.cart.put');
@@ -75,7 +75,7 @@ $router->group(config('ibrand.ec-open-api.routeAuthAttributes'), function ($rout
     $router->post('shopping/cart/clear', 'ShoppingCartController@clear')->name('api.shopping.cart.clear');
     $router->get('shopping/cart/count', 'ShoppingCartController@count')->name('api.shopping.cart.count');
 
-    /************************* 购物流程 **********************/
+    /************************************************ 购物流程 ****************************************************/
     $router->post('shopping/order/checkout', 'ShoppingController@checkout')->name('api.shopping.order.checkout');    //购物车结算||直接下单
     $router->post('shopping/order/confirm', 'ShoppingController@confirm')->name('api.shopping.order.confirm');       //提交订单
     $router->post('shopping/order/charge', 'PaymentController@createCharge')->name('api.shopping.order.charge');     //创建支付请求
@@ -87,7 +87,11 @@ $router->group(config('ibrand.ec-open-api.routeAuthAttributes'), function ($rout
     $router->post('shopping/order/review', 'ShoppingController@review')->name('api.shopping.order.review');          //订单评价
     $router->post('shopping/order/delivery', 'ShoppingController@delivery')->name('api.order.delivery');             //发货
 
-    /************************* 订单联系人 **********************/
+    //自助注册商标
+    $router->post('shopping/brand/images', 'ShoppingController@createBrandImage')->name('api.order.delivery');             //
+
+
+    /************************************************* 订单联系人 **************************************************/
     $router->get('contacts', 'ContactsController@index')->name('api.contact.list');
     $router->post('contacts', 'ContactsController@store')->name('api.contact.store');
     $router->patch('contacts/{id}', 'ContactsController@update')->name('api.contact.update');
@@ -96,14 +100,14 @@ $router->group(config('ibrand.ec-open-api.routeAuthAttributes'), function ($rout
     $router->get('contacts/default', 'ContactsController@default')->name('api.contact.default');
 
 
-    /*************************** 我的收藏 ********************/
+    /*************************************************** 我的收藏 **************************************************/
     $router->get('favorite', 'FavoriteController@index')->name('api.favorite');
     $router->post('favorite', 'FavoriteController@store')->name('api.favorite.store');
     $router->delete('favorite', 'FavoriteController@delete')->name('api.favorite.delete');
     $router->post('favorite/delFavs', 'FavoriteController@delFavs')->name('api.favorite.delFavs');
     $router->get('favorite/isfav', 'FavoriteController@getIsFav')->name('api.favorite.isFav');
 
-    /************************* 用户 **********************/
+    /**************************************************** 用户 ****************************************************/
     $router->get('me', 'UserController@me')->name('api.me');
     //刷新token
     $router->put('oauth/authorizations/current', 'AuthController@update')->name('api.oauth.update');
@@ -121,7 +125,7 @@ $router->group(config('ibrand.ec-open-api.routeAuthAttributes'), function ($rout
     $router->get('coupon', 'CouponController@index')->name('api.coupon.list');
     $router->get('coupon/{id}', 'CouponController@show')->name('api.coupon.show');
 
-    /************************* 促销活动和优惠券 **********************/
+    /************************************************* 促销活动和优惠券 **********************************************/
     $router->post('discount', 'DiscountController@create')->name('api.discount.create');
     $router->post('coupon', 'CouponController@create')->name('api.coupon.create');
     $router->post('coupon/take', 'CouponController@take')->name('api.coupon.take');

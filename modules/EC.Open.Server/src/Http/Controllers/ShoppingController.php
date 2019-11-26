@@ -35,6 +35,7 @@ use Illuminate\Support\Collection;
 use GuoJiangClub\Component\Product\Models\Goods;
 use GuoJiangClub\Component\Product\Models\Product;
 use iBrand\Shoppingcart\Item;
+use Intervention\Image\Image;
 use Log;
 
 class ShoppingController extends Controller
@@ -648,5 +649,12 @@ class ShoppingController extends Controller
         $data = new Item(array_merge($input, $item));
         $cartItems->put($__raw_id, $data);
         return $cartItems;
+    }
+
+    public function createBrandImage(Image $image)
+    {
+        dd($image);
+        $img = $image->make(url('img/banner.png'))->resize(200, 200);
+        dd($img);
     }
 }
