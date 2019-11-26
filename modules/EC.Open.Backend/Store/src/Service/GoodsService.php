@@ -140,7 +140,8 @@ class GoodsService
     {
         $questionData = [];
         foreach ($questionlist as $key => $val) {
-            $questionData[] = ['sort' => $val['sort'],
+            $questionData[] = [
+                'sort' => $val['sort'],
                 'question' => $val['question'],
                 'code' => $key,
                 'answer' => $val['answer'],
