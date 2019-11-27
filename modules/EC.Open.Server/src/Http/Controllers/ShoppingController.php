@@ -35,7 +35,7 @@ use Illuminate\Support\Collection;
 use GuoJiangClub\Component\Product\Models\Goods;
 use GuoJiangClub\Component\Product\Models\Product;
 use iBrand\Shoppingcart\Item;
-use Intervention\Image\Image;
+use Intervention\Image\ImageManager;
 use Log;
 
 class ShoppingController extends Controller
@@ -500,7 +500,7 @@ class ShoppingController extends Controller
                 $optionServices = $this->getOptionService($item['attribute_value_ids']);
                 $option_services_price = $optionServices->sum('attribute_value');
                 $item_meta['attribute_value_ids'] = $item['attribute_value_ids'];
-                $item_meta['option_service'] =  $optionServices;
+                $item_meta['option_service'] = $optionServices;
             } else {
                 $option_services_price = 0;
                 $item_meta['attribute_value_ids'] = null;
@@ -651,10 +651,47 @@ class ShoppingController extends Controller
         return $cartItems;
     }
 
-    public function createBrandImage(Image $image)
+    public function createBrandImage(ImageManager $image)
     {
-        dd($image);
-        $img = $image->make(url('img/banner.png'))->resize(200, 200);
-        dd($img);
+        $img = $image->canvas(150, 150, '#fff');
+
+        $name = request('brand_name');
+        $length = mb_strlen($name);
+
+        switch ($length) {
+            case $length >= 0 && $length < 2:
+                $size = 80;
+                break;
+            case $length >= 2 && $length < 4:
+                $size = 40;
+                break;
+            case $length >= 4 && $length < 8:
+                $size = 20;
+                break;
+            case $length >= 8 && $length < 15:
+                $size = 10;
+                break;
+            case $length >= 15 && $length < 30:
+                $size = 5;
+                break;
+            default:
+                $size = 1;
+        }
+
+        $img->text($name, 75, 75, function ($font) use ($size) {
+
+            $font->file(public_path('font/msyh.ttf'));
+
+            $font->size($size);
+
+            $font->valign('middle');
+
+            $font->align('center');
+
+            $font->color('#000000');
+        });
+
+        return $img->response('png');
     }
+
 }
