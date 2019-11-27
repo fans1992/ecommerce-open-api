@@ -25,6 +25,7 @@
 		"ibrand/laravel-ueditor": "^1.0",
 		"ibrand/pay": "~0.2",
 		"ibrand/setting": "^1.1",
+		"iidestiny/laravel-filesystem-oss": "^1.2",
 		"intervention/image": "^2.5",
 		"jenssegers/agent": "^2.4",
 		"kalnoy/nestedset": "^4.1",
