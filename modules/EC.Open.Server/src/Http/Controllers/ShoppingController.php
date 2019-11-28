@@ -28,6 +28,7 @@ use GuoJiangClub\Component\Product\Models\AttributeValue;
 use GuoJiangClub\Component\Product\Repositories\GoodsRepository;
 use GuoJiangClub\Component\Product\Repositories\ProductRepository;
 use GuoJiangClub\Component\Shipping\Models\Shipping;
+use GuoJiangClub\EC\Open\Backend\Store\Handlers\ImageUploadHandler;
 use GuoJiangClub\EC\Open\Core\Applicators\PointApplicator;
 use GuoJiangClub\EC\Open\Core\Processor\OrderProcessor;
 use GuoJiangClub\EC\Open\Core\Services\DiscountService;
@@ -36,6 +37,7 @@ use GuoJiangClub\Component\Product\Models\Goods;
 use GuoJiangClub\Component\Product\Models\Product;
 use iBrand\Shoppingcart\Item;
 use Intervention\Image\ImageManager;
+use Storage;
 use Log;
 
 class ShoppingController extends Controller
@@ -651,6 +653,12 @@ class ShoppingController extends Controller
         return $cartItems;
     }
 
+    /**
+     * 生成商标图片
+     *
+     * @param ImageManager $image
+     * @return \Dingo\Api\Http\Response
+     */
     public function createBrandImage(ImageManager $image)
     {
         $img = $image->canvas(150, 150, '#fff');
@@ -689,9 +697,15 @@ class ShoppingController extends Controller
             $font->align('center');
 
             $font->color('#000000');
-        });
+        })->stream();
 
-        return $img->response('png');
+        $disk = Storage::disk('qiniu');
+        $filename = 'brand/'. time() . '_' . str_random(10) . '.png';
+
+        $disk->put($filename, $img->__toString());
+        $url = $disk->getUrl($filename);
+
+        return $this->success(['url' => $url]);
     }
 
 }
