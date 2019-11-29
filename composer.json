@@ -13,11 +13,13 @@
 	"require": {
 		"php": ">=7.0.0",
 		"barryvdh/laravel-cors": "^0.10",
+		"barryvdh/laravel-snappy": "^0.4.6",
 		"dingo/api": "2.0.0-alpha1",
 		"doctrine/dbal": "^2.10",
 		"encore/laravel-admin": "1.5.19",
 		"fideloper/proxy": "~3.3",
 		"foridom/backend": "dev-master",
+		"h4cc/wkhtmltopdf-amd64": "0.12.x",
 		"ibrand/laravel-active": "~2.0",
 		"ibrand/laravel-miniprogram-poster": "^1.1",
 		"ibrand/laravel-shopping-cart": "^1.3",
