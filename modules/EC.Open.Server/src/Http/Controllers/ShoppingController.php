@@ -699,11 +699,8 @@ class ShoppingController extends Controller
             $font->color('#000000');
         })->stream();
 
-        $disk = Storage::disk('qiniu');
-        $filename = 'brand/'. time() . '_' . str_random(10) . '.png';
-
-        $disk->put($filename, $img->__toString());
-        $url = $disk->getUrl($filename);
+        $path = 'brand/'. date('Ymd'). '/' . str_random(10) . '.png';
+        $url = upload_image($path, $img->__toString());
 
         return $this->success(['url' => $url]);
     }
