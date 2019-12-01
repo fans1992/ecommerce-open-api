@@ -211,7 +211,7 @@ class IndustryController extends Controller
     {
         /** @var Industry $industry */
         $industry = Industry::query()->find($request->input('industry_id'));
-        $data = $industry->recommendClassifications()->orderBy('id', 'desc')->paginate(10);
+        $data = $industry->recommendClassifications()->where('nice_classification_parent_id', 0)->orderBy('id', 'desc')->paginate(10);
 
         return $this->ajaxJson(true, $data);
     }
