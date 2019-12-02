@@ -29,7 +29,6 @@
                     </thead>
                     <tbody id='spec_box'>
                     <tr class="td_c">
-                        {{--<td><input type="text" class="form-control" name="add_value[0][name]"></td>--}}
                         <td>
                             <select class="form-control type-s"  name="add_value[0][nice_classification_id]" >
                                 <option value="">请选择</option>
@@ -50,16 +49,11 @@
             </div>
 
             <div class="form-group col-md-25">
-                {{--<button id="specAddButton" type="button" class="btn btn-w-m btn-primary">继续添加</button>--}}
-                <label class="col-sm-2 control-label">所属分类：</label>
+                <label class="control-label" style="text-align: left;padding-left: 40px;">所属分类：</label>
                 <div class="col-sm-20" id="category-box">
 
                 </div>
             </div>
-
-            {{--<div class="form-group">--}}
-                {{--<button id="specAddButton" type="button" class="btn btn-w-m btn-primary">继续添加</button>--}}
-            {{--</div>--}}
         </div>
 
         {!! Form::close() !!}

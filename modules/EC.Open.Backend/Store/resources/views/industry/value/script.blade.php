@@ -3,7 +3,6 @@
     <div class="category-wrap">
         <input data-id="{#id#}" data-parent="{#parent_id#}" data-name="{#value#}"
                data-uniqueId="categoryIds_{#id#}" class="category_checks" type="checkbox"/>
-        &nbsp;&nbsp;&nbsp;
         <input class="btn btn-outline btn-primary category-btn" type="button" value="{#value#}"/>
     </div>
 </script>
