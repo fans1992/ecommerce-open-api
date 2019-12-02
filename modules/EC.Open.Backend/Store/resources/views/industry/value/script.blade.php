@@ -204,11 +204,11 @@
 
 
     //根据显示类型返回格式
-    function getTr(indexValue) {
+    function getTr() {
         //数据
-        var specRow = '<tr class="td_c"><td>' + '<select class="form-control"  name="add_value[' + indexValue + '][nice_classification_id]">'
+        var specRow = '<tr class="td_c"><td>' + '<select class="form-control"  name="top_nice_classification_id">'
             + '<option value="">请选择</option>' + @foreach($classifications as $item)' + <option value="{{$item->id}}">{{$item->classification_code. '-' .$item->classification_name}}</option>' +@endforeach' + </select>'
-                +'<td><input type="text" class="form-control" name="add_value[' + indexValue + '][alias]" />' +
+                +'<td><input type="text" class="form-control" name="alias" />' +
                 '</td>' +
                         '<td><a href="javascript:;" class="btn btn-xs btn-primary operatorPhy">' +
                 '<i class="fa fa-trash" data-toggle="tooltip" data-placement="top" data-original-title="删除"></i></a></td></tr>';
@@ -229,9 +229,7 @@
     $('#specAddButton').click(
             function () {
 
-                var specSize = $('#spec_box tr').size();
-
-                var specRow = getTr(specSize);
+                var specRow = getTr();
 
                 $('#spec_box').append(specRow);
 

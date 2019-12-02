@@ -12,16 +12,18 @@
 @stop
 
 <style>
-    .row{
+    .row {
         padding-top: 20px;
     }
-    .search{
+
+    .search {
         position: absolute;
         right: 10px;
         top: 0;
-        display:flex;
+        display: flex;
     }
-    button{
+
+    button {
         margin-left: 10px;
         background-color: #fff;
         outline: none;
@@ -34,11 +36,11 @@
 @section('body')
     <div class="row">
         <!-- 搜索框 -->
-        <div class="search"> 
+        <div class="search">
             <input type="text" placeholder="输入商品/服务名称" class="searchVal">
-            <button >搜索</button>
+            <button>搜索</button>
         </div>
-        
+
         {!! Form::open( [ 'route' => ['admin.industry.classification.store'], 'method' => 'POST', 'id' => 'spec-value-form','class'=>'form-horizontal'] ) !!}
 
         <input type="hidden" name="industry_id" value="{{$industry_id}}">
@@ -55,14 +57,14 @@
                     <tbody id='spec_box'>
                     <tr class="td_c">
                         <td>
-                            <select class="form-control type-s"  name="add_value[0][nice_classification_id]" >
+                            <select class="form-control type-s" name="top_nice_classification_id">
                                 <option value="">请选择</option>
                                 @foreach($classifications as $item)
-                                    <option value="{{$item->id}}">{{$item->classification_code. '-' .$item->classification_name}}</option>
+                                    <option value="{{$item->id}}">{{'第' . $item->classification_code .'类'}}</option>
                                 @endforeach
                             </select>
                         </td>
-                        <td><input type="text" class="form-control" name="add_value[0][alias]"></td>
+                        <td><input type="text" class="form-control" name="alias"></td>
                         <td><a href="javascript:;" class="btn btn-xs btn-primary operatorPhy">
                                 <i class="fa fa-trash" data-toggle="tooltip" data-placement="top"
                                    data-original-title="删除"></i></a>
@@ -99,14 +101,14 @@
     </button>
 
     <script>
-    $(".search button").click(function(){
-        let searchVal = $(".searchVal").val();
-        // $.post("",{suggest:txt},function(result){
-            
-        // });
-        
-    })
-</script>
+        $(".search button").click(function () {
+            let searchVal = $(".searchVal").val();
+            // $.post("",{suggest:txt},function(result){
+
+            // });
+
+        })
+    </script>
     @include('store-backend::industry.value.script')
 
 @stop
