@@ -6,6 +6,8 @@
             line-height: 28px;
             color: #fff;
             text-align: center
+        }.modal.in .modal-dialog{
+            width:1200px !important;
         }
     </style>
 
@@ -43,7 +45,6 @@
                     <!-- /.tab-content -->
         </div>
     </div>
-
     <div id="spu_modal" class="modal inmodal fade"></div>
 @include('store-backend::industry.script')
 

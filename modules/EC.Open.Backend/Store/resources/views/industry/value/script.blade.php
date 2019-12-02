@@ -159,18 +159,26 @@
             var $parentCategoryContent = $checkbox.closest('.category-content');
             operator($parentCategoryContent, id, name, 3);
         });
+        // 点击复选框 
         $('body').on('ifChanged', '.category_checks', function () {
             var id = $(this).data('id');
             var name = $(this).data('name');
             var parentId = $(this).data('parent');
             var code = $(this).data('code');
             var $parentCategoryContent = $(this).closest('.category-content');
+            console.log("$(this).is(':checked')", $(this).is(':checked'));
             if ($(this).is(':checked')) {
                 operator($parentCategoryContent, id, name, 1);
                 addTheOrderCheckedCat(id, parentId, name, code);
             } else {
                 operator($parentCategoryContent, id, name, 2);
                 removeTheOrderCheckedCat(id);
+                // 移除已经选中的所有复选框
+                $('.titCon02 .category-wrap .icheckbox_square-green').each(function(item,i) {
+                    if ($(this).is(".checked")) {
+                        $(this).removeClass("checked")
+                    }
+                }) 
             }
         });
     });

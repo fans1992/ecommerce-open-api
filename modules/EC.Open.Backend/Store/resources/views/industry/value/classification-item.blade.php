@@ -17,7 +17,7 @@
         border: none;
         margin-left: 0;
     }
-    .modal.in .modal-dialog{
+    .modal-dialog{
         width: 1200px !important;
     }
     .titCon02 {
