@@ -43,6 +43,9 @@ class IndustryController extends Controller
     public function classifictionStore(Request $request, Industry $industry)
     {
         $input = $request->all();
+        if ($classification = $industry->recommendClassifications()->find($input['nice_classification_id'])) {
+            return $this->failed('无法重复添加,该行业对应分类:' . $classification->classification_name . ' 已存在相关记录');
+        }
 
 //        if (isset($input['value'])) {
 //            $updateData = $input['value'];
@@ -58,7 +61,6 @@ class IndustryController extends Controller
 //            }
 //        }
 
-//        dd($input);
         $classifications[] = [
             'nice_classification_id' => $input['nice_classification_id'],
             'alias' => $input['alias'],
@@ -87,7 +89,7 @@ class IndustryController extends Controller
             ]);
         }
 
-        $this->success();
+        return $this->success();
 
     }
 
