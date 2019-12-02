@@ -17,7 +17,7 @@
         border: none;
         margin-left: 0;
     }
-    .modal.in .modal-dialog{
+    .modal-dialog{
         width: 1200px !important;
     }
     .titCon02 {
@@ -78,7 +78,9 @@
         <div class="category-content titCon01" data-position="left">
             @foreach($classifications as $key => $val)
                 <div class="category-wrap">
-                    <input data-id="{{$val->id}}" data-parent="{{$val->parent_id | 0}}" data-name="{{$val->classification_name}}" data-uniqueId="categoryIds_{{$val->id}}" class="category_checks" type="checkbox" @if(isset($cateIds)) {{in_array($val->id, $cateIds) ? 'checked' : ''}} @endif />
+                    <input data-id="{{$val->id}}" data-parent="{{$val->parent_id | 0}}" data-name="{{$val->classification_name}}"
+                     data-uniqueId="categoryIds_{{$val->id}}" class="category_checks" type="checkbox"
+                      @if(isset($cateIds)) {{in_array($val->id, $cateIds) ? 'checked' : ''}} @endif />
                     &nbsp; <input class="btn btn-outline btn-primary category-btn" type="button" value="{{$val->classification_code . ' ' . $val->classification_name}}"/>
                 </div>
             @endforeach

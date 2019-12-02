@@ -11,9 +11,34 @@
     {!! Html::style(env("APP_URL").'/assets/backend/libs/ladda/ladda-themeless.min.css') !!}
 @stop
 
-
+<style>
+    .row{
+        padding-top: 20px;
+    }
+    .search{
+        position: absolute;
+        right: 10px;
+        top: 0;
+        display:flex;
+    }
+    button{
+        margin-left: 10px;
+        background-color: #fff;
+        outline: none;
+        border: none;
+        background-color: #2bc0be;
+        color: #fff;
+        padding: 5px 15px;
+    }
+</style>
 @section('body')
     <div class="row">
+        <!-- 搜索框 -->
+        <div class="search"> 
+            <input type="text" placeholder="输入商品/服务名称" class="searchVal">
+            <button >搜索</button>
+        </div>
+        
         {!! Form::open( [ 'route' => ['admin.industry.classification.store'], 'method' => 'POST', 'id' => 'spec-value-form','class'=>'form-horizontal'] ) !!}
 
         <input type="hidden" name="industry_id" value="{{$industry_id}}">
@@ -73,6 +98,15 @@
             data-target="#spec-value-form">保存
     </button>
 
+    <script>
+    $(".search button").click(function(){
+        let searchVal = $(".searchVal").val();
+        // $.post("",{suggest:txt},function(result){
+            
+        // });
+        
+    })
+</script>
     @include('store-backend::industry.value.script')
 
 @stop
