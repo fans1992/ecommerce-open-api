@@ -52,6 +52,28 @@ $router->get('micro/page/{code}', 'MicroPageController@index')->name('api.micro.
 /************************************************************* 尼斯分类 ****************************************************/
 $router->get('classification', 'NiceClassificationController@index')->name('api.classification.index');
 
+/************************************************************* 后台行业推荐 ****************************************************/
+//行业管理推荐
+//$router->get('admin/store/industry', 'IndustryController@index')->name('api.classification.index');
+$router->get('admin/industry/classifications/search', 'IndustryController@getClassificationByGroupID')->name('admin.industry.getClassification');
+$router->post('admin/industry/{industry}/classifications', 'IndustryController@classifictionStore')->name('admin.industry.classification.store');
+
+
+
+//$router->get('industry/{id}/classification', 'IndustryController@classifictionIndex')->name('admin.industry.classification.index');
+$router->post('industry/getRecommendData', 'IndustryController@getRecommendData')->name('admin.industry.classification.getRecommendData');
+//$router->post('industry/classification/store', 'IndustryController@classifictionStore')->name('admin.industry.classification.store');
+
+$router->get('industry/editClassification', 'IndustryController@editClassification')->name('admin.industry.classification.editClassification');
+$router->post('industry/storeClassification', 'IndustryController@storeClassification')->name('admin.industry.classification.storeClassification');
+//$router->get('industry/{id}/addClassification', 'IndustryController@addClassification')->name('admin.industry.classification.addClassification');
+
+$router->post('industry/delClassification', 'IndustryController@delClassification')->name('admin.industry.classification.delete');
+
+//$router->get('industry/get_classification', 'IndustryController@getClassificationByGroupID')->name('admin.industry.get_classification');
+
+$router->get('industry/industry_sort', 'IndustryController@industry_sort')->name('admin.industry.industry_sort');
+
 
 /************************************************************* 其他 **********************************************************/
 //客户留言

@@ -163,7 +163,14 @@ class IndustryController extends Controller
     }
 
 
-    public function classifictionStore(Request $request)
+    /**
+     * 行业推荐类别保存
+     *
+     * @param Request $request
+     * @param Industry $industry
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function classifictionStore(Request $request, Industry $industry)
     {
         $input = $request->except('_token');
 
@@ -211,7 +218,7 @@ class IndustryController extends Controller
     {
         /** @var Industry $industry */
         $industry = Industry::query()->find($request->input('industry_id'));
-        $data = $industry->recommendClassifications()->orderBy('id', 'desc')->paginate(10);
+        $data = $industry->recommendClassifications()->where('nice_classification_parent_id', 0)->orderBy('id', 'desc')->paginate(10);
 
         return $this->ajaxJson(true, $data);
     }
@@ -240,7 +247,7 @@ class IndustryController extends Controller
      * @param Request $request
      * @return mixed
      */
-    public function storeClassification(Request $request)
+    public function updateClassification(Request $request)
     {
         $input = $request->except('_token');
         $industryId = $request->input('industry_id');
@@ -288,7 +295,18 @@ class IndustryController extends Controller
         /** @var Industry $industry */
         $industry = Industry::query()->find($request->input('industry_id'));
 
-        $industry->recommendClassifications()->detach($request->input('nice_classification_id'));
+        $niceClassificationId = $request->input('nice_classification_id');
+
+        //根节点以及所有子节点
+        $niceClassificationIds = $industry->recommendClassifications()
+            ->where('nice_classification.id',  $niceClassificationId)
+            ->orWhere('parent_id', $niceClassificationId)
+            ->orWhereHas('parent', function ($query) use ($niceClassificationId) {
+                $query->where('parent_id', $niceClassificationId);
+            })
+            ->pluck('nice_classification.id')->toArray();
+
+        $industry->recommendClassifications()->detach($niceClassificationIds);
         return $this->ajaxJson(true);
     }
 

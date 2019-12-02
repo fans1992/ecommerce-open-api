@@ -20,4 +20,9 @@ class NiceClassification extends Model implements Transformable
         $this->setTable( 'nice_classification');
     }
 
+    public function parent()
+    {
+        return $this->belongsTo(NiceClassification::class, 'parent_id', 'id');
+    }
+
 }

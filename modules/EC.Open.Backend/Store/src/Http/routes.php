@@ -158,7 +158,7 @@ $router->group(['prefix' => 'admin/store'], function () use ($router) {
     $router->post('industry/classification/store', 'IndustryController@classifictionStore')->name('admin.industry.classification.store');
 
     $router->get('industry/editClassification', 'IndustryController@editClassification')->name('admin.industry.classification.editClassification');
-    $router->post('industry/storeClassification', 'IndustryController@storeClassification')->name('admin.industry.classification.storeClassification');
+    $router->post('industry/updateClassification', 'IndustryController@updateClassification')->name('admin.industry.classification.updateClassification');
     $router->get('industry/{id}/addClassification', 'IndustryController@addClassification')->name('admin.industry.classification.addClassification');
 
     $router->post('industry/delClassification', 'IndustryController@delClassification')->name('admin.industry.classification.delete');
