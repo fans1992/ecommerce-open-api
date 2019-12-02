@@ -1,7 +1,7 @@
 {!! Html::script(env("APP_URL").'/assets/backend/libs/pop.js?v=20180807') !!}
 <script type="text/html" id="template">
     <div class="category-wrap">
-        <input data-id="{#id#}" data-parent="{#parent_id#}" data-code="{#classification_code#}" data-name="{#value#}"
+        <input data-id="{#id#}" data-parent="{#parent_id#}"  data-name="{#value#}"
                data-uniqueId="categoryIds_{#id#}" class="category_checks" type="checkbox"/>
         <input class="btn btn-outline btn-primary category-btn" type="button" value="{#value#}"/>
     </div>
@@ -62,7 +62,7 @@
             });
         }
 
-        function addTheOrderCheckedCat(dataId, dataParentId, dataName, dataCode) {
+        function addTheOrderCheckedCat(dataId, dataParentId, dataName, dataCode='') {
 
             var whetherExistNode = $(".category_name").find('[data-id=' + dataId + ']').length;
             if (0 == whetherExistNode) {
