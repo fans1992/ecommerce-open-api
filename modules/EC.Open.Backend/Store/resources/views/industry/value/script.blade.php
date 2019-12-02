@@ -1,7 +1,7 @@
 {!! Html::script(env("APP_URL").'/assets/backend/libs/pop.js?v=20180807') !!}
 <script type="text/html" id="template">
     <div class="category-wrap">
-        <input data-id="{#id#}" data-parent="{#parent_id#}" data-name="{#value#}"
+        <input data-id="{#id#}" data-parent="{#parent_id#}" data-code="{#classification_code#}" data-name="{#value#}"
                data-uniqueId="categoryIds_{#id#}" class="category_checks" type="checkbox"/>
         <input class="btn btn-outline btn-primary category-btn" type="button" value="{#value#}"/>
     </div>
@@ -62,10 +62,11 @@
             });
         }
 
-        function addTheOrderCheckedCat(dataId, dataParentId, dataName) {
+        function addTheOrderCheckedCat(dataId, dataParentId, dataName, dataCode) {
+
             var whetherExistNode = $(".category_name").find('[data-id=' + dataId + ']').length;
             if (0 == whetherExistNode) {
-                var template = " <li data-id=" + dataId + " data-parent=" + dataParentId + "><span>" + dataName +
+                var template = " <li data-id=" + dataId + " data-parent=" + dataParentId + "><span>" + dataCode + " " + dataName +
                     "</span><ul></ul>" +
                     " </li>";
                 var $parentObject = $(".category_name").find('[data-id=' + dataParentId + ']');
@@ -112,13 +113,13 @@
                 $.get(
                     "{{route('admin.industry.get_classification')}}", data,
                     function (json) {
-                        console.log(json);
                         for (var i = 0; i < json.length; i++) {
 
                             var data = {
                                 id: json[i].id,
                                 value: json[i].classification_name,
                                 parent_id: json[i].parent_id,
+                                classification_code:json[i].classification_code
                             }
                             html = html + $.convertTemplate('#template', data, '');
                         }
@@ -163,11 +164,12 @@
             var id = $(this).data('id');
             var name = $(this).data('name');
             var parentId = $(this).data('parent');
+            var code = $(this).data('code');
             var $parentCategoryContent = $(this).closest('.category-content');
             console.log("$(this).is(':checked')", $(this).is(':checked'));
             if ($(this).is(':checked')) {
                 operator($parentCategoryContent, id, name, 1);
-                addTheOrderCheckedCat(id, parentId, name);
+                addTheOrderCheckedCat(id, parentId, name, code);
             } else {
                 operator($parentCategoryContent, id, name, 2);
                 removeTheOrderCheckedCat(id);
