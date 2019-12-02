@@ -51,7 +51,7 @@
                     <tr>
                         <th>商标类别</th>
                         <th>类别别名</th>
-                        <th>操作</th>
+                        {{--<th>操作</th>--}}
                     </tr>
                     </thead>
                     <tbody id='spec_box'>
@@ -65,10 +65,10 @@
                             </select>
                         </td>
                         <td><input type="text" class="form-control" name="alias"></td>
-                        <td><a href="javascript:;" class="btn btn-xs btn-primary operatorPhy">
-                                <i class="fa fa-trash" data-toggle="tooltip" data-placement="top"
-                                   data-original-title="删除"></i></a>
-                        </td>
+                        {{--<td><a href="javascript:;" class="btn btn-xs btn-primary operatorPhy">--}}
+                                {{--<i class="fa fa-trash" data-toggle="tooltip" data-placement="top"--}}
+                                   {{--data-original-title="删除"></i></a>--}}
+                        {{--</td>--}}
                     </tr>
 
                     </tbody>

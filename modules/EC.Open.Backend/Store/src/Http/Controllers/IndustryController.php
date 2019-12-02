@@ -170,9 +170,14 @@ class IndustryController extends Controller
      * @param Industry $industry
      * @return \Illuminate\Http\JsonResponse
      */
-    public function classifictionStore(Request $request, Industry $industry)
+    public function classifictionStore(Request $request)
     {
         $input = $request->except('_token');
+        $industry = Industry::query()->find($input['industry_id']);
+
+        if ($classification = $industry->recommendClassifications()->find($input['top_nice_classification_id'])) {
+            return $this->ajaxJson(false, [], 500, '无法重复添加,该行业对应' . $classification->classification_code . '分类已存在相关记录');
+        }
 
 //        if (isset($input['value'])) {
 //            $updateData = $input['value'];
@@ -188,20 +193,25 @@ class IndustryController extends Controller
 //            }
 //        }
 
-        if (isset($input['add_value'])) {
-            $createData = $input['add_value'];
+        $classifications[] = [
+            'nice_classification_id' => $input['top_nice_classification_id'],
+            'alias' => $input['alias'],
+        ];
 
-            /** @var Industry $industry */
-            $industry = Industry::query()->find($input['industry_id']);
+        foreach ($input['category_id'] as $classification) {
+            $classifications[] = [
+                'nice_classification_id' => $classification,
+                'alias' => '',
+            ];
+        }
 
-            foreach ($createData as $item) {
-                $classification = NiceClassification::query()->find($item['nice_classification_id']);
+        foreach ($classifications as $item) {
+            $classification = NiceClassification::query()->find($item['nice_classification_id']);
 
-                $industry->recommendClassifications()->attach($classification, [
-                    'alias' => $item['alias'],
-                    'nice_classification_parent_id' => $classification['parent_id'] ?: 0,
-                ]);
-            }
+            $industry->recommendClassifications()->attach($classification, [
+                'alias' => $item['alias'],
+                'nice_classification_parent_id' => $classification['parent_id'] ?: 0,
+            ]);
         }
 
         return $this->ajaxJson();

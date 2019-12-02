@@ -196,7 +196,7 @@
                     location.reload();
                 });
             } else {
-                swal('存在重复的规格值', '', 'error');
+                swal(result.message, '', 'error');
             }
 
         }
