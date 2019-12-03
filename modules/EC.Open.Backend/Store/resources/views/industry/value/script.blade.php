@@ -1,7 +1,7 @@
 {!! Html::script(env("APP_URL").'/assets/backend/libs/pop.js?v=20180807') !!}
 <script type="text/html" id="template">
     <div class="category-wrap">
-        <input data-id="{#id#}" data-parent="{#parent_id#}"  data-name="{#value#}"
+        <input data-id="{#id#}" data-parent="{#parent_id#}"  data-name="{#value#}" data-level="{#level#}"
                data-uniqueId="categoryIds_{#id#}" class="category_checks" type="checkbox"/>
         <input class="btn btn-outline btn-primary category-btn" type="button" value="{#value#}"/>
     </div>
@@ -85,12 +85,12 @@
             $node.remove();
         }
 
-        function operator($object, parentId, parentName, flag) {
+        function operator($object, parentId, parentName, level, flag) {
             // $flag =1 表示checked操作， $flag=2 表示unchecked操作， $flag=3表示点击钮
             // $object 表示 category-content类对象
 
             // 首先 写unchecked操作
-            if (2 == flag) {
+            if (flag == 2) {
                 // 在category_ids里面找parentId
                 var positionIndex = category_ids.indexOf(parentId);
                 category_ids.splice(positionIndex, 1);
@@ -102,9 +102,16 @@
                 //将表单中的hidden 某个category_id移除
                 $("#hidden-category-id").find("#category_" + parentId).remove();
             } else {
-                // 在flag =1 或者 flag=3时 一定会向后台请求数据
                 // html
                 var html = "";
+
+                if (level == 3) {
+                    //3级分类直接处理
+                    handle($object, parentId, parentName, flag, html);
+                    return;
+                }
+
+                // 1级2级分类 在flag =1 或者 flag=3时 一定会向后台请求数据
                 //var groupId = $("select[name=category_group]").children('option:selected').val();
                 var data = {
                     "parentId": parentId,
@@ -120,36 +127,43 @@
                                 id: json[i].id,
                                 value: json[i].classification_name,
                                 parent_id: json[i].parent_id,
-                                classification_code:json[i].classification_code
+                                classification_code:json[i].classification_code,
+                                level:json[i].level,
                             }
                             html = html + $.convertTemplate('#template', data, '');
                         }
-                        // 异步请求后， 模板数据全都存在于var html中 下一步获得 类为 category-content的位置 这里有个bug,  应该要放进 ajax里面
-                        var categoryContentPosition = $object.data('position');
 
-                        if (categoryContentPosition != "right") {
-                            // categoryContentPosition 不等于 right 找到它的next sibling
-                            var $nextObject = $object.next();
-                            // 首先将 $nextObject里面的内容清空
-                            $nextObject.children().remove();
-                            $nextObject.append(html);
-                            // debugger;
-                            $(".category_checks").iCheck({checkboxClass: 'icheckbox_square-green'});
-                            //将id存在于 category_ids里的 checkbox checked
-                            for (var i = 0; i < category_ids.length; i++) {
-                                $("input[data-uniqueId=categoryIds_" + category_ids[i] + "]").iCheck('check');
-                            }
-                        }
-                        if (1 == flag) {
-                            parentId = parseInt(parentId);
-                            if (category_ids.indexOf(parentId) < 0) {
-                                category_ids.push(parentId);
-                                category_checked.push(parentName);
-                                $("#hidden-category-id").append("<input  type=\"hidden\" name=\"category_id[]\" id=category_" + parentId + " value=" + parentId + ">");
-                            }
-                        }
+                        handle($object, parentId, parentName, flag, html);
                     });
             }
+        }
+
+        function handle($object, parentId, parentName, flag, html) {
+            // 异步请求后， 模板数据全都存在于var html中 下一步获得 类为 category-content的位置 这里有个bug,  应该要放进 ajax里面
+            var categoryContentPosition = $object.data('position');
+
+            if (categoryContentPosition != "right") {
+                // categoryContentPosition 不等于 right 找到它的next sibling
+                var $nextObject = $object.next();
+                // 首先将 $nextObject里面的内容清空
+                $nextObject.children().remove();
+                $nextObject.append(html);
+                // debugger;
+                $(".category_checks").iCheck({checkboxClass: 'icheckbox_square-green'});
+                //将id存在于 category_ids里的 checkbox checked
+                for (var i = 0; i < category_ids.length; i++) {
+                    $("input[data-uniqueId=categoryIds_" + category_ids[i] + "]").iCheck('check');
+                }
+            }
+            if (1 == flag) {
+                parentId = parseInt(parentId);
+                if (category_ids.indexOf(parentId) < 0) {
+                    category_ids.push(parentId);
+                    category_checked.push(parentName);
+                    $("#hidden-category-id").append("<input  type=\"hidden\" name=\"category_id[]\" id=category_" + parentId + " value=" + parentId + ">");
+                }
+            }
+
         }
 
         $('body').on('click', '.category-btn', function () {
@@ -157,28 +171,32 @@
             var $checkbox = $(this).prev().find(':checkbox');
             var id = $checkbox.data('id');
             var name = $checkbox.data('name');
+            var level = $checkbox.data('level');
             var $parentCategoryContent = $checkbox.closest('.category-content');
-            operator($parentCategoryContent, id, name, 3);
+            operator($parentCategoryContent, id, name, level, 3);
         });
         // 点击复选框 
         $('body').on('ifChanged', '.category_checks', function () {
             var id = $(this).data('id');
             var name = $(this).data('name');
             var parentId = $(this).data('parent');
+            var level = $(this).data('level');
             var code = $(this).data('code');
             var $parentCategoryContent = $(this).closest('.category-content');
             console.log("$(this).is(':checked')", $(this).is(':checked'));
             if ($(this).is(':checked')) {
                 // 点击右边的子选项 不发送ajax请求，只显示头部已选中的子选项
-                if ($parentCategoryContent.is(".titCon02")){
-                    addTheOrderCheckedCat(id, parentId, name, code);    
-                } else{
-                    operator($parentCategoryContent, id, name, 1);
-                    addTheOrderCheckedCat(id, parentId, name, code);    
-                }
+                // if ($parentCategoryContent.is(".titCon02")){
+                //     addTheOrderCheckedCat(id, parentId, name, code);
+                // } else{
+                //     operator($parentCategoryContent, id, name, 1);
+                //     addTheOrderCheckedCat(id, parentId, name, code);
+                // }
                 
+                operator($parentCategoryContent, id, name, level, 1);
+                addTheOrderCheckedCat(id, parentId, name, code);
             } else {
-                operator($parentCategoryContent, id, name, 2);
+                operator($parentCategoryContent, id, name, level, 2);
                 removeTheOrderCheckedCat(id);
                 // 移除已经选中的所有复选框
                 $('.titCon02 .category-wrap .icheckbox_square-green').each(function(item,i) {
