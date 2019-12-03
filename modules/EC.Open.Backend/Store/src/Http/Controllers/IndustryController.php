@@ -195,7 +195,7 @@ class IndustryController extends Controller
 
         $classifications[] = [
             'nice_classification_id' => $input['top_nice_classification_id'],
-            'alias' => $input['alias'],
+            'alias' => $input['alias'] ?? '',
         ];
 
         foreach (array_unique($input['category_id']) as $classification) {

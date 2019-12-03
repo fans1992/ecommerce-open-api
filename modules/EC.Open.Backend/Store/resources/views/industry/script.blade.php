@@ -49,11 +49,11 @@
             </td>
             <td>
 
-                <a class="btn btn-xs btn-success" id="chapter-create-btn" data-toggle="modal"
-                   data-target="#spu_modal" data-backdrop="static" data-keyboard="false"
-                   data-url="{{route('admin.industry.classification.editClassification')}}?industry_id={#pivot.industry_id#}&nice_classification_id={#pivot.nice_classification_id#}">
-                    <i class="fa fa-pencil" data-toggle="tooltip"
-                       data-placement="top" title="" data-original-title="编辑"></i></a>
+                {{--<a class="btn btn-xs btn-success" id="chapter-create-btn" data-toggle="modal"--}}
+                   {{--data-target="#spu_modal" data-backdrop="static" data-keyboard="false"--}}
+                   {{--data-url="{{route('admin.industry.classification.editClassification')}}?industry_id={#pivot.industry_id#}&nice_classification_id={#pivot.nice_classification_id#}">--}}
+                    {{--<i class="fa fa-pencil" data-toggle="tooltip"--}}
+                       {{--data-placement="top" title="" data-original-title="编辑"></i></a>--}}
 
 
                 <a href="javascript:;"   data-url="{{route('admin.industry.classification.delete')}}"
