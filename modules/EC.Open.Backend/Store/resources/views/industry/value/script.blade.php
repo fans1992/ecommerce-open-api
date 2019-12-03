@@ -118,6 +118,7 @@
                     //"groupId": groupId,
                     "type-click-category-button": true
                 };
+                outID = parentId;
                 $.get(
                     "{{route('admin.industry.get_classification')}}", data,
                     function (json) {
@@ -175,6 +176,7 @@
             var $parentCategoryContent = $checkbox.closest('.category-content');
             operator($parentCategoryContent, id, name, level, 3);
         });
+        var outID = ""; // 记录请求后台的二级标题id 
         // 点击复选框 
         $('body').on('ifChanged', '.category_checks', function () {
             var id = $(this).data('id');
@@ -185,26 +187,55 @@
             var $parentCategoryContent = $(this).closest('.category-content');
             console.log("$(this).is(':checked')", $(this).is(':checked'));
             if ($(this).is(':checked')) {
-                // 点击右边的子选项 不发送ajax请求，只显示头部已选中的子选项
-                // if ($parentCategoryContent.is(".titCon02")){
-                //     addTheOrderCheckedCat(id, parentId, name, code);
-                // } else{
-                //     operator($parentCategoryContent, id, name, 1);
-                //     addTheOrderCheckedCat(id, parentId, name, code);
-                // }
-                
                 operator($parentCategoryContent, id, name, level, 1);
                 addTheOrderCheckedCat(id, parentId, name, code);
             } else {
-                operator($parentCategoryContent, id, name, level, 2);
+                // 点击右边的复选框
+                operator($parentCategoryContent, id, name, level, 2); 
                 removeTheOrderCheckedCat(id);
-                // 移除已经选中的所有复选框
-                $('.titCon02 .category-wrap .icheckbox_square-green').each(function(item,i) {
-                    if ($(this).is(".checked")) {
-                        $(this).removeClass("checked")
+                console.log('level === 2', parseInt(level) ===2);
+                 if (parseInt(level) ===2 ){
+                    // 判断当前选中的二级标题 跟 最后一次发送后台请求的二级标题 是否一样
+                    if (id == outID ) {
+                         // 移除右边已经选中的所有复选框 
+                        $('.titCon02 .category-wrap .icheckbox_square-green').each(function(item,i) {
+                            if ($(this).is(".checked")) {
+                                $(this).removeClass("checked");
+                                var rightID  = $(this).find("input").data('id');
+                                var rightName  = $(this).find("input").data('name');
+                                // 在category_ids里面找parentId
+                                var positionIndex = category_ids.indexOf(rightID);
+                                console.log('移除positionIndex',positionIndex);
+                                category_ids.splice(positionIndex, 1);
+
+                                // 同上， 将parentName从category_checked中移除
+                                positionIndex = category_checked.indexOf(rightName);
+                                category_checked.splice(positionIndex, 1);
+                                //将表单中的hidden 某个category_id移除
+                                $("#hidden-category-id").find("#category_" + rightID).remove();
+                            }
+                        }) 
+ 
                     }
-                }) 
+                   
+                    console.log('level =2, category_ids', category_ids);
+                 } 
+                // 右边的复选项取消选中
+                else{
+                    // 在category_ids里面找parentId
+                    console.log('category_ids', category_ids,"id", id);
+                    // var rigIndex = category_ids.indexOf(id);
+                    // console.log('移除positionIndex',rigIndex);
+                    // category_ids.splice(rigIndex, 1);
+
+                    // 同上， 将parentName从category_checked中移除
+                    // rigIndex = category_checked.indexOf(name);
+                    // category_checked.splice(rigIndex, 1);
+                    //将表单中的hidden 某个category_id移除
+                    $("#hidden-category-id").find("#category_" + id).remove();
+                }
             }
+            console.log('category_ids', category_ids);
         });
     });
 </script>
