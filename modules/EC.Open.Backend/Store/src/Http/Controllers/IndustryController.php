@@ -175,9 +175,9 @@ class IndustryController extends Controller
         $input = $request->except('_token');
         $industry = Industry::query()->find($input['industry_id']);
 
-        if ($classification = $industry->recommendClassifications()->find($input['top_nice_classification_id'])) {
-            return $this->ajaxJson(false, [], 500, '无法重复添加,该行业对应' . $classification->classification_code . '分类已存在相关记录');
-        }
+//        if ($classification = $industry->recommendClassifications()->find($input['top_nice_classification_id'])) {
+//            return $this->ajaxJson(false, [], 500, '无法重复添加,该行业对应' . $classification->classification_code . '分类已存在相关记录');
+//        }
 
 //        if (isset($input['value'])) {
 //            $updateData = $input['value'];
