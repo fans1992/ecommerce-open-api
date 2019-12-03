@@ -207,6 +207,9 @@ class IndustryController extends Controller
 
         foreach ($classifications as $item) {
             $classification = NiceClassification::query()->find($item['nice_classification_id']);
+            if ($industry->recommendClassifications()->find($classification->id)) {
+                continue;
+            }
 
             $industry->recommendClassifications()->attach($classification, [
                 'alias' => $item['alias'],
