@@ -198,7 +198,7 @@ class IndustryController extends Controller
             'alias' => $input['alias'],
         ];
 
-        foreach ($input['category_id'] as $classification) {
+        foreach (array_unique($input['category_id']) as $classification) {
             $classifications[] = [
                 'nice_classification_id' => $classification,
                 'alias' => '',
@@ -333,7 +333,18 @@ class IndustryController extends Controller
             return response()->json($classifications);
         } elseif (request()->has('type-select-category-button')) {
             $classifications = NiceClassification::query()->where('parent_id', request('parentId'))->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
-            return view('store-backend::industry.value.classification-item', compact('classifications'));
+            $industry = Industry::query()->find(request('industryId'));
+            $cateIds = $industry->recommendClassifications->pluck('id')->all();
+            $cateNames = $industry->recommendClassifications->all();
+
+            $categoriesLevelTwo = [];
+            foreach ($classifications as $classification) {
+                if (in_array($classification->id, $cateIds)) {
+                    $categoriesLevelTwo[] =  NiceClassification::query()->where('parent_id', $classification->id)->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
+                }
+            }
+
+            return view('store-backend::industry.value.classification-item', compact('classifications', 'categoriesLevelTwo', 'cateNames', 'cateIds'));
 
         } else {
             $classifications = NiceClassification::query()->where('parent_id', 0)->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);

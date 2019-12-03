@@ -9,6 +9,8 @@
 
 <script>
 // 点击select下拉框
+    var industry_id = $('input[name="industry_id"]').val();
+
     $("body .td_c").on("change", ".type-s", function () {
         var that = $(this);
         var val = that.find("option:selected").val();
@@ -21,6 +23,7 @@
             category_ids = [];
             var data = {
                 parentId:val,
+                industryId:industry_id,
                 "type-select-category-button": true,
                 _token: _token
             };

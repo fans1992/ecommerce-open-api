@@ -88,9 +88,9 @@
                 @foreach($categoriesLevelTwo as $val)
                     @foreach($val as $v)
                         <div class="category-wrap">
-                            <input data-id="{{$v->id}}" data-parent="{{$v->parent_id | 0}}" data-name="{{$v->name}}" data-uniqueId="categoryIds_{{$v->id}}" class="category_checks" type="checkbox" @if(isset($cateIds)) {{in_array($v->id, $cateIds) ? 'checked' : ''}} @endif />
+                            <input data-id="{{$v->id}}" data-parent="{{$v->parent_id | 0}}" data-name="{{$v->classification_name}}" data-uniqueId="categoryIds_{{$v->id}}" class="category_checks" type="checkbox" @if(isset($cateIds)) {{in_array($v->id, $cateIds) ? 'checked' : ''}} @endif />
                             &nbsp;&nbsp;&nbsp;
-                            <input class="btn btn-outline btn-primary category-btn" type="button" value="{{$v->name}}"/>
+                            <input class="btn btn-outline btn-primary category-btn" type="button" value="{{$v->classification_name}}"/>
                         </div>
                     @endforeach
                 @endforeach
