@@ -99,6 +99,7 @@
     <button type="submit" class="ladda-button btn btn-primary" data-style="slide-right" data-toggle="form-submit"
             data-target="#spec-value-form">保存
     </button>
+
     @include('store-backend::industry.value.script')
 
 @stop
