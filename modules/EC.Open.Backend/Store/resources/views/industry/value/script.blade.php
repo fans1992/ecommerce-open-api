@@ -73,13 +73,14 @@
                 moveTheOrderCat($parentObject, template);
             }
         }
-
+        // 移除已经选中的二级与三级选项
         function removeTheOrderCheckedCat(dataId) {
             var $node = $(".category_name").find('[data-id=' + dataId + ']');
             var $childrenNode = $node.children('ul').children();
             if ($childrenNode.length > 0) {
                 var $nodeParent = $node.parents('li').first();
-                moveTheOrderCat($nodeParent, $childrenNode);
+                // moveTheOrderCat($nodeParent, $childrenNode);
+                $nodeParent.find('ul').html("");
             }
             $node.remove();
         }
@@ -168,8 +169,14 @@
             var $parentCategoryContent = $(this).closest('.category-content');
             console.log("$(this).is(':checked')", $(this).is(':checked'));
             if ($(this).is(':checked')) {
-                operator($parentCategoryContent, id, name, 1);
-                addTheOrderCheckedCat(id, parentId, name, code);
+                // 点击右边的子选项 不发送ajax请求，只显示头部已选中的子选项
+                if ($parentCategoryContent.is(".titCon02")){
+                    addTheOrderCheckedCat(id, parentId, name, code);    
+                } else{
+                    operator($parentCategoryContent, id, name, 1);
+                    addTheOrderCheckedCat(id, parentId, name, code);    
+                }
+                
             } else {
                 operator($parentCategoryContent, id, name, 2);
                 removeTheOrderCheckedCat(id);
