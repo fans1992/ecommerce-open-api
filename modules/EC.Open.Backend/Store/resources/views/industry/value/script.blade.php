@@ -8,16 +8,16 @@
 </script>
 
 <script>
-
+// 点击select下拉框
     $("body .td_c").on("change", ".type-s", function () {
         var that = $(this);
         var val = that.find("option:selected").val();
 
-        var category_checked = [];
+        // var category_checked = [];
         var category_ids = [];
         // 初始化
         function initCategory() {
-            category_checked = [];
+            // category_checked = [];
             category_ids = [];
             var data = {
                 parentId:val,
@@ -40,9 +40,10 @@
         @endif
 
         $("#hidden-category-id input").each(function () {
-            category_ids.push(parseInt($(this).val()));
+          let parID  = $(this).data("val");
+            category_ids.push([parseInt(parID), parseInt($(this).val())]);
         });
-        category_checked = $(".category_name").text().split("/");
+        // category_checked = $(".category_name").text().split("/");
 
         initTheOrderCheckedCats();
 
@@ -85,40 +86,45 @@
             $node.remove();
         }
 
-        function operator($object, parentId, parentName, level, flag) {
+        function operator($object, id, parentId, level, flag) {
             // $flag =1 表示checked操作， $flag=2 表示unchecked操作， $flag=3表示点击钮
             // $object 表示 category-content类对象
 
             // 首先 写unchecked操作
             if (flag == 2) {
                 // 在category_ids里面找parentId
-                var positionIndex = category_ids.indexOf(parentId);
-                category_ids.splice(positionIndex, 1);
+                category_ids.forEach(function(item, i){
+                    if (item[1] == id) {
+                        category_ids.splice(i, 1);        
+                    }
+                })
+                // var positionIndex = category_ids.indexOf(id);
+                // category_ids.splice(positionIndex, 1);
 
                 // 同上， 将parentName从category_checked中移除
-                positionIndex = category_checked.indexOf(parentName);
-                category_checked.splice(positionIndex, 1);
+                // positionIndex = category_checked.indexOf(parentName);
+                // category_checked.splice(positionIndex, 1);
 
                 //将表单中的hidden 某个category_id移除
-                $("#hidden-category-id").find("#category_" + parentId).remove();
+                $("#hidden-category-id").find("#category_" + id).remove();
             } else {
                 // html
                 var html = "";
 
                 if (level == 3) {
                     //3级分类直接处理
-                    handle($object, parentId, parentName, flag, html);
+                    handle($object, id, parentId, flag, html);
                     return;
                 }
 
                 // 1级2级分类 在flag =1 或者 flag=3时 一定会向后台请求数据
                 //var groupId = $("select[name=category_group]").children('option:selected').val();
                 var data = {
-                    "parentId": parentId,
+                    "parentId": id,
                     //"groupId": groupId,
                     "type-click-category-button": true
                 };
-                outID = parentId;
+                outID = id;
                 $.get(
                     "{{route('admin.industry.get_classification')}}", data,
                     function (json) {
@@ -134,12 +140,12 @@
                             html = html + $.convertTemplate('#template', data, '');
                         }
 
-                        handle($object, parentId, parentName, flag, html);
+                        handle($object, id, parentId, flag, html);
                     });
             }
         }
 
-        function handle($object, parentId, parentName, flag, html) {
+        function handle($object, id, parentId, flag, html) {
             // 异步请求后， 模板数据全都存在于var html中 下一步获得 类为 category-content的位置 这里有个bug,  应该要放进 ajax里面
             var categoryContentPosition = $object.data('position');
 
@@ -153,20 +159,44 @@
                 $(".category_checks").iCheck({checkboxClass: 'icheckbox_square-green'});
                 //将id存在于 category_ids里的 checkbox checked
                 for (var i = 0; i < category_ids.length; i++) {
-                    $("input[data-uniqueId=categoryIds_" + category_ids[i] + "]").iCheck('check');
+                    $("input[data-uniqueId=categoryIds_" + category_ids[i][1] + "]").iCheck('check');
                 }
             }
             if (1 == flag) {
-                parentId = parseInt(parentId);
-                if (category_ids.indexOf(parentId) < 0) {
-                    category_ids.push(parentId);
-                    category_checked.push(parentName);
-                    $("#hidden-category-id").append("<input  type=\"hidden\" name=\"category_id[]\" id=category_" + parentId + " value=" + parentId + ">");
+                id = parseInt(id);
+                if (category_ids.length == 0) {
+                    category_ids.push([parentId,id]);
+                    $("#hidden-category-id").append("<input  type=\"hidden\" name=\"category_id[]\" id=category_" + id + " data-val=" +parentId + "  value=" + id + ">");
                 }
+                else{
+                    $.each(category_ids,function(i,item){
+                        console.log('item', item);
+                        if (item[1]  == id) {
+                            return false;
+                        }
+                        if (item[1] != id &&  i == category_ids.length - 1) {
+                            category_ids.push([parentId,id]);
+                            $("#hidden-category-id").append("<input  type=\"hidden\" name=\"category_id[]\" id=category_" + id + " data-val=" +parentId + "  value=" + id + ">");
+                        }
+                        // 右侧复选框选中一个，左侧复选框就选中
+                        // if (item[1]  == parentId) {
+                        //     return false;
+                        // }
+                        // if (item[1] != parentId  &&  i == category_ids.length - 1) {
+                        //     category_ids.push([parentId,id]);
+                        //     $("#hidden-category-id").append("<input  type=\"hidden\" name=\"category_id[]\" id=category_" + id + " data-val=" +parentId + "  value=" + id + ">");
+                        // }
+                    })
+                }
+               console.log('flag,1 category_ids',  category_ids);
+                // if (category_ids.indexOf(id) < 0) {
+                //     category_ids.push(id);
+                //     // category_checked.push(parentName);
+                //     $("#hidden-category-id").append("<input  type=\"hidden\" name=\"category_id[]\" id=category_" + id + " data-val=" +parentId + "value=" + id + ">");
+                // }
             }
 
         }
-
         $('body').on('click', '.category-btn', function () {
             // 获得相邻的checkbox
             var $checkbox = $(this).prev().find(':checkbox');
@@ -176,8 +206,6 @@
             var $parentCategoryContent = $checkbox.closest('.category-content');
             operator($parentCategoryContent, id, name, level, 3);
         });
-        var outID = ""; // 记录请求后台的二级标题id 
-        // 点击复选框 
         $('body').on('ifChanged', '.category_checks', function () {
             var id = $(this).data('id');
             var name = $(this).data('name');
@@ -186,15 +214,23 @@
             var code = $(this).data('code');
             var $parentCategoryContent = $(this).closest('.category-content');
             console.log("$(this).is(':checked')", $(this).is(':checked'));
-            if ($(this).is(':checked')) {
-                operator($parentCategoryContent, id, name, level, 1);
+            if ($(this).is(':checked')) { // 选中状态
+                operator($parentCategoryContent, id, parentId, level, 1);
                 addTheOrderCheckedCat(id, parentId, name, code);
+                // 右边但凡有一个复选框选中，左边对应 复选框也自动选中
+                if($(".titCon02").find(".checked").length ==  1){
+                    console.log('input', $("input[data-uniqueId=categoryIds_" + parentId + "]").is(':checked'));
+                    if (!$("input[data-uniqueId=categoryIds_" + parentId + "]").is(':checked')) {
+                        $("input[data-uniqueId=categoryIds_" + parentId + "]").iCheck('check');    
+                    }
+                    
+                }
             } else {
+                console.log('outID', outID, "id", id , "id == outID", id == outID);
                 // 点击右边的复选框
-                operator($parentCategoryContent, id, name, level, 2); 
+                operator($parentCategoryContent, id, parentId, level, 2); 
                 removeTheOrderCheckedCat(id);
-                console.log('level === 2', parseInt(level) ===2);
-                 if (parseInt(level) ===2 ){
+                 if (parseInt(level) == 2 ){
                     // 判断当前选中的二级标题 跟 最后一次发送后台请求的二级标题 是否一样
                     if (id == outID ) {
                          // 移除右边已经选中的所有复选框 
@@ -202,35 +238,42 @@
                             if ($(this).is(".checked")) {
                                 $(this).removeClass("checked");
                                 var rightID  = $(this).find("input").data('id');
-                                var rightName  = $(this).find("input").data('name');
+                                console.log('rightID', rightID);
+                                // var rightName  = $(this).find("input").data('name');
                                 // 在category_ids里面找parentId
-                                var positionIndex = category_ids.indexOf(rightID);
-                                console.log('移除positionIndex',positionIndex);
-                                category_ids.splice(positionIndex, 1);
-
-                                // 同上， 将parentName从category_checked中移除
-                                positionIndex = category_checked.indexOf(rightName);
-                                category_checked.splice(positionIndex, 1);
-                                //将表单中的hidden 某个category_id移除
-                                $("#hidden-category-id").find("#category_" + rightID).remove();
+                                $.each(category_ids,function(i,item){
+                                    console.log('item', item);
+                                    if (item[1] == rightID) {
+                                        console.log('移除右侧i', rightID);
+                                        category_ids.splice(i, 1);
+                                        $("#hidden-category-id").find("#category_" + rightID).remove();
+                                        return false;
+                                    }
+                                })
                             }
                         }) 
- 
+                    } else{
+                        // 从数组category_ids中删除 右边的复选框已选中状态的id 与 左边复选框的id
+                        var iArr=[];
+                        var category_idsNew = []
+                        $.each(category_ids,function(i,item){
+                            console.log('item', item);
+                            if (item.indexOf(id) > -1) {
+                                console.log('移除右侧item', item);
+                                $("#hidden-category-id").find("#category_" + item[1]).remove();
+                            } else {
+                                category_idsNew.push(item)  
+                            }
+                        })
+                        
+                        category_ids = category_idsNew 
+                        
                     }
-                   
                     console.log('level =2, category_ids', category_ids);
                  } 
                 // 右边的复选项取消选中
                 else{
-                    // 在category_ids里面找parentId
                     console.log('category_ids', category_ids,"id", id);
-                    // var rigIndex = category_ids.indexOf(id);
-                    // console.log('移除positionIndex',rigIndex);
-                    // category_ids.splice(rigIndex, 1);
-
-                    // 同上， 将parentName从category_checked中移除
-                    // rigIndex = category_checked.indexOf(name);
-                    // category_checked.splice(rigIndex, 1);
                     //将表单中的hidden 某个category_id移除
                     $("#hidden-category-id").find("#category_" + id).remove();
                 }
