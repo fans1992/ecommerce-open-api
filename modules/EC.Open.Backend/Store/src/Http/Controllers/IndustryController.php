@@ -353,7 +353,11 @@ class IndustryController extends Controller
                 ->get(['parent_id', 'nice_classification.id']);
 
             $cateIds = $recommendClassifications->pluck('id')->all();
-            $cateNames = $industry->recommendClassifications->all();
+            $cateNames = $industry->recommendClassifications()
+                ->where('parent_id', $parentId)
+                ->orWhereHas('parent', function ($query) use($parentId) {
+                    $query->where('parent_id', $parentId);
+                })->get();
 
 //            $category_ids = [];
 //            foreach ($recommendClassifications as $recommendClassification) {
@@ -372,22 +376,25 @@ class IndustryController extends Controller
             return view('store-backend::industry.value.classification-item', compact('classifications', 'categoriesLevelTwo', 'cateNames', 'cateIds'));
 
         } else {
+            $parentId = request('parentId');
             $query = NiceClassification::query();
             if ($search = request()->has('search')) {
-                $like = '%' . $search . '%';
+                $like = $search;
                 $query->where(function ($query) use($like) {
-                    $query->where('classification_name', 'like', $like)
+                    $query->where('classification_name', $like)
                         ->orWhereHas('children', function ($query) use($like) {
-                            $query->where('classification_name', 'like', $like)
+                            $query->where('classification_name', $like)
                                 ->orWhereHas('children', function ($query) use($like) {
-                                    $query->where('classification_name', 'like', $like);
+                                    $query->where('classification_name', $like);
                                 });
                         });
                 });
             }
 
-            $classifications = $query->where('parent_id', 0)->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
-            return view('store-backend::industry.value.classification-item', compact('classifications'));
+            $classifications = $query->where('parent_id', $parentId)->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
+            return response()->json($classifications);
+
+//            return view('store-backend::industry.value.classification-item', compact('classifications'));
         }
     }
 
