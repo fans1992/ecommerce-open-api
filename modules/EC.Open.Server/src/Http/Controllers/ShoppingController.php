@@ -489,6 +489,7 @@ class ShoppingController extends Controller
                 continue;
             }
 
+
             $item_meta = [
                 'image' => $item->img,
                 'detail_id' => $item->model->detail_id,
@@ -496,6 +497,7 @@ class ShoppingController extends Controller
                 'service_price' => $item->service_price * 100,
                 'official_price' => $item->official_price * 100,
             ];
+
 
             //TODO 附加服务待优化
             if ($item['attribute_value_ids']) {
@@ -646,10 +648,13 @@ class ShoppingController extends Controller
             $input['color'] = isset($item['color']) ? $item['color'] : '';
             $input['type'] = 'spu';
             $input['__model'] = Goods::class;
-            $input['com_id'] = $item['id'];
+//            $input['com_id'] = $item['id'];
+
+            $input += $item['attributes'];
         }
         $data = new Item(array_merge($input, $item));
         $cartItems->put($__raw_id, $data);
+
         return $cartItems;
     }
 
