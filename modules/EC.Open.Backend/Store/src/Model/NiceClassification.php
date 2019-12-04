@@ -25,4 +25,9 @@ class NiceClassification extends Model implements Transformable
         return $this->belongsTo(NiceClassification::class, 'parent_id', 'id');
     }
 
+    public function children()
+    {
+        return $this->hasMany(NiceClassification::class, 'parent_id', 'id');
+    }
+
 }

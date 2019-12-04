@@ -372,8 +372,21 @@ class IndustryController extends Controller
             return view('store-backend::industry.value.classification-item', compact('classifications', 'categoriesLevelTwo', 'cateNames', 'cateIds'));
 
         } else {
-            $classifications = NiceClassification::query()->where('parent_id', 0)->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
-//            $classifications = $this->niceClassificationRepository->getOneLevelNiceClassification();
+            $query = NiceClassification::query();
+            if ($search = request()->has('search')) {
+                $like = '%' . $search . '%';
+                $query->where(function ($query) use($like) {
+                    $query->where('classification_name', 'like', $like)
+                        ->orWhereHas('children', function ($query) use($like) {
+                            $query->where('classification_name', 'like', $like)
+                                ->orWhereHas('children', function ($query) use($like) {
+                                    $query->where('classification_name', 'like', $like);
+                                });
+                        });
+                });
+            }
+
+            $classifications = $query->where('parent_id', 0)->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
             return view('store-backend::industry.value.classification-item', compact('classifications'));
         }
     }
