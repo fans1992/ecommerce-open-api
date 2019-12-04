@@ -377,21 +377,31 @@ class IndustryController extends Controller
 
         } else {
             $parentId = request('parentId');
+//            dd('123');
             $query = NiceClassification::query();
-            if ($search = request()->has('search')) {
+            if ($search = request()->input('search')) {
                 $like = $search;
-                $query->where(function ($query) use($like) {
-                    $query->where('classification_name', $like)
-                        ->orWhereHas('children', function ($query) use($like) {
-                            $query->where('classification_name', $like)
-                                ->orWhereHas('children', function ($query) use($like) {
-                                    $query->where('classification_name', $like);
-                                });
-                        });
-                });
+                $query->where('classification_name', $like);
+
+
+
+
+//                $like = $search;
+//                $query->where(function ($query) use($like) {
+//                    $query->where('classification_name', $like)
+//                        ->orWhereHas('children', function ($query) use($like) {
+//                            $query->where('classification_name', $like)
+//                                ->orWhereHas('children', function ($query) use($like) {
+//                                    $query->where('classification_name', $like);
+//                                });
+//                        });
+//                });
             }
 
-            $classifications = $query->where('parent_id', $parentId)->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
+            $classification = $query->first(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
+            $classifications[] = $classification->parent->parent;
+//            dd($classifications);
+//            $classifications = $query->where('parent_id', $parentId)->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
             return response()->json($classifications);
 
 //            return view('store-backend::industry.value.classification-item', compact('classifications'));
