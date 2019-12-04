@@ -132,7 +132,6 @@
                     "{{route('admin.industry.get_classification')}}", data,
                     function (json) {
                         for (var i = 0; i < json.length; i++) {
-
                             var data = {
                                 id: json[i].id,
                                 value: json[i].classification_name,
@@ -142,7 +141,17 @@
                             }
                             html = html + $.convertTemplate('#template', data, '');
                         }
-
+                        // 点击左边标题， 将右边内容清空  重新复制
+                        var $nextObject = $object.next();
+                        // 首先将 $nextObject里面的内容清空
+                        $nextObject.children().remove();
+                        $nextObject.append(html);
+                        // debugger;
+                        $(".category_checks").iCheck({checkboxClass: 'icheckbox_square-green'});
+                        //将id存在于 category_ids里的 checkbox checked
+                        for (var i = 0; i < category_ids.length; i++) {
+                            $("input[data-uniqueId=categoryIds_" + category_ids[i][1] + "]").iCheck('check');
+                        }
                         handle($object, id, parentId, flag, html);
                     });
             }
@@ -150,21 +159,21 @@
 
         function handle($object, id, parentId, flag, html) {
             // 异步请求后， 模板数据全都存在于var html中 下一步获得 类为 category-content的位置 这里有个bug,  应该要放进 ajax里面
-            var categoryContentPosition = $object.data('position');
+            // var categoryContentPosition = $object.data('position');
 
-            if (categoryContentPosition != "right") {
+            // if (categoryContentPosition != "right") {
                 // categoryContentPosition 不等于 right 找到它的next sibling
-                var $nextObject = $object.next();
-                // 首先将 $nextObject里面的内容清空
-                $nextObject.children().remove();
-                $nextObject.append(html);
-                // debugger;
-                $(".category_checks").iCheck({checkboxClass: 'icheckbox_square-green'});
-                //将id存在于 category_ids里的 checkbox checked
-                for (var i = 0; i < category_ids.length; i++) {
-                    $("input[data-uniqueId=categoryIds_" + category_ids[i][1] + "]").iCheck('check');
-                }
-            }
+                // var $nextObject = $object.next();
+                // // 首先将 $nextObject里面的内容清空
+                // $nextObject.children().remove();
+                // $nextObject.append(html);
+                // // debugger;
+                // $(".category_checks").iCheck({checkboxClass: 'icheckbox_square-green'});
+                // //将id存在于 category_ids里的 checkbox checked
+                // for (var i = 0; i < category_ids.length; i++) {
+                //     $("input[data-uniqueId=categoryIds_" + category_ids[i][1] + "]").iCheck('check');
+                // }
+            // }
             if (1 == flag) {
                 id = parseInt(id);
                 if (category_ids.length == 0) {
@@ -181,22 +190,9 @@
                             category_ids.push([parentId,id]);
                             $("#hidden-category-id").append("<input  type=\"hidden\" name=\"category_id[]\" id=category_" + id + " data-val=" +parentId + "  value=" + id + ">");
                         }
-                        // 右侧复选框选中一个，左侧复选框就选中
-                        // if (item[1]  == parentId) {
-                        //     return false;
-                        // }
-                        // if (item[1] != parentId  &&  i == category_ids.length - 1) {
-                        //     category_ids.push([parentId,id]);
-                        //     $("#hidden-category-id").append("<input  type=\"hidden\" name=\"category_id[]\" id=category_" + id + " data-val=" +parentId + "  value=" + id + ">");
-                        // }
                     })
                 }
                console.log('flag,1 category_ids',  category_ids);
-                // if (category_ids.indexOf(id) < 0) {
-                //     category_ids.push(id);
-                //     // category_checked.push(parentName);
-                //     $("#hidden-category-id").append("<input  type=\"hidden\" name=\"category_id[]\" id=category_" + id + " data-val=" +parentId + "value=" + id + ">");
-                // }
             }
 
         }
