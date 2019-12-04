@@ -331,19 +331,41 @@ class IndustryController extends Controller
     public function getClassificationByGroupID()
     {
         if (request()->has('type-click-category-button')) {
-            $classifications = NiceClassification::query()->where('parent_id', request('parentId'))->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
+            $classifications = NiceClassification::query()
+                ->where('parent_id', request('parentId'))
+                ->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
 
             return response()->json($classifications);
+
         } elseif (request()->has('type-select-category-button')) {
-            $classifications = NiceClassification::query()->where('parent_id', request('parentId'))->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
+            $parentId = request('parentId');
+            $classifications = NiceClassification::query()
+                ->where('parent_id', $parentId)
+                ->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
+
             $industry = Industry::query()->find(request('industryId'));
-            $cateIds = $industry->recommendClassifications->pluck('id')->all();
+
+            $recommendClassifications = $industry->recommendClassifications()
+                ->where('parent_id', $parentId)
+                ->orWhereHas('parent', function ($query) use($parentId) {
+                    $query->where('parent_id', $parentId);
+                })
+                ->get(['parent_id', 'nice_classification.id']);
+
+            $cateIds = $recommendClassifications->pluck('id')->all();
             $cateNames = $industry->recommendClassifications->all();
+
+//            $category_ids = [];
+//            foreach ($recommendClassifications as $recommendClassification) {
+//                $category_ids[] = [$recommendClassification->parent_id, $recommendClassification->id];
+//            }
 
             $categoriesLevelTwo = [];
             foreach ($classifications as $classification) {
                 if (in_array($classification->id, $cateIds)) {
-                    $categoriesLevelTwo[] =  NiceClassification::query()->where('parent_id', $classification->id)->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
+                    $categoriesLevelTwo[] =  NiceClassification::query()
+                        ->where('parent_id', $classification->id)
+                        ->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
                 }
             }
 
