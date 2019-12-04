@@ -159,21 +159,6 @@
 
         function handle($object, id, parentId, flag, html) {
             // 异步请求后， 模板数据全都存在于var html中 下一步获得 类为 category-content的位置 这里有个bug,  应该要放进 ajax里面
-            // var categoryContentPosition = $object.data('position');
-
-            // if (categoryContentPosition != "right") {
-                // categoryContentPosition 不等于 right 找到它的next sibling
-                // var $nextObject = $object.next();
-                // // 首先将 $nextObject里面的内容清空
-                // $nextObject.children().remove();
-                // $nextObject.append(html);
-                // // debugger;
-                // $(".category_checks").iCheck({checkboxClass: 'icheckbox_square-green'});
-                // //将id存在于 category_ids里的 checkbox checked
-                // for (var i = 0; i < category_ids.length; i++) {
-                //     $("input[data-uniqueId=categoryIds_" + category_ids[i][1] + "]").iCheck('check');
-                // }
-            // }
             if (1 == flag) {
                 id = parseInt(id);
                 if (category_ids.length == 0) {
@@ -280,9 +265,7 @@
             console.log('category_ids', category_ids);
         });
     });
-</script>
-
-<script>
+    // 点击 保存 按钮
     $('#spec-value-form').ajaxForm({
         success: function (result) {
             if (result.status) {
@@ -299,6 +282,29 @@
 
         }
     });
+    // 点击 搜索按钮 实现查询
+    $(".search button").click(function(){
+        var inputVal = $(".search input").val();
+        console.log('inputVal', inputVal);
+        var data = {
+                parentId:0,
+                search:inputVal,
+                _token: _token
+            };
+            $.get('{{route('admin.industry.get_classification')}}', data, function (html) {
+                console.log('后台返回的字段', html);
+                // select class="form-control type-s" name="top_nice_classification_id">
+                //                 <option value="">请选择</option>
+                //                 @foreach($classifications as $item)
+                //                     <option value="{{$item->id}}">{{'第' . $item->classification_code .'类'}}</option>
+                //                 @endforeach
+                //             </select>
+                // $(".type-s").children().remove();
+                // $(".type-s").append(html);
+
+             
+            });
+    })
 
 
     //根据显示类型返回格式

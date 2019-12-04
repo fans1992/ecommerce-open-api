@@ -57,9 +57,9 @@
 
 <div class="major">
     <div id="hidden-category-id">
-        @if(isset($cateIds))
-            @foreach($cateIds as $classification_id)
-                <input type="hidden" name="category_id[]" id=category_{{$classification_id}} value="{{$classification_id}}">
+        @if(isset($classIds))
+            @foreach($classIds as $class)
+                <input type="hidden" name="category_id[]" id=category_{{$cate}} value="{{$cate}}">
             @endforeach
         @endif
     </div>
@@ -96,9 +96,6 @@
                 @endforeach
             @endif
         </div>
-        <!-- <div class="category-content col-md-3" data-position="right">
-
-        </div> -->
     </div>
 </div>
 
