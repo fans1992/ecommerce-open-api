@@ -8,13 +8,15 @@
 </script>
 
 <script>
-// 点击select下拉框
     var industry_id = $('input[name="industry_id"]').val();
-
+    
+    // input框输入的值
+    var inputVal ="";
+    // 点击select下拉框
     $("body .td_c").on("change", ".type-s", function () {
+        console.log('inputVal', inputVal);
         var that = $(this);
         var val = that.find("option:selected").val();
-
         // var category_checked = [];
         var category_ids = [];
         // 初始化
@@ -22,12 +24,18 @@
             // category_checked = [];
             category_ids = [];
             var data = {
+                search:inputVal,
                 parentId:val,
                 industryId:industry_id,
                 "type-select-category-button": true,
                 _token: _token
             };
+            // console.log('$.trim(inputVal).length', $.trim(inputVal).length);
+            // if ($.trim(inputVal).length > 0) {
+            //     data[search] = inputVal;
+            // }
             $.get('{{route('admin.industry.get_classification')}}', data, function (html) {
+                console.log('initCategory', html);
                 $('#category-box').children().remove();
                 $('#category-box').append(html);
                 $('#category-box').find("input").iCheck({
@@ -42,6 +50,7 @@
         initCategory();
         @endif
 
+     
         $("#hidden-category-id input").each(function () {
           let parID  = $(this).data("val");
             category_ids.push([parseInt(parID), parseInt($(this).val())]);
@@ -101,13 +110,6 @@
                         category_ids.splice(i, 1);        
                     }
                 })
-                // var positionIndex = category_ids.indexOf(id);
-                // category_ids.splice(positionIndex, 1);
-
-                // 同上， 将parentName从category_checked中移除
-                // positionIndex = category_checked.indexOf(parentName);
-                // category_checked.splice(positionIndex, 1);
-
                 //将表单中的hidden 某个category_id移除
                 $("#hidden-category-id").find("#category_" + id).remove();
             } else {
@@ -121,12 +123,12 @@
                 }
 
                 // 1级2级分类 在flag =1 或者 flag=3时 一定会向后台请求数据
-                //var groupId = $("select[name=category_group]").children('option:selected').val();
                 var data = {
+                    "search":inputVal,
                     "parentId": id,
-                    //"groupId": groupId,
                     "type-click-category-button": true
                 };
+
                 outID = id;
                 $.get(
                     "{{route('admin.industry.get_classification')}}", data,
@@ -177,7 +179,7 @@
                         }
                     })
                 }
-               console.log('flag,1 category_ids',  category_ids);
+            //    console.log('flag,1 category_ids',  category_ids);
             }
 
         }
@@ -282,30 +284,33 @@
 
         }
     });
-    // 点击 搜索按钮 实现查询
-    $(".search button").click(function(){
-        var inputVal = $(".search input").val();
-        console.log('inputVal', inputVal);
-        var data = {
+
+   // 点击 搜索按钮 实现查询
+   var selOption ='<option value="">请选择</option>';
+        $(".search button").click(function(){
+            inputVal = $(".search input").val();
+            console.log('inputVal', inputVal);
+            var data = {
                 parentId:0,
                 search:inputVal,
                 _token: _token
             };
             $.get('{{route('admin.industry.get_classification')}}', data, function (html) {
                 console.log('后台返回的字段', html);
-                // select class="form-control type-s" name="top_nice_classification_id">
-                //                 <option value="">请选择</option>
-                //                 @foreach($classifications as $item)
-                //                     <option value="{{$item->id}}">{{'第' . $item->classification_code .'类'}}</option>
-                //                 @endforeach
-                //             </select>
-                // $(".type-s").children().remove();
-                // $(".type-s").append(html);
-
-             
+                // 搜索不到内容
+                if (html.length === 0) {
+                    alert("暂无搜索结果")
+                } else{
+                    $.each(html, function(i, item){
+                        selOption += '<option value="'+item.id+'">第'+item.classification_code+'类</option>';    
+                    })
+                    $(".type-s").html(selOption);
+                    // 下面的二级 三级内容标题清空
+                    $(".titCon01").html("");
+                    $(".titCon02").html("");
+                }
             });
-    })
-
+        })
 
     //根据显示类型返回格式
     function getTr() {
