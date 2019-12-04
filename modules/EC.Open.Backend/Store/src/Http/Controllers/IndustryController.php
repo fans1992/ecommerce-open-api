@@ -331,13 +331,18 @@ class IndustryController extends Controller
     public function getClassificationByGroupID()
     {
         if (request()->has('type-click-category-button')) {
-            $classifications = NiceClassification::query()
-                ->where('parent_id', request('parentId'))
-                ->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
+            //点击分类按钮
+            $query = NiceClassification::query()->where('parent_id', request('parentId'));
+            if ($search = request()->input('search')) {
+                $query->where('classification_name', $search);
+            }
+
+            $classifications = $query->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
 
             return response()->json($classifications);
 
         } elseif (request()->has('type-select-category-button')) {
+            //下拉框筛选分类
             $parentId = request('parentId');
 
             //二级分类
