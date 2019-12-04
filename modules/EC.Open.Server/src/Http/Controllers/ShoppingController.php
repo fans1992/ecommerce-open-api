@@ -646,7 +646,7 @@ class ShoppingController extends Controller
             $input['color'] = isset($item['color']) ? $item['color'] : '';
             $input['type'] = 'spu';
             $input['__model'] = Goods::class;
-            $input['com_id'] = $item['id'];
+//            $input['com_id'] = $item['id'];
         }
         $data = new Item(array_merge($input, $item));
         $cartItems->put($__raw_id, $data);
