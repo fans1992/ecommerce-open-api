@@ -39,7 +39,7 @@ class HomeController extends Controller
 
     public function index()
     {
-        $carousels = $this->advertItem->getItemsByCode('home.carousel');
+        $carousels = $this->advertItem->getItemsByCode('AD2019120558141306646');
 //        $categories = $this->advertItem->getItemsByCode('home.categories');
 
         $goodsService = app(GoodsService::class);
