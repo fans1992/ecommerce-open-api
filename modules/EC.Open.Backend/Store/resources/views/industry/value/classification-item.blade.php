@@ -67,7 +67,7 @@
         <ul  class="category_ul">
             @if(isset($cateNames))
                 @foreach($cateNames as $val)
-                    <li class="" data-id="{{$val->id}}" data-parent="{{$val->parent_id | 0}}"><span class="tit02">{{$val->classification_name}}</span>
+                    <li class="" data-id="{{$val->id}}" data-parent="{{$val->parent_id | 0}}"><span class="tit02">{{$val->classification_code . ' ' . $val->classification_name}}</span>
                         <ul>
                             @foreach($val->children as $child)
                                 <li class="" data-id="{{$child->id}}" data-parent="{{$child->parent_id | 0}}">
