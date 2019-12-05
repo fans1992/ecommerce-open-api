@@ -368,13 +368,13 @@ class IndustryController extends Controller
             if ($search = request()->input('search')) {
                 $cateNames = collect();
             } else {
-                $cateNames = $industry->recommendClassifications()
-                    ->where('parent_id', $parentId)
-                    ->orWhereHas('parent', function ($query) use($parentId) {
-                        $query->where('parent_id', $parentId);
-                    })->get();
+                $cateNames = $industry->recommendClassifications()->where('parent_id', $parentId)->get();
+                foreach ($cateNames as $cateName) {
+                    $cateName->children =  $industry->recommendClassifications()->where('parent_id', $cateName->id)->get();
+                }
+
             }
-            
+
 //            $category_ids = [];
 //            foreach ($recommendClassifications as $recommendClassification) {
 //                $category_ids[] = [$recommendClassification->parent_id, $recommendClassification->id];

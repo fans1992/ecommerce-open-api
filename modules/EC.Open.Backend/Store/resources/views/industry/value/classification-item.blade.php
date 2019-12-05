@@ -57,8 +57,8 @@
 
 <div class="major">
     <div id="hidden-category-id">
-        @if(isset($classIds))
-            @foreach($classIds as $class)
+        @if(isset($cateIds))
+            @foreach($cateIds as $cate)
                 <input type="hidden" name="category_id[]" id=category_{{$cate}} value="{{$cate}}">
             @endforeach
         @endif
@@ -68,7 +68,14 @@
             @if(isset($cateNames))
                 @foreach($cateNames as $val)
                     <li class="" data-id="{{$val->id}}" data-parent="{{$val->parent_id | 0}}"><span class="tit02">{{$val->classification_name}}</span>
-                        <ul></ul>
+                        <ul>
+                            @foreach($val->children as $child)
+                                <li class="" data-id="{{$child->id}}" data-parent="{{$child->parent_id | 0}}">
+                                    <span class="tit02">{{$child->classification_name}}</span>
+                                    <ul></ul>
+                                </li>
+                            @endforeach
+                        </ul>
                     </li>
                 @endforeach
             @endif
@@ -88,7 +95,7 @@
                 @foreach($categoriesLevelTwo as $val)
                     @foreach($val as $v)
                         <div class="category-wrap">
-                            <input data-id="{{$v->id}}" data-parent="{{$v->parent_id | 0}}" data-name="{{$v->classification_name}}" data-uniqueId="categoryIds_{{$v->id}}" class="category_checks" type="checkbox" @if(isset($cateIds)) {{in_array($v->id, $cateIds) ? 'checked' : ''}} @endif />
+                            <input data-id="{{$v->id}}" data-parent="{{$v->parent_id | 0}}" data-name="{{$v->classification_name}}" data-level="{{$v->level}}" data-uniqueId="categoryIds_{{$v->id}}" class="category_checks" type="checkbox" @if(isset($cateIds)) {{in_array($v->id, $cateIds) ? 'checked' : ''}} @endif />
                             &nbsp;&nbsp;&nbsp;
                             <input class="btn btn-outline btn-primary category-btn" type="button" value="{{$v->classification_name}}"/>
                         </div>
