@@ -14,7 +14,8 @@
     var inputVal ="";
     // 点击select下拉框
     $("body .td_c").on("change", ".type-s", function () {
-        console.log('inputVal', inputVal);
+        $(".type-s").attr("disabled","disabled");
+        // console.log('inputVal', inputVal);
         var that = $(this);
         var val = that.find("option:selected").val();
         // var category_checked = [];
@@ -35,7 +36,7 @@
             //     data[search] = inputVal;
             // }
             $.get('{{route('admin.industry.get_classification')}}', data, function (html) {
-                console.log('initCategory', html);
+                // console.log('initCategory', html);
                 $('#category-box').children().remove();
                 $('#category-box').append(html);
                 $('#category-box').find("input").iCheck({
@@ -79,11 +80,22 @@
 
             var whetherExistNode = $(".category_name").find('[data-id=' + dataId + ']').length;
             if (0 == whetherExistNode) {
-                var template = " <li data-id=" + dataId + " data-parent=" + dataParentId + "><span>" + dataCode + " " + dataName +
-                    "</span><ul></ul>" +
-                    " </li>";
                 var $parentObject = $(".category_name").find('[data-id=' + dataParentId + ']');
-                moveTheOrderCat($parentObject, template);
+
+                if ($parentObject.length == 1) {
+                    var $sort = $parentObject.find('li').length + 1;
+                    var template = " <li data-id=" + dataId + " data-parent=" + dataParentId + "><span>" + $sort + '.' + dataName +
+                        "</span><ul></ul>" +
+                        " </li>";
+                    $parentObject.children('ul').append(template);
+
+                } else {
+                    var template = " <li data-id=" + dataId + " data-parent=" + dataParentId + "><span>" + dataCode + dataName +
+                        "</span><ul></ul>" +
+                        " </li>";
+                    $(".category_name").children('ul').append(template);
+
+                }
             }
         }
         // 移除已经选中的二级与三级选项
@@ -115,7 +127,6 @@
             } else {
                 // html
                 var html = "";
-
                 if (level == 3) {
                     //3级分类直接处理
                     handle($object, id, parentId, flag, html);
@@ -199,20 +210,20 @@
             var level = $(this).data('level');
             var code = $(this).data('code');
             var $parentCategoryContent = $(this).closest('.category-content');
-            console.log("$(this).is(':checked')", $(this).is(':checked'));
+            // console.log("$(this).is(':checked')", $(this).is(':checked'));
             if ($(this).is(':checked')) { // 选中状态
                 operator($parentCategoryContent, id, parentId, level, 1);
                 addTheOrderCheckedCat(id, parentId, name, code);
                 // 右边但凡有一个复选框选中，左边对应 复选框也自动选中
                 if($(".titCon02").find(".checked").length ==  1){
-                    console.log('input', $("input[data-uniqueId=categoryIds_" + parentId + "]").is(':checked'));
+                    // console.log('input', $("input[data-uniqueId=categoryIds_" + parentId + "]").is(':checked'));
                     if (!$("input[data-uniqueId=categoryIds_" + parentId + "]").is(':checked')) {
                         $("input[data-uniqueId=categoryIds_" + parentId + "]").iCheck('check');    
                     }
                     
                 }
             } else {
-                console.log('outID', outID, "id", id , "id == outID", id == outID);
+                // console.log('outID', outID, "id", id , "id == outID", id == outID);
                 // 点击右边的复选框
                 operator($parentCategoryContent, id, parentId, level, 2); 
                 removeTheOrderCheckedCat(id);
@@ -224,13 +235,12 @@
                             if ($(this).is(".checked")) {
                                 $(this).removeClass("checked");
                                 var rightID  = $(this).find("input").data('id');
-                                console.log('rightID', rightID);
+                                // console.log('rightID', rightID);
                                 // var rightName  = $(this).find("input").data('name');
                                 // 在category_ids里面找parentId
                                 $.each(category_ids,function(i,item){
-                                    console.log('item', item);
                                     if (item[1] == rightID) {
-                                        console.log('移除右侧i', rightID);
+                                        // console.log('移除右侧i', rightID);
                                         category_ids.splice(i, 1);
                                         $("#hidden-category-id").find("#category_" + rightID).remove();
                                         return false;
@@ -243,9 +253,9 @@
                         var iArr=[];
                         var category_idsNew = []
                         $.each(category_ids,function(i,item){
-                            console.log('item', item);
+                            // console.log('item', item);
                             if (item.indexOf(id) > -1) {
-                                console.log('移除右侧item', item);
+                                // console.log('移除右侧item', item);
                                 $("#hidden-category-id").find("#category_" + item[1]).remove();
                             } else {
                                 category_idsNew.push(item)  
@@ -255,16 +265,16 @@
                         category_ids = category_idsNew 
                         
                     }
-                    console.log('level =2, category_ids', category_ids);
+                    // console.log('level =2, category_ids', category_ids);
                  } 
                 // 右边的复选项取消选中
                 else{
-                    console.log('category_ids', category_ids,"id", id);
+                    // console.log('category_ids', category_ids,"id", id);
                     //将表单中的hidden 某个category_id移除
                     $("#hidden-category-id").find("#category_" + id).remove();
                 }
             }
-            console.log('category_ids', category_ids);
+            // console.log('category_ids', category_ids);
         });
     });
     // 点击 保存 按钮
@@ -288,15 +298,16 @@
    // 点击 搜索按钮 实现查询
    var selOption ='<option value="">请选择</option>';
         $(".search button").click(function(){
+            $(".type-s").removeAttr("disabled");
             inputVal = $(".search input").val();
-            console.log('inputVal', inputVal);
+            // console.log('inputVal', inputVal);
             var data = {
                 parentId:0,
                 search:inputVal,
                 _token: _token
             };
             $.get('{{route('admin.industry.get_classification')}}', data, function (html) {
-                console.log('后台返回的字段', html);
+                // console.log('后台返回的字段', html);
                 // 搜索不到内容
                 if (html.length === 0) {
                     alert("暂无搜索结果")
