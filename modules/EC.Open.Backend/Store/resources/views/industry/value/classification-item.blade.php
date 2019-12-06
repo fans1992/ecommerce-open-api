@@ -69,9 +69,9 @@
                 @foreach($cateNames as $val)
                     <li class="" data-id="{{$val->id}}" data-parent="{{$val->parent_id | 0}}"><span class="tit02">{{$val->classification_code . ' ' . $val->classification_name}}</span>
                         <ul>
-                            @foreach($val->children as $child)
+                            @foreach($val->children as $key => $child)
                                 <li class="" data-id="{{$child->id}}" data-parent="{{$child->parent_id | 0}}">
-                                    <span class="tit02">{{$child->classification_name}}</span>
+                                    <span class="tit02">{{$key + 1 .'.'. $child->classification_name}}</span>
                                     <ul></ul>
                                 </li>
                             @endforeach

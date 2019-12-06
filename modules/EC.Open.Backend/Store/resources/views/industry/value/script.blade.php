@@ -14,7 +14,6 @@
     var inputVal ="";
     // 点击select下拉框
     $("body .td_c").on("change", ".type-s", function () {
-        $(".type-s").attr("disabled","disabled");
         // console.log('inputVal', inputVal);
         var that = $(this);
         var val = that.find("option:selected").val();
@@ -298,7 +297,6 @@
    // 点击 搜索按钮 实现查询
    var selOption ='<option value="">请选择</option>';
         $(".search button").click(function(){
-            $(".type-s").removeAttr("disabled");
             inputVal = $(".search input").val();
             // console.log('inputVal', inputVal);
             var data = {
