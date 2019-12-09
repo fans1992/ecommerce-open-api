@@ -29,6 +29,7 @@ use GuoJiangClub\Component\Product\Repositories\GoodsRepository;
 use GuoJiangClub\Component\Product\Repositories\ProductRepository;
 use GuoJiangClub\Component\Shipping\Models\Shipping;
 use GuoJiangClub\EC\Open\Backend\Store\Handlers\ImageUploadHandler;
+use GuoJiangClub\EC\Open\Backend\Store\Model\NiceClassification;
 use GuoJiangClub\EC\Open\Core\Applicators\PointApplicator;
 use GuoJiangClub\EC\Open\Core\Processor\OrderProcessor;
 use GuoJiangClub\EC\Open\Core\Services\DiscountService;
@@ -511,9 +512,16 @@ class ShoppingController extends Controller
                 $item_meta['option_service'] = null;
             }
 
+            //商标保障申请
+            $ensure_price = 0;
+            if (isset($item['classification_ids'])) {
+                $ensure_price = count($item['classification_ids']) * Goods::MARKUP_PRICE_TOTAL;
+                $item_meta['ensure_classifications'] = NiceClassification::query()->whereIn('id', $item['classification_ids'])->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level'])->toArray();
+            }
+
             $orderItem = new OrderItem([
                 'quantity' => $item->qty,
-                'unit_price' => $item->model->sell_price + $option_services_price / 100,
+                'unit_price' => $item->model->sell_price + $option_services_price / 100 + $ensure_price,
                 'item_id' => $item->id,
                 'type' => $item->__model,
                 'item_name' => $item->name,

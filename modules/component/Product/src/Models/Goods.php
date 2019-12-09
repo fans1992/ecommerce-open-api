@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model as LaravelModel;
 
 class Goods extends LaravelModel
 {
+    //商标保障申请价格
     const MARKUP_PRICE_SERVICE = 200;
     const MARKUP_PRICE_OFFICIAL = 200;
     const MARKUP_PRICE_TOTAL = 400;
