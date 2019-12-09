@@ -514,9 +514,10 @@ class ShoppingController extends Controller
 
             //商标保障申请
             $ensure_price = 0;
-            if (isset($item['classification_ids'])) {
-                $ensure_price = count($item['classification_ids']) * Goods::MARKUP_PRICE_TOTAL;
-                $item_meta['ensure_classifications'] = NiceClassification::query()->whereIn('id', $item['classification_ids'])->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level'])->toArray();
+            if ($item['classification_ids']) {
+                $classificationIds = explode(',', $item['classification_ids']);
+                $ensure_price = count($classificationIds) * Goods::MARKUP_PRICE_TOTAL;
+                $item_meta['ensure_classifications'] = NiceClassification::query()->whereIn('id', $classificationIds)->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level'])->toArray();
             }
 
             $orderItem = new OrderItem([
