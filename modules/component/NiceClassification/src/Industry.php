@@ -26,4 +26,10 @@ class Industry extends Model
         parent::__construct($attributes);
 
     }
+
+    public function recommendClassifications()
+    {
+        return $this->belongsToMany(NiceClassification::class, 'industry_recommend_classifications', 'industry_id', 'nice_classification_id')
+            ->withPivot('nice_classification_parent_id', 'alias', 'sort')->withTimestamps();
+    }
 }

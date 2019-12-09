@@ -59,9 +59,29 @@ class NiceClassificationController extends Controller
         return $this->response()->collection($industries, new IndustryTransformer());
     }
 
-    public function recommendationIndex()
+    /**
+     * 行业推荐类别列表
+     *
+     * @param Request $request
+     * @param Industry $industry
+     * @return \Dingo\Api\Http\Response
+     */
+    public function recommendationIndex(Industry $industry)
     {
-        
+        $classifications = NiceClassification::query()->where('parent_id', 0)->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
+
+        $recommendClassifications = $industry->recommendClassifications->pluck('pivot.alias','id')->all();
+        foreach ($classifications as $classification) {
+            if (array_key_exists($classification->id, $recommendClassifications)) {
+                $classification->classification_name = $recommendClassifications[$classification->id] ?: $classification->classification_name  ;
+                $classification->recommendation = true;
+            } else {
+                $classification->recommendation = false;
+            }
+        }
+
+        return $this->response()->collection($classifications, new NiceClassificationTransformer());
+
     }
 
 
