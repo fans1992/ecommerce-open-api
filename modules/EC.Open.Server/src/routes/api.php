@@ -42,7 +42,13 @@ $router->get('store/list', 'GoodsController@index')->name('api.goods.list');
 $router->get('store/detail/{id}', 'GoodsController@show')->name('api.goods.detail');
 $router->get('store/detail/{id}/stock', 'GoodsController@getStock')->name('api.goods.detail.stock');
 $router->get('store/detail/{id}/share/img', 'GoodsController@shareImg')->name('api.goods.detail.share.img');
+//热门问答列表
 $router->get('store/question/list', 'GoodsController@questionIndex')->name('api.goods.question.list');
+//行业列表
+$router->get('industries', 'NiceClassificationController@industryIndex')->name('api.industry.list');
+//行业推荐分类列表
+$router->get('industries/{industry}/classifications', 'NiceClassificationController@recommendationIndex')->name('api.classification.recommendation.list');
+
 
 /************************************************************ 首页数据 ****************************************************/
 $router->get('home', 'HomeController@index')->name('api.home.index');
@@ -51,28 +57,6 @@ $router->get('micro/page/{code}', 'MicroPageController@index')->name('api.micro.
 
 /************************************************************* 尼斯分类 ****************************************************/
 $router->get('classification', 'NiceClassificationController@index')->name('api.classification.index');
-
-/************************************************************* 后台行业推荐 ****************************************************/
-//行业管理推荐
-//$router->get('admin/store/industry', 'IndustryController@index')->name('api.classification.index');
-$router->get('admin/industry/classifications/search', 'IndustryController@getClassificationByGroupID')->name('admin.industry.getClassification');
-$router->post('admin/industry/{industry}/classifications', 'IndustryController@classifictionStore')->name('admin.industry.classification.store');
-
-
-
-//$router->get('industry/{id}/classification', 'IndustryController@classifictionIndex')->name('admin.industry.classification.index');
-$router->post('industry/getRecommendData', 'IndustryController@getRecommendData')->name('admin.industry.classification.getRecommendData');
-//$router->post('industry/classification/store', 'IndustryController@classifictionStore')->name('admin.industry.classification.store');
-
-$router->get('industry/editClassification', 'IndustryController@editClassification')->name('admin.industry.classification.editClassification');
-$router->post('industry/storeClassification', 'IndustryController@storeClassification')->name('admin.industry.classification.storeClassification');
-//$router->get('industry/{id}/addClassification', 'IndustryController@addClassification')->name('admin.industry.classification.addClassification');
-
-$router->post('industry/delClassification', 'IndustryController@delClassification')->name('admin.industry.classification.delete');
-
-//$router->get('industry/get_classification', 'IndustryController@getClassificationByGroupID')->name('admin.industry.get_classification');
-
-$router->get('industry/industry_sort', 'IndustryController@industry_sort')->name('admin.industry.industry_sort');
 
 
 /************************************************************* 其他 **********************************************************/
