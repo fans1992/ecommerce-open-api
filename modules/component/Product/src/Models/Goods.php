@@ -16,6 +16,11 @@ use Illuminate\Database\Eloquent\Model as LaravelModel;
 
 class Goods extends LaravelModel
 {
+    const MARKUP_PRICE_SERVICE = 200;
+    const MARKUP_PRICE_OFFICIAL = 200;
+    const MARKUP_PRICE_TOTAL = 400;
+
+
     protected $guarded = ['id'];
 
     protected $hidden = ['cost_price'];

@@ -80,6 +80,14 @@ class ShoppingCartController extends Controller
             $option_services_price = AttributeValue::query()->whereIn('id', $option_services)->sum('name');
             $cart['price'] += $option_services_price;
 
+            //商标保障申请,商标加急申请
+            if ($classificationIds = $cart['attributes']['classification_ids']) {
+                $num = count(array_unique($classificationIds));
+                $cart['price'] += $num * Goods::MARKUP_PRICE_TOTAL;
+                $attributes['service_price'] += $num * Goods::MARKUP_PRICE_SERVICE;
+                $attributes['official_price'] += $num * Goods::MARKUP_PRICE_OFFICIAL;
+            }
+
             $item = Cart::add($cart['id'], $cart['name'], $cart['qty'], $cart['price'], $attributes);
 
             if (!$item || !$item->model) {

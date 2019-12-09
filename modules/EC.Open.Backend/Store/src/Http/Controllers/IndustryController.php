@@ -198,7 +198,8 @@ class IndustryController extends Controller
             'alias' => $input['alias'] ?? '',
         ];
 
-        foreach (array_unique($input['category_id']) as $classification) {
+        $childrenIds = $input['category_id'] ?? [];
+        foreach (array_unique($childrenIds) as $classification) {
             $classifications[] = [
                 'nice_classification_id' => $classification,
                 'alias' => '',

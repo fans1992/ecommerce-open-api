@@ -28,6 +28,12 @@ class NiceClassificationController extends Controller
         $this->niceClassificationRepository = $niceClassificationRepository;
     }
 
+    /**
+     * 商标分类列表
+     *
+     * @param Request $request
+     * @return \Dingo\Api\Http\Response
+     */
     public function index(Request $request)
     {
 
@@ -62,7 +68,6 @@ class NiceClassificationController extends Controller
     /**
      * 行业推荐类别列表
      *
-     * @param Request $request
      * @param Industry $industry
      * @return \Dingo\Api\Http\Response
      */

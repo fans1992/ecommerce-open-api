@@ -5,6 +5,9 @@ namespace GuoJiangClub\Component\NiceClassification;
 use Illuminate\Database\Eloquent\Model;
 use Kalnoy\Nestedset\NodeTrait;
 
+/**
+ * @property mixed recommendClassifications
+ */
 class Industry extends Model
 {
     use NodeTrait;
