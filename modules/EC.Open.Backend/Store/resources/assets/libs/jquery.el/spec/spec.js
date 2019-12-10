@@ -413,19 +413,19 @@ $(document).ready(function () {
             Object.keys(current).forEach(function (item) {
                 // console.log(item, current[item])
             });
-            if (current.image && imageCount) {
-                imageText = `<td class="image" rowspan="${imageCount}">
-                        <div class="block ${current.class}">${current.imgTag}</div>
-                        <button class="btn btn-primary btn-xs upload_sku_img" type="button">上传图片</button>
-                        </label>
-                        </td>`;
-
-            } else if (imageCount) {
-                imageText = `<td class="image" rowspan="${imageCount}">
-                        <div class="block ${current.class}"></div>
-                        <button class="btn btn-primary btn-xs upload_sku_img" type="button">上传图片</button>                   
-                        </td>`;
-            }
+            // if (current.image && imageCount) {
+            //     imageText = `<td class="image" rowspan="${imageCount}">
+            //             <div class="block ${current.class}">${current.imgTag}</div>
+            //             <button class="btn btn-primary btn-xs upload_sku_img" type="button">上传图片</button>
+            //             </label>
+            //             </td>`;
+            //
+            // } else if (imageCount) {
+            //     imageText = `<td class="image" rowspan="${imageCount}">
+            //             <div class="block ${current.class}"></div>
+            //             <button class="btn btn-primary btn-xs upload_sku_img" type="button">上传图片</button>
+            //             </td>`;
+            // }
 
             rowHtml += imageText;
             //debugger

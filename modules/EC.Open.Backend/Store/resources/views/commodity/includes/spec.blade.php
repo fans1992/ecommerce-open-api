@@ -65,7 +65,7 @@
                 <thead>
                 <tr>
                     <!--规格-->
-                    <th class="spec_img_th_active">颜色图片</th>
+                    {{--<th class="spec_img_th_active">颜色图片</th>--}}
                     <th>服务费</th>
                     <th>官费</th>
                     <th>销售价</th>

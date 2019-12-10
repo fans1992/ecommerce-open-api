@@ -66,7 +66,7 @@ class ShoppingCartController extends Controller
                 continue;
             }
 
-            //TODO 设置商品单价
+            //TODO 商品附加服务
             $option_services = explode(',', $cart['attributes']['attribute_value_ids']);
             $option_services_price = AttributeValue::query()->whereIn('id', $option_services)->sum('name');
             $cart['price'] += $option_services_price;
