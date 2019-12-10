@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of ibrand/EC-Open-Server.
- *
- * (c) 果酱社区 <https://guojiang.club>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 
 use Cart;
@@ -81,7 +72,7 @@ class ShoppingCartController extends Controller
             $cart['price'] += $option_services_price;
 
             //商标保障申请,商标加急申请
-            if ($cart['attributes']['classification_ids']) {
+            if (isset($cart['attributes']['classification_ids']) && $cart['attributes']['classification_ids']) {
                 $classificationIds = explode(',', $cart['attributes']['classification_ids']);
                 $num = count(array_unique($classificationIds));
                 $cart['price'] += $num * Goods::MARKUP_PRICE_TOTAL;
