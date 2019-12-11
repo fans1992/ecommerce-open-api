@@ -48,8 +48,10 @@ $router->get('store/question/list', 'GoodsController@questionIndex')->name('api.
 $router->get('industries', 'NiceClassificationController@industryIndex')->name('api.industry.list');
 //行业树
 $router->get('industries/tree', 'NiceClassificationController@industryTree')->name('api.industry.tree');
-//行业推荐分类列表
+//行业推荐分类列表(保障申请)
 $router->get('industries/{industry}/classifications', 'NiceClassificationController@recommendationIndex')->name('api.classification.recommendation.list');
+//行业推荐分类树(自助申请)
+$router->get('industries/{industry}/classifications/tree', 'NiceClassificationController@recommendationTree')->name('api.classification.recommendation.tree');
 
 
 /************************************************************ 首页数据 ****************************************************/

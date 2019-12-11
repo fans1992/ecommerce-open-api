@@ -47,7 +47,7 @@ class NiceClassificationController extends Controller
     }
 
     /**
-     * 行业列表
+     * 行业列表('保障申请')
      *
      * @param Industry $industry
      * @param Request $request
@@ -68,7 +68,7 @@ class NiceClassificationController extends Controller
 
 
     /**
-     * 行业树
+     * 行业树(自助申请)
      *
      * @param Request $request
      * @param Factory $transformerFactory
@@ -89,14 +89,16 @@ class NiceClassificationController extends Controller
 
 
     /**
-     * 行业推荐类别列表
+     * 行业推荐类别列表(保障申请)
      *
      * @param Industry $industry
      * @return \Dingo\Api\Http\Response
      */
     public function recommendationIndex(Industry $industry)
     {
-        $classifications = NiceClassification::query()->where('parent_id', 0)->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
+        $classifications = NiceClassification::query()
+            ->where('parent_id', 0)
+            ->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
 
         $recommendClassifications = $industry->recommendClassifications->pluck('pivot.alias','id')->all();
         foreach ($classifications as $classification) {
@@ -111,6 +113,30 @@ class NiceClassificationController extends Controller
         return $this->response()->collection($classifications, new NiceClassificationTransformer());
 
     }
+
+    /**
+     * 行业推荐分类树
+     *
+     * @param Request $request
+     * @param Industry $industry
+     * @param Factory $transformerFactory
+     * @return \Dingo\Api\Http\Response
+     */
+    public function recommendationTree(Request $request, Industry $industry, Factory $transformerFactory)
+    {
+
+        if ($request->include === 'children') {
+            $niceClassifications = $industry->recommendClassifications->toTree();
+            // 关闭 Dingo 的预加载
+            $transformerFactory->disableEagerLoading();
+        } else {
+            $niceClassifications = NiceClassification::whereIsRoot()->defaultOrder()->get();
+        }
+
+        return $this->response->collection($niceClassifications, new NiceClassificationTransformer());
+    }
+
+
 
 
 
