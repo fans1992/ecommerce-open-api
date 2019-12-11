@@ -11,6 +11,7 @@
 
 namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 
+use Dingo\Api\Transformer\Factory;
 use GuoJiangClub\Component\NiceClassification\Industry;
 use GuoJiangClub\Component\NiceClassification\NiceClassification;
 use GuoJiangClub\Component\NiceClassification\RepositoryContract as NiceClassificationRepository;
@@ -60,10 +61,32 @@ class NiceClassificationController extends Controller
             $query->where('parent_id', $request->input('parent_id'));
         }
 
-        $industries = $query->get();
+        $industries = $query->whereIsRoot()->get();
 
         return $this->response()->collection($industries, new IndustryTransformer());
     }
+
+
+    /**
+     * 行业树
+     *
+     * @param Request $request
+     * @param Factory $transformerFactory
+     * @return \Dingo\Api\Http\Response
+     */
+    public function industryTree(Request $request, Factory $transformerFactory)
+    {
+        if ($request->input('include') == 'children') {
+            $industries = Industry::defaultOrder()->get()->toTree();
+            // 关闭 Dingo 的预加载
+            $transformerFactory->disableEagerLoading();
+        } else {
+            $industries = Industry::whereIsRoot()->defaultOrder()->get();
+        }
+
+        return $this->response()->collection($industries, new IndustryTransformer());
+    }
+
 
     /**
      * 行业推荐类别列表

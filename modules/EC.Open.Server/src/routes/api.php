@@ -46,6 +46,8 @@ $router->get('store/detail/{id}/share/img', 'GoodsController@shareImg')->name('a
 $router->get('store/question/list', 'GoodsController@questionIndex')->name('api.goods.question.list');
 //行业列表
 $router->get('industries', 'NiceClassificationController@industryIndex')->name('api.industry.list');
+//行业树
+$router->get('industries/tree', 'NiceClassificationController@industryTree')->name('api.industry.tree');
 //行业推荐分类列表
 $router->get('industries/{industry}/classifications', 'NiceClassificationController@recommendationIndex')->name('api.classification.recommendation.list');
 
