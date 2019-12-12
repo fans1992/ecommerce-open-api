@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of ibrand/EC-Open-Server.
- *
- * (c) 果酱社区 <https://guojiang.club>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 $router->get('test', 'BeanbunController@test');
 
 /************************************************************* PC注册登录 ************************************************/
@@ -48,10 +39,6 @@ $router->get('store/question/list', 'GoodsController@questionIndex')->name('api.
 $router->get('industries', 'NiceClassificationController@industryIndex')->name('api.industry.list');
 //行业树
 $router->get('industries/tree', 'NiceClassificationController@industryTree')->name('api.industry.tree');
-//行业推荐分类列表(保障申请)
-$router->get('industries/{industry}/classifications', 'NiceClassificationController@recommendationIndex')->name('api.classification.recommendation.list');
-//行业推荐分类树(自助申请)
-$router->get('industries/{industry}/classifications/tree', 'NiceClassificationController@recommendationTree')->name('api.classification.recommendation.tree');
 
 
 /************************************************************ 首页数据 ****************************************************/
@@ -60,7 +47,7 @@ $router->get('category', 'HomeController@category')->name('api.home.category');
 $router->get('micro/page/{code}', 'MicroPageController@index')->name('api.micro.page.index');
 
 /************************************************************* 尼斯分类 ****************************************************/
-$router->get('classification', 'NiceClassificationController@index')->name('api.classification.index');
+$router->get('classification', 'NiceClassificationController@index')->name('api.classification.index'); //尼斯分类列表
 
 
 /************************************************************* 其他 **********************************************************/
@@ -80,7 +67,12 @@ $router->group(config('ibrand.ec-open-api.routeAuthAttributes'), function ($rout
     /************************************************* 自助注册商标 ****************************************************/
     $router->post('application/brand/images', 'GoodsController@createBrandImage')->name('api.application.brand.image');    //生成商标图样
     $router->post('application/brand/upload', 'GoodsController@uploadBrandImage')->name('api.application.brand.upload');    //手动上传商标图样
-
+    //行业推荐分类列表(保障申请)
+    $router->get('industries/{industry}/classifications', 'NiceClassificationController@recommendationIndex')->name('api.classification.recommendation.list');
+    //行业推荐分类树(自助申请)
+    $router->get('industries/{industry}/classifications/tree', 'NiceClassificationController@recommendationTree')->name('api.classification.recommendation.tree');
+    //尼斯分类关键词搜索
+    $router->get('classifications/search', 'NiceClassificationController@search')->name('api.classification.search.tree');
 
     /************************************************* 购物车 ****************************************************/
     $router->post('shopping/cart', 'ShoppingCartController@store')->name('api.shopping.cart.store');

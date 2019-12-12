@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of ibrand/EC-Open-Server.
- *
- * (c) 果酱社区 <https://guojiang.club>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 
 use Dingo\Api\Transformer\Factory;
@@ -41,7 +32,7 @@ class NiceClassificationController extends Controller
         $niceClassificationList = NiceClassification::query()
             ->where('parent_id', $request->input('pid'))
             ->orderBy('classification_code')
-            ->get();
+            ->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
 
         return $this->response()->collection($niceClassificationList, new NiceClassificationTransformer());
     }
@@ -134,6 +125,29 @@ class NiceClassificationController extends Controller
         }
 
         return $this->response->collection($niceClassifications, new NiceClassificationTransformer());
+    }
+
+    public function search(Request $request, NiceClassification $niceClassification)
+    {
+        // 创建一个查询构造器
+        $builder = $niceClassification->query();
+
+        // 判断是否有提交 search 参数模糊搜索，如果有就赋值给 $search 变量
+        if ($search = $request->input('search', '')) {
+            $like = '%' . $search . '%';
+            // 模糊搜索顶级分类、群组分类、商品
+            $builder->where('classification_name', 'like', $like)
+                ->orWhereHas('children', function ($query) use ($like) {
+                    $query->where('classification_name', 'like', $like)
+                        ->orWhereHas('children', function ($query) use ($like) {
+                            $query->where('classification_name', 'like', $like);
+                        });
+                });
+        }
+
+        $classifications = $builder->get();
+        dd($classifications);
+
     }
 
 

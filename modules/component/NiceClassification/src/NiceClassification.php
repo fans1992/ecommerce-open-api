@@ -39,4 +39,11 @@ class NiceClassification extends Model
         parent::__construct($attributes);
 
     }
+
+    public function children()
+    {
+        return $this->hasMany(NiceClassification::class, 'parent_id', 'id');
+    }
+
+
 }
