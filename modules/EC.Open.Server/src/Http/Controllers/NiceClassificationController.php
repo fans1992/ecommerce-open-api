@@ -91,10 +91,10 @@ class NiceClassificationController extends Controller
             ->where('parent_id', 0)
             ->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
 
-        $recommendClassifications = $industry->recommendClassifications->pluck('pivot.alias','id')->all();
+        $recommendClassifications = $industry->recommendClassifications->pluck('pivot.alias', 'id')->all();
         foreach ($classifications as $classification) {
             if (array_key_exists($classification->id, $recommendClassifications)) {
-                $classification->classification_name = $recommendClassifications[$classification->id] ?: $classification->classification_name  ;
+                $classification->classification_name = $recommendClassifications[$classification->id] ?: $classification->classification_name;
                 $classification->recommendation = true;
             } else {
                 $classification->recommendation = false;
@@ -127,7 +127,7 @@ class NiceClassificationController extends Controller
         return $this->response->collection($niceClassifications, new NiceClassificationTransformer());
     }
 
-    public function search(Request $request, NiceClassification $niceClassification)
+    public function search(Request $request, NiceClassification $niceClassification,  Factory $transformerFactory)
     {
         // 创建一个查询构造器
         $builder = $niceClassification->query();
@@ -136,22 +136,33 @@ class NiceClassificationController extends Controller
         if ($search = $request->input('search', '')) {
             $like = '%' . $search . '%';
             // 模糊搜索顶级分类、群组分类、商品
-            $builder->where('classification_name', 'like', $like)
-                ->orWhereHas('children', function ($query) use ($like) {
-                    $query->where('classification_name', 'like', $like)
-                        ->orWhereHas('children', function ($query) use ($like) {
-                            $query->where('classification_name', 'like', $like);
-                        });
-                });
+            $builder->where('classification_name', 'like', $like);
+//                ->orWhereHas('children', function ($query) use ($like) {
+//                    $query->where('classification_name', 'like', $like)
+//                        ->orWhereHas('children', function ($query) use ($like) {
+//                            $query->where('classification_name', 'like', $like);
+//                        });
+//                });
         }
 
-        $classifications = $builder->get();
-        dd($classifications);
+
+        if ($request->include === 'children') {
+            $classifications = $builder->get()->toTree();
+            // 关闭 Dingo 的预加载
+            $transformerFactory->disableEagerLoading();
+        } else {
+            $classifications = NiceClassification::whereIsRoot()->defaultOrder()->get();
+        }
+
+        foreach ($classifications as $classification) {
+            if ($classification->level ==3) {
+//                $classifications->push($classification->parent);
+//                $classifications->push($classification->parent->parent);
+            }
+        }
+        return $this->response->collection($classifications, new NiceClassificationTransformer());
 
     }
-
-
-
 
 
 }
