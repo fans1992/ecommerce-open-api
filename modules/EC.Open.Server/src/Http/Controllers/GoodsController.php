@@ -461,7 +461,7 @@ class GoodsController extends Controller
         })->stream();
 
         $path = 'brand/create/'. date('Ymd'). '/' . generaterandomstring() . '.png';
-        $url = upload_image($path, $img->__toString(), 'qiniu');
+        $url = upload_image($path, $img->__toString());
 
         return $this->success(['url' => $url]);
     }
@@ -486,7 +486,7 @@ class GoodsController extends Controller
         //获取扩展名，上传OSS
         $extension = $file->getClientOriginalExtension();
         $path = 'brand/upload/'. date('Ymd'). '/' . generaterandomstring() . '.' . $extension;;
-        $url = upload_image($path, $img->__toString(), 'qiniu');
+        $url = upload_image($path, $img->__toString());
 
         return $this->success(['url' => $url]);
     }

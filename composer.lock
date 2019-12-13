@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bfdb2575a22c715b37a02d46c84c5bd2",
+    "content-hash": "da4779c1fe3c19f48321bf47143df208",
     "packages": [
         {
             "name": "aliyuncs/oss-sdk-php",
@@ -1517,6 +1517,63 @@
             "time": "2017-06-27T22:17:23+00:00"
         },
         {
+            "name": "foridom/ali-oss-storage",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/foridom/Aliyun-oss-storage.git",
+                "reference": "7a090a82feb9e343eef86db0575a5c2cb656535b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/foridom/Aliyun-oss-storage/zipball/7a090a82feb9e343eef86db0575a5c2cb656535b",
+                "reference": "7a090a82feb9e343eef86db0575a5c2cb656535b",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "aliyuncs/oss-sdk-php": "~2.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Jacobcyl\\AliOSS\\AliOssServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Jacobcyl\\AliOSS\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "fanzhuo",
+                    "email": "henbuhai@gmail.com"
+                }
+            ],
+            "description": "aliyun oss filesystem storage for laravel 5+",
+            "homepage": "https://github.com/foridom/Aliyun-oss-storage",
+            "keywords": [
+                "aliyun",
+                "filesystems",
+                "laravel",
+                "oss",
+                "storage"
+            ],
+            "time": "2019-12-13T12:33:50+00:00"
+        },
+        {
             "name": "foridom/backend",
             "version": "dev-master",
             "source": {
@@ -2568,113 +2625,6 @@
                 "setting"
             ],
             "time": "2019-01-03T11:04:09+00:00"
-        },
-        {
-            "name": "iidestiny/flysystem-oss",
-            "version": "1.3.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/iiDestiny/flysystem-oss.git",
-                "reference": "3a35575c9479553156c1855184b47ddfb3c46bdb"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/iiDestiny/flysystem-oss/zipball/3a35575c9479553156c1855184b47ddfb3c46bdb",
-                "reference": "3a35575c9479553156c1855184b47ddfb3c46bdb",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
-            },
-            "require": {
-                "aliyuncs/oss-sdk-php": "^2.3",
-                "ext-json": "*",
-                "league/flysystem": "^1.0",
-                "nesbot/carbon": "^1.24.1 || ^2.0",
-                "php": "^7.0"
-            },
-            "require-dev": {
-                "mockery/mockery": "^1.2",
-                "phpunit/phpunit": "^6.5",
-                "symfony/var-dumper": "^3.4"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Iidestiny\\Flysystem\\Oss\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "iidestiny",
-                    "email": "iidestiny@vip.qq.com"
-                }
-            ],
-            "description": "Flysystem adapter for the Oss storage.",
-            "keywords": [
-                "alioss",
-                "laravel",
-                "oss",
-                "阿里oss"
-            ],
-            "time": "2019-10-16T06:01:19+00:00"
-        },
-        {
-            "name": "iidestiny/laravel-filesystem-oss",
-            "version": "1.2.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/iiDestiny/laravel-filesystem-oss.git",
-                "reference": "ee503770ade592f249098696aefc8890c32b722d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/iiDestiny/laravel-filesystem-oss/zipball/ee503770ade592f249098696aefc8890c32b722d",
-                "reference": "ee503770ade592f249098696aefc8890c32b722d",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
-            },
-            "require": {
-                "iidestiny/flysystem-oss": "^1.0",
-                "php": "^7.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Iidestiny\\LaravelFilesystemOss\\OssStorageServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Iidestiny\\LaravelFilesystemOss\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "iidestiny",
-                    "email": "iidestiny@vip.qq.com"
-                }
-            ],
-            "description": "Oss storage filesystem for Laravel.",
-            "time": "2019-04-29T09:26:14+00:00"
         },
         {
             "name": "intervention/image",
@@ -4246,16 +4196,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "1.0.57",
+            "version": "1.0.61",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "0e9db7f0b96b9f12dcf6f65bc34b72b1a30ea55a"
+                "reference": "4fb13c01784a6c9f165a351e996871488ca2d8c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/0e9db7f0b96b9f12dcf6f65bc34b72b1a30ea55a",
-                "reference": "0e9db7f0b96b9f12dcf6f65bc34b72b1a30ea55a",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/4fb13c01784a6c9f165a351e996871488ca2d8c9",
+                "reference": "4fb13c01784a6c9f165a351e996871488ca2d8c9",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -4332,7 +4282,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2019-10-16T21:01:05+00:00"
+            "time": "2019-12-08T21:46:50+00:00"
         },
         {
             "name": "league/fractal",
@@ -7806,16 +7756,16 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.12.0",
+            "version": "v1.13.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "b42a2f66e8f1b15ccf25652c3424265923eb4f17"
+                "reference": "7b4aab9743c30be783b73de055d24a39cf4b954f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/b42a2f66e8f1b15ccf25652c3424265923eb4f17",
-                "reference": "b42a2f66e8f1b15ccf25652c3424265923eb4f17",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/7b4aab9743c30be783b73de055d24a39cf4b954f",
+                "reference": "7b4aab9743c30be783b73de055d24a39cf4b954f",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -7833,7 +7783,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.12-dev"
+                    "dev-master": "1.13-dev"
                 }
             },
             "autoload": {
@@ -7867,7 +7817,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2019-08-06T08:03:45+00:00"
+            "time": "2019-11-27T14:18:11+00:00"
         },
         {
             "name": "symfony/polyfill-php56",
@@ -8389,16 +8339,16 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v4.3.8",
+            "version": "v4.3.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "bbce239b35b0cd47bd75848b23e969f17dd970e7"
+                "reference": "73f86a49454d9477864ccbb6c06993e24a052a48"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/bbce239b35b0cd47bd75848b23e969f17dd970e7",
-                "reference": "bbce239b35b0cd47bd75848b23e969f17dd970e7",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/73f86a49454d9477864ccbb6c06993e24a052a48",
+                "reference": "73f86a49454d9477864ccbb6c06993e24a052a48",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -8467,7 +8417,7 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2019-11-06T23:21:49+00:00"
+            "time": "2019-11-26T03:44:44+00:00"
         },
         {
             "name": "symfony/translation-contracts",
@@ -11982,6 +11932,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "dingo/api": 15,
+        "foridom/ali-oss-storage": 20,
         "foridom/backend": 20
     },
     "prefer-stable": false,
