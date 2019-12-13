@@ -127,7 +127,15 @@ class NiceClassificationController extends Controller
         return $this->response->collection($niceClassifications, new NiceClassificationTransformer());
     }
 
-    public function search(Request $request, NiceClassification $niceClassification,  Factory $transformerFactory)
+    /**
+     * 商标搜索(自助申请)
+     *
+     * @param Request $request
+     * @param NiceClassification $niceClassification
+     * @param Factory $transformerFactory
+     * @return \Dingo\Api\Http\Response
+     */
+    public function search(Request $request, NiceClassification $niceClassification, Factory $transformerFactory)
     {
         // 创建一个查询构造器
         $builder = $niceClassification->query();
@@ -135,8 +143,10 @@ class NiceClassificationController extends Controller
         // 判断是否有提交 search 参数模糊搜索，如果有就赋值给 $search 变量
         if ($search = $request->input('search', '')) {
             $like = '%' . $search . '%';
-            // 模糊搜索顶级分类、群组分类、商品
-            $builder->where('classification_name', 'like', $like);
+
+            // 模糊搜索商品
+            $builder->where('classification_name', 'like', $like)
+                ->where('level', 3);
 //                ->orWhereHas('children', function ($query) use ($like) {
 //                    $query->where('classification_name', 'like', $like)
 //                        ->orWhereHas('children', function ($query) use ($like) {
@@ -145,9 +155,9 @@ class NiceClassificationController extends Controller
 //                });
         }
 
-
+        //商品集合
         if ($request->include === 'children') {
-            $classifications = $builder->get()->toTree();
+            $classifications = $builder->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
             // 关闭 Dingo 的预加载
             $transformerFactory->disableEagerLoading();
         } else {
@@ -155,12 +165,18 @@ class NiceClassificationController extends Controller
         }
 
         foreach ($classifications as $classification) {
-            if ($classification->level ==3) {
-//                $classifications->push($classification->parent);
-//                $classifications->push($classification->parent->parent);
+            //群组
+            if (!$classifications->contains('id', $classification->parent->id)) {
+                $classifications->push($classification->parent);
+            }
+
+            //分类
+            if (!$classifications->contains('id', $classification->parent->parent->id)) {
+                $classifications->push($classification->parent->parent);
             }
         }
-        return $this->response->collection($classifications, new NiceClassificationTransformer());
+
+        return $this->response->collection($classifications->toTree(), new NiceClassificationTransformer());
 
     }
 
