@@ -155,6 +155,15 @@ class NiceClassificationController extends Controller
 //                });
         }
 
+        //单一分类下的搜索
+        if ($parentId = $request->input('parent_id', '')) {
+            $builder->whereHas('parent', function ($query) use ($parentId) {
+                $query->whereHas('parent', function ($query) use ($parentId) {
+                    $query->where('id', $parentId);
+                });
+            });
+        }
+
         //商品集合
         if ($request->include === 'children') {
             $classifications = $builder->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
