@@ -45,7 +45,7 @@ $router->post('application/brand/upload', 'SelfApplicationController@uploadBrand
 $router->get('industries/tree', 'NiceClassificationController@industryTree')->name('api.industry.tree');                            //行业树
 $router->get('industries/{industry}/classifications/tree', 'NiceClassificationController@recommendationTree')->name('api.classification.recommendation.tree'); //行业推荐分类树(自助申请)
 $router->get('classifications/search', 'NiceClassificationController@search')->name('api.classification.search.tree');              //尼斯分类关键词搜索
-$router->get('getCouponsExportData', 'CouponController@getCouponsExportData')->name('admin.promotion.coupon.getCouponsExportData'); //尼斯分类导出
+$router->post('classifications/export', 'SelfApplicationController@getClassificationsExportData')->name('api.classification.getClassificationsExportData'); //尼斯分类导出
 
 
 /************************************************************ 首页数据 ****************************************************/

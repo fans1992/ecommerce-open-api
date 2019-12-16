@@ -2,10 +2,14 @@
 
 namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 
+use GuoJiangClub\Component\NiceClassification\NiceClassification;
 use Intervention\Image\ImageManager;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Validator;
 use Image;
+use Cache;
+use Storage;
 
 class SelfApplicationController extends Controller
 {
@@ -55,7 +59,7 @@ class SelfApplicationController extends Controller
             $font->color('#000000');
         })->stream();
 
-        $path = 'brand/create/'. date('Ymd'). '/' . generaterandomstring() . '.png';
+        $path = 'brand/create/' . date('Ymd') . '/' . generaterandomstring() . '.png';
         $url = upload_image($path, $img->__toString());
 
         return $this->success(['url' => $url]);
@@ -80,11 +84,91 @@ class SelfApplicationController extends Controller
 
         //获取扩展名，上传OSS
         $extension = $file->getClientOriginalExtension();
-        $path = 'brand/upload/'. date('Ymd'). '/' . generaterandomstring() . '.' . $extension;;
+        $path = 'brand/upload/' . date('Ymd') . '/' . generaterandomstring() . '.' . $extension;;
         $url = upload_image($path, $img->__toString());
 
         return $this->success(['url' => $url]);
     }
 
+    /**
+     * 导出领取记录
+     * @return mixed
+     */
+    public function getClassificationsExportData(Request $request)
+    {
+        $classificationIds = array_column($request->input('classifications'), 'id');
+        $classifications = NiceClassification::query()->whereIn('id', $classificationIds)->get();
+
+        $excelData = [];
+        if (count($classifications) > 0) {
+            $i = 0;
+            foreach ($classifications as $classification) {
+//                if (isset($item->bind)) {
+//                    $item->open_id = $item->bind->open_id;
+//                }
+
+                $excelData[$i][] = $classification->classification_code;
+                $excelData[$i][] = $classification->classification_name;
+                $i++;
+            }
+        }
+//
+//        $cacheName = generate_export_cache_name('export_classification_get_cache_');
+//
+//        if (Cache::has($cacheName)) {
+//            $cacheData = Cache::get($cacheName);
+//            Cache::put($cacheName, array_merge($cacheData, $excelData), 300);
+//        } else {
+//            Cache::put($cacheName, $excelData, 300);
+//        }
+
+        Storage::makeDirectory('public/exports');
+
+        $title = ['商标分类编号', '商标分类名称'];
+        $prefix = '商标注册共大类_';
+        $fileName = generate_export_name($prefix);
+
+//        $excelData = $this->cache->pull($cache);
+
+        set_time_limit(10000);
+        ini_set('memory_limit', '300M');
+
+        $excel = Excel::create($fileName, function ($excel) use ($excelData, $title) {
+            $excel->sheet('Sheet1', function ($sheet) use ($excelData, $title) {
+                $sheet->prependRow(1, $title);
+                $sheet->rows($excelData);
+//                    $sheet->setWidth(array(
+//                        'A' => 5,
+//                        'B' => 20,
+//                        'C' => 10,
+//                        'D' => 40,
+//                        'E' => 5,
+//                        'F' => 10,
+//                        'G' => 10,
+//                        'H' => 5,
+//                        'I' => 5,
+//                        'J' => 20,
+//                        'K' => 10,
+//                        'L' => 30,
+//                        'M' => 30,
+//                        'N' => 80,
+//                        'O' => 100
+//                    ));
+            });
+        })->store('xls', storage_path('exports'), false);
+
+        $result = \File::move(storage_path('exports') . '/' . $fileName . '.xls', storage_path('app/public/exports/') . $fileName . '.xls');
+
+        if (!$result) {
+            return $this->failed('failed');
+        }
+
+        if ($request->input('action') === 'preview') {
+            return $this->success(['url' => 'https://view.officeapps.live.com/op/view.aspx?src=' . $fileName . '.xls']);
+        }
+
+        return $this->success(['url' => url('/storage/exports/' . $fileName . '.xls')]);
+
+    }
 
 }
