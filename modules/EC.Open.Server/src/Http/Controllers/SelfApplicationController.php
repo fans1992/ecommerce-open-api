@@ -97,21 +97,49 @@ class SelfApplicationController extends Controller
     public function getClassificationsExportData(Request $request)
     {
         $classificationIds = array_column($request->input('classifications'), 'id');
-        $classifications = NiceClassification::query()->whereIn('id', $classificationIds)->get();
+        $classifications = NiceClassification::query()->whereIn('id', $classificationIds)
+            ->with(['parent.parent:id,classification_name,classification_code,parent_id,level'])
+            ->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
+
+
+        foreach ($classifications as $classification) {
+            //群组
+            if (!$classifications->contains('id', $classification->parent->id)) {
+                $classifications->push($classification->parent);
+            }
+
+            //分类
+            if (!$classifications->contains('id', $classification->parent->parent->id)) {
+                $classifications->push($classification->parent->parent);
+            }
+        }
+
+        $classificationsTree = $classifications->toTree();
 
         $excelData = [];
-        if (count($classifications) > 0) {
-            $i = 0;
-            foreach ($classifications as $classification) {
+        $i = 2;
+        $colorLine = [];
+        if (count($classificationsTree) > 0) {
+            foreach ($classificationsTree as $topClassification) {
 //                if (isset($item->bind)) {
 //                    $item->open_id = $item->bind->open_id;
 //                }
-
-                $excelData[$i][] = $classification->classification_code;
-                $excelData[$i][] = $classification->classification_name;
+                $excelData[] = [
+                    '第' . $topClassification->classification_code . '类',
+                    $topClassification->classification_name,
+                ];
+                $colorLine[] = $i;
                 $i++;
+                foreach ($topClassification->children as $group) {
+                    foreach ($group->children as $product) {
+                        $excelData[] = [$product->classification_code, $product->classification_name];
+                        $i++;
+                    }
+                }
+
             }
         }
+
 //
 //        $cacheName = generate_export_cache_name('export_classification_get_cache_');
 //
@@ -133,27 +161,45 @@ class SelfApplicationController extends Controller
         set_time_limit(10000);
         ini_set('memory_limit', '300M');
 
-        $excel = Excel::create($fileName, function ($excel) use ($excelData, $title) {
-            $excel->sheet('Sheet1', function ($sheet) use ($excelData, $title) {
+        $excel = Excel::create($fileName, function ($excel) use ($excelData, $title, $colorLine) {
+            $excel->sheet('Sheet1', function ($sheet) use ($excelData, $title, $colorLine) {
                 $sheet->prependRow(1, $title);
                 $sheet->rows($excelData);
-//                    $sheet->setWidth(array(
-//                        'A' => 5,
-//                        'B' => 20,
-//                        'C' => 10,
-//                        'D' => 40,
-//                        'E' => 5,
-//                        'F' => 10,
-//                        'G' => 10,
-//                        'H' => 5,
-//                        'I' => 5,
-//                        'J' => 20,
-//                        'K' => 10,
-//                        'L' => 30,
-//                        'M' => 30,
-//                        'N' => 80,
-//                        'O' => 100
-//                    ));
+
+                $sheet->setWidth([
+                    'A' => 30,
+                    'B' => 50,
+                ]);
+
+                $sheet->setHeight([
+                    1 => 50,
+                ]);
+
+                $sheet->setStyle([
+                    'font' => [
+                        'name' => 'Calibri',
+                        'size' => 15,
+                        'bold' => true,
+                    ]
+                ]);
+
+                // Alignment
+                $style = array(
+                    'alignment' => array(
+                        'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                        'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                    )
+                );
+                $sheet->getDefaultStyle()->applyFromArray($style);
+
+                for ($i=2;$i<=count($excelData)+1;$i++) {
+                    if (in_array($i, $colorLine))
+                    $sheet->row($i, function ($row) {
+                        /** @var CellWriter $row */
+                        $row->setBackground('#AAAAFF');
+                    });
+                }
+
             });
         })->store('xls', storage_path('exports'), false);
 
