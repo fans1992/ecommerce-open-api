@@ -33,11 +33,13 @@ $router->get('store/list', 'GoodsController@index')->name('api.goods.list');
 $router->get('store/detail/{id}', 'GoodsController@show')->name('api.goods.detail');
 $router->get('store/detail/{id}/stock', 'GoodsController@getStock')->name('api.goods.detail.stock');
 $router->get('store/detail/{id}/share/img', 'GoodsController@shareImg')->name('api.goods.detail.share.img');
-$router->get('store/question/list', 'GoodsController@questionIndex')->name('api.goods.question.list');                              //热门问答列表
+$router->get('store/question/list', 'GoodsController@questionIndex')->name('api.goods.question.list');        //热门问答列表
+
+/*********************************************************** 商标保障注册 ****************************************************/
 $router->get('industries', 'NiceClassificationController@industryIndex')->name('api.industry.list');                                //行业列表
+$router->get('industries/{industry}/classifications', 'NiceClassificationController@recommendationIndex')->name('api.classification.recommendation.list');  //行业推荐分类列表(保障申请)
 
-
-/*********************************************************** 自助注册商标 ****************************************************/
+/*********************************************************** 商标自助注册 ****************************************************/
 $router->post('application/brand/images', 'SelfApplicationController@createBrandImage')->name('api.application.brand.image');       //生成商标图样
 $router->post('application/brand/upload', 'SelfApplicationController@uploadBrandImage')->name('api.application.brand.upload');      //手动上传商标图样
 $router->get('industries/tree', 'NiceClassificationController@industryTree')->name('api.industry.tree');                            //行业树
@@ -70,8 +72,7 @@ $router->group(config('ibrand.ec-open-api.routeAuthAttributes'), function ($rout
     $router->post('oauth/qrcode/binding', 'WechatController@wechatBind');
 
 
-    //行业推荐分类列表(保障申请)
-    $router->get('industries/{industry}/classifications', 'NiceClassificationController@recommendationIndex')->name('api.classification.recommendation.list');
+
 
 
     /************************************************* 购物车 ****************************************************/
