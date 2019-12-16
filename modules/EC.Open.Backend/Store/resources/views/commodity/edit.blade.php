@@ -257,7 +257,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">服务亮点：</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="service_highlights" placeholder="">
+                        <input type="text" class="form-control" name="service_highlights" placeholder="" value="{{$goods_info->service_highlights}}">
                     </div>
                 </div>
 
