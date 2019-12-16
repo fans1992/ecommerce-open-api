@@ -48,11 +48,13 @@ class NiceClassificationController extends Controller
     {
         $query = $industry->query();
 
-        if ($request->has('parent_id')) {
-            $query->where('parent_id', $request->input('parent_id'));
+        if ($parentId = $request->input('parent_id', 0)) {
+            $query->where('parent_id', $parentId);
+        } else {
+            $query->whereIsRoot()->defaultOrder();
         }
 
-        $industries = $query->whereIsRoot()->get();
+        $industries = $query->get();
 
         return $this->response()->collection($industries, new IndustryTransformer());
     }
