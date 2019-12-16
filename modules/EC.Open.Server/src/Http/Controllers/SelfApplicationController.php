@@ -163,11 +163,12 @@ class SelfApplicationController extends Controller
             return $this->failed('failed');
         }
 
+        $url = url('/storage/exports/' . $fileName . '.xls');
         if ($request->input('action') === 'preview') {
-            return $this->success(['url' => 'https://view.officeapps.live.com/op/view.aspx?src=' . $fileName . '.xls']);
+            return $this->success(['url' => 'https://view.officeapps.live.com/op/view.aspx?src=' . $url]);
         }
 
-        return $this->success(['url' => url('/storage/exports/' . $fileName . '.xls')]);
+        return $this->success(['url' => $url]);
 
     }
 
