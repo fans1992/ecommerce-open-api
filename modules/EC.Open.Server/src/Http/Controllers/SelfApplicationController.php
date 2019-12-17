@@ -90,9 +90,12 @@ class SelfApplicationController extends Controller
         return $this->success(['url' => $url]);
     }
 
+
     /**
-     * 导出领取记录
-     * @return mixed
+     * 自助申请方案下载
+     *
+     * @param Request $request
+     * @return \Dingo\Api\Http\Response|mixed
      */
     public function getClassificationsExportData(Request $request)
     {
@@ -187,21 +190,21 @@ class SelfApplicationController extends Controller
                 $style = array(
                     'alignment' => array(
                         'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
-                        'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                        'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
                     )
                 );
                 $sheet->getDefaultStyle()->applyFromArray($style);
 
-                for ($i=2;$i<=count($excelData)+1;$i++) {
+                for ($i = 2; $i <= count($excelData) + 1; $i++) {
                     if (in_array($i, $colorLine))
-                    $sheet->row($i, function ($row) {
-                        /** @var CellWriter $row */
-                        $row->setBackground('#AAAAFF');
-                    });
+                        $sheet->row($i, function ($row) {
+                            $row->setBackground('#AAAAFF');
+                        });
                 }
 
             });
-        })->store('xls', storage_path('exports'), false);
+        })->stream();
+        dd('3232');
 
         $result = \File::move(storage_path('exports') . '/' . $fileName . '.xls', storage_path('app/public/exports/') . $fileName . '.xls');
 
