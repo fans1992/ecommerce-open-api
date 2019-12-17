@@ -3,6 +3,7 @@
 /public/storage
 /public/laravel-u-editor
 /public/fonts
+/public/font
 /public/mix-manifest.json
 /storage/*.key
 /vendor
