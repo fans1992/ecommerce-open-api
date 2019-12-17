@@ -23,6 +23,7 @@ use GuoJiangClub\EC\Open\Backend\Store\Model\NiceClassification;
 use GuoJiangClub\EC\Open\Core\Applicators\PointApplicator;
 use GuoJiangClub\EC\Open\Core\Processor\OrderProcessor;
 use GuoJiangClub\EC\Open\Core\Services\DiscountService;
+use GuoJiangClub\EC\Open\Server\Events\UserClassification;
 use Illuminate\Support\Collection;
 use GuoJiangClub\Component\Product\Models\Goods;
 use GuoJiangClub\Component\Product\Models\Product;
@@ -487,7 +488,7 @@ class ShoppingController extends Controller
                 'official_price' => $item->official_price * 100,
             ];
 
-            //TODO 附加服务待优化
+            //TODO 附加服务待优
             if ($item['attribute_value_ids']) {
                 $optionServices = $this->getOptionService($item['attribute_value_ids']);
                 $option_services_price = $optionServices->sum('attribute_value');
@@ -509,6 +510,7 @@ class ShoppingController extends Controller
 
             //自助申请
             if (isset($item['self_apply_classifications'])) {
+                $this->submitUserClassifications($item['self_apply_classifications']);
                 $item_meta['self_apply_classifications'] = $item['self_apply_classifications'];
             }
 
@@ -658,6 +660,36 @@ class ShoppingController extends Controller
 
         return $cartItems;
     }
+
+    protected function submitUserClassifications($classifications)
+    {
+        $classifications = \GuoJiangClub\Component\NiceClassification\NiceClassification::query()
+            ->whereIn('id', array_column($classifications, 'id'))
+            ->with(['parent.parent:id,classification_name,classification_code,parent_id,level'])
+            ->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
+
+        foreach ($classifications as $classification) {
+            //群组
+            if (!$classifications->contains('id', $classification->parent->id)) {
+                $classifications->push($classification->parent);
+            }
+
+            //分类
+            if (!$classifications->contains('id', $classification->parent->parent->id)) {
+                $classifications->push($classification->parent->parent);
+            }
+        }
+
+        $result = request()->user()->classifications()->create([
+            'user_id' => 1,
+            'name' => "test",
+            'content' => $classifications->toTree(),
+        ]);
+
+        event(new UserClassification($classifications));
+    }
+
+
 
 
 }

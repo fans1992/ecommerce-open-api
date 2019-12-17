@@ -11,6 +11,7 @@
 
 namespace GuoJiangClub\Component\User\Models;
 
+use GuoJiangClub\Component\NiceClassification\Models\UserClassification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -103,6 +104,11 @@ class User extends Authenticatable
     {
         // 随机生成 6 位的数字
         return  '用户' . str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+    }
+
+    public function classifications()
+    {
+        return $this->hasMany(UserClassification::class, 'user_id', 'id');
     }
 
 
