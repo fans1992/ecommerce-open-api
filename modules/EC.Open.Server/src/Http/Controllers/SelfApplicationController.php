@@ -48,7 +48,7 @@ class SelfApplicationController extends Controller
 
         $img->text($name, 75, 75, function ($font) use ($size) {
 
-            $font->file(public_path('font/msyh.ttf'));
+            $font->file(public_path('font/SourceHanSansCN-Normal-2.otf'));
 
             $font->size($size);
 
@@ -203,8 +203,7 @@ class SelfApplicationController extends Controller
                 }
 
             });
-        })->stream();
-        dd('3232');
+        })->store('xls', storage_path('exports'), false);
 
         $result = \File::move(storage_path('exports') . '/' . $fileName . '.xls', storage_path('app/public/exports/') . $fileName . '.xls');
 
