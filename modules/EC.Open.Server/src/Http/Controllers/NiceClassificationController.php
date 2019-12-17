@@ -119,14 +119,20 @@ class NiceClassificationController extends Controller
     {
 
         if ($request->include === 'children') {
-            $niceClassifications = $industry->recommendClassifications->toTree();
+            //TODO 推荐修复
+            $recommendClassifications = $industry->recommendClassifications;
+            $recommendClassifications->each(function ($item) {
+                $item->recommendation = true;
+            });
+
+            $niceClassificationsTree = $recommendClassifications->toTree();
             // 关闭 Dingo 的预加载
             $transformerFactory->disableEagerLoading();
         } else {
-            $niceClassifications = NiceClassification::whereIsRoot()->defaultOrder()->get();
+            $niceClassificationsTree = NiceClassification::whereIsRoot()->defaultOrder()->get();
         }
 
-        return $this->response->collection($niceClassifications, new NiceClassificationTransformer());
+        return $this->response->collection($niceClassificationsTree, new NiceClassificationTransformer());
     }
 
     /**

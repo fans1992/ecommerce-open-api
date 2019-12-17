@@ -48,7 +48,7 @@ class SelfApplicationController extends Controller
 
         $img->text($name, 75, 75, function ($font) use ($size) {
 
-            $font->file(public_path('font/msyh.ttf'));
+            $font->file(public_path('font/SourceHanSansCN-Normal-2.otf'));
 
             $font->size($size);
 
@@ -90,9 +90,12 @@ class SelfApplicationController extends Controller
         return $this->success(['url' => $url]);
     }
 
+
     /**
-     * 导出领取记录
-     * @return mixed
+     * 自助申请方案下载
+     *
+     * @param Request $request
+     * @return \Dingo\Api\Http\Response|mixed
      */
     public function getClassificationsExportData(Request $request)
     {
@@ -187,17 +190,16 @@ class SelfApplicationController extends Controller
                 $style = array(
                     'alignment' => array(
                         'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
-                        'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                        'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
                     )
                 );
                 $sheet->getDefaultStyle()->applyFromArray($style);
 
-                for ($i=2;$i<=count($excelData)+1;$i++) {
+                for ($i = 2; $i <= count($excelData) + 1; $i++) {
                     if (in_array($i, $colorLine))
-                    $sheet->row($i, function ($row) {
-                        /** @var CellWriter $row */
-                        $row->setBackground('#AAAAFF');
-                    });
+                        $sheet->row($i, function ($row) {
+                            $row->setBackground('#AAAAFF');
+                        });
                 }
 
             });

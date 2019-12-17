@@ -479,7 +479,6 @@ class ShoppingController extends Controller
                 continue;
             }
 
-
             $item_meta = [
                 'image' => $item->img,
                 'detail_id' => $item->model->detail_id,
@@ -487,7 +486,6 @@ class ShoppingController extends Controller
                 'service_price' => $item->service_price * 100,
                 'official_price' => $item->official_price * 100,
             ];
-
 
             //TODO 附加服务待优化
             if ($item['attribute_value_ids']) {
@@ -507,6 +505,11 @@ class ShoppingController extends Controller
                 $classificationIds = explode(',', $item['classification_ids']);
                 $ensure_price = count($classificationIds) * Goods::MARKUP_PRICE_TOTAL;
                 $item_meta['ensure_classifications'] = NiceClassification::query()->whereIn('id', $classificationIds)->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level'])->toArray();
+            }
+
+            //自助申请
+            if (isset($item['self_apply_classifications'])) {
+                $item_meta['self_apply_classifications'] = $item['self_apply_classifications'];
             }
 
             $orderItem = new OrderItem([
