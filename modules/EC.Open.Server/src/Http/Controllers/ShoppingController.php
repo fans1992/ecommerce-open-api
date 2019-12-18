@@ -510,8 +510,8 @@ class ShoppingController extends Controller
             }
 
             //自助申请
-            if (isset($item['self_apply_classifications'])) {
-                $this->submitUserClassifications($item['self_apply_classifications'], request()->user()->id);
+            if (isset($item['seleced_classifications'])) {
+                $this->submitUserClassifications($item['self_apply_classifications']['seleced_classifications'], request()->user()->id);
                 $item_meta['self_apply_classifications'] = $item['self_apply_classifications'];
             }
 
