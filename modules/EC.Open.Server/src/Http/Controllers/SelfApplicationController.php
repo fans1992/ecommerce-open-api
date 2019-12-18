@@ -2,7 +2,9 @@
 
 namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 
+use GuoJiangClub\Component\NiceClassification\Models\UserClassification;
 use GuoJiangClub\Component\NiceClassification\NiceClassification;
+use GuoJiangClub\EC\Open\Server\Transformers\UserClassificationTransformer;
 use Intervention\Image\ImageManager;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -218,6 +220,18 @@ class SelfApplicationController extends Controller
 
         return $this->success(['url' => $url]);
 
+    }
+
+    /**
+     * 用户历史申请分类记录
+     *
+     * @return \Dingo\Api\Http\Response
+     */
+    public function userRecordIndex()
+    {
+        $classificationList = UserClassification::all();
+
+        return $this->response()->collection($classificationList, new UserClassificationTransformer());
     }
 
 }

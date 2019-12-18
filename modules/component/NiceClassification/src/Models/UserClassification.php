@@ -25,7 +25,6 @@ class UserClassification extends Model
         $this->setTable( 'user_classifications');
 
         parent::__construct($attributes);
-
     }
 
     public function user()

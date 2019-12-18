@@ -40,12 +40,7 @@ $router->get('industries', 'NiceClassificationController@industryIndex')->name('
 $router->get('industries/{industry}/classifications', 'NiceClassificationController@recommendationIndex')->name('api.classification.recommendation.list');  //行业推荐分类列表(保障申请)
 
 /*********************************************************** 商标自助注册 ****************************************************/
-$router->post('application/brand/images', 'SelfApplicationController@createBrandImage')->name('api.application.brand.image');       //生成商标图样
-$router->post('application/brand/upload', 'SelfApplicationController@uploadBrandImage')->name('api.application.brand.upload');      //手动上传商标图样
 $router->get('industries/tree', 'NiceClassificationController@industryTree')->name('api.industry.tree');                            //行业树
-$router->get('industries/{industry}/classifications/tree', 'NiceClassificationController@recommendationTree')->name('api.classification.recommendation.tree'); //行业推荐分类树(自助申请)
-$router->get('classifications/search', 'NiceClassificationController@search')->name('api.classification.search.tree');              //尼斯分类关键词搜索
-$router->post('classifications/export', 'SelfApplicationController@getClassificationsExportData')->name('api.classification.getClassificationsExportData'); //尼斯分类导出
 
 
 /************************************************************ 首页数据 ****************************************************/
@@ -72,8 +67,14 @@ $router->group(config('ibrand.ec-open-api.routeAuthAttributes'), function ($rout
     $router->post('oauth/qrcode/binding', 'WechatController@wechatBind');
 
 
-
-
+    /********************************************** 商标自助注册 ****************************************************/
+    $router->post('application/brand/images', 'SelfApplicationController@createBrandImage')->name('api.application.brand.image');       //生成商标图样
+    $router->post('application/brand/upload', 'SelfApplicationController@uploadBrandImage')->name('api.application.brand.upload');      //手动上传商标图样
+    $router->get('industries/tree', 'NiceClassificationController@industryTree')->name('api.industry.tree');                            //行业树
+    $router->get('industries/{industry}/classifications/tree', 'NiceClassificationController@recommendationTree')->name('api.classification.recommendation.tree'); //行业推荐分类树(自助申请)
+    $router->get('classifications/search', 'NiceClassificationController@search')->name('api.classification.search.tree');              //尼斯分类关键词搜索
+    $router->post('classifications/export', 'SelfApplicationController@getClassificationsExportData')->name('api.classification.getClassificationsExportData'); //尼斯分类导出
+    $router->get('classifications/record', 'SelfApplicationController@userRecordIndex')->name('api.classifications.user.record');       //历史申请类别列表
 
     /************************************************* 购物车 ****************************************************/
     $router->post('shopping/cart', 'ShoppingCartController@store')->name('api.shopping.cart.store');

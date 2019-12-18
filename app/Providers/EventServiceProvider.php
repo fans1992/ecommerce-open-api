@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use GuoJiangClub\EC\Open\Server\Events\UserClassification;
+use GuoJiangClub\EC\Open\Server\Events\UserClassificationEvent;
 use GuoJiangClub\EC\Open\Server\Listeners\SaveUserClassification;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -18,7 +19,7 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Event' => [
             'App\Listeners\EventListener',
         ],
-        UserClassification::class => [
+        UserClassificationEvent::class => [
           SaveUserClassification::class,
         ],
     ];
