@@ -489,12 +489,15 @@ class ShoppingController extends Controller
                 'official_price' => $item->official_price * 100,
             ];
 
+            $unit_price = $item->model->sell_price;
+
             //TODO 附加服务待优
             if ($item['attribute_value_ids']) {
                 $optionServices = $this->getOptionService($item['attribute_value_ids']);
                 $option_services_price = $optionServices->sum('attribute_value');
                 $item_meta['attribute_value_ids'] = $item['attribute_value_ids'];
                 $item_meta['option_service'] = $optionServices;
+                $unit_price += $option_services_price /100;
             } else {
                 $option_services_price = 0;
                 $item_meta['attribute_value_ids'] = null;
@@ -506,18 +509,19 @@ class ShoppingController extends Controller
             if ($item['classification_ids']) {
                 $classificationIds = explode(',', $item['classification_ids']);
                 $ensure_price = count($classificationIds) * Goods::MARKUP_PRICE_TOTAL;
+                $unit_price += $ensure_price;
                 $item_meta['ensure_classifications'] = NiceClassification::query()->whereIn('id', $classificationIds)->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level'])->toArray();
             }
 
             //自助申请
-            if (isset($item['seleced_classifications'])) {
-                $this->submitUserClassifications($item['self_apply_classifications']['seleced_classifications'], request()->user()->id);
+            if (isset($item['self_apply_classifications'])) {
+                $this->submitUserClassifications($item['self_apply_classifications']['selected_classifications'], request()->user()->id);
                 $item_meta['self_apply_classifications'] = $item['self_apply_classifications'];
             }
 
             $orderItem = new OrderItem([
                 'quantity' => $item->qty,
-                'unit_price' => $item->model->sell_price + $option_services_price / 100 + $ensure_price,
+                'unit_price' => $unit_price,
                 'item_id' => $item->id,
                 'type' => $item->__model,
                 'item_name' => $item->name,
