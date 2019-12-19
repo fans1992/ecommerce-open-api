@@ -506,7 +506,7 @@ class ShoppingController extends Controller
 
             //商标保障申请
             $ensure_price = 0;
-            if ($item['classification_ids']) {
+            if (isset($item['classification_ids'])) {
                 $classificationIds = explode(',', $item['classification_ids']);
                 $ensure_price = count($classificationIds) * Goods::MARKUP_PRICE_TOTAL;
                 $unit_price += $ensure_price;

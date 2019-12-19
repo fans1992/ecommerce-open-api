@@ -308,7 +308,7 @@
                 // console.log('后台返回的字段', html);
                 // 搜索不到内容
                 if (html.length === 0) {
-                    alert("暂无搜索结果")
+                    swal("暂无搜索结果", "", "error");
                 } else{
                     $.each(html, function(i, item){
                         selOption += '<option value="'+item.id+'">第'+item.classification_code+'类</option>';    
@@ -317,6 +317,7 @@
                     // 下面的二级 三级内容标题清空
                     $(".titCon01").html("");
                     $(".titCon02").html("");
+                    swal("搜到相关类别,请选择商标类别以及所属分类查看!", "", "success");
                 }
             });
         })
