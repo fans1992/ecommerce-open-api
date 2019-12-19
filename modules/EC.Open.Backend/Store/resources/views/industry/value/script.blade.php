@@ -75,21 +75,22 @@
             });
         }
 
-        function addTheOrderCheckedCat(dataId, dataParentId, dataName, dataCode='') {
+        function addTheOrderCheckedCat(dataId, dataParentId, dataName, dataLevel, dataCode='') {
 
             var whetherExistNode = $(".category_name").find('[data-id=' + dataId + ']').length;
+
             if (0 == whetherExistNode) {
                 var $parentObject = $(".category_name").find('[data-id=' + dataParentId + ']');
-
                 if ($parentObject.length == 1) {
-                    var $sort = $parentObject.find('li').length + 1;
-                    var template = " <li data-id=" + dataId + " data-parent=" + dataParentId + "><span>" + $sort + '.' + dataName +
+
+                    var $sort =  $(".category_name").find('[data-level=3]').length + 1;
+                    var template = " <li data-id=" + dataId + " data-parent=" + dataParentId + " data-level=" + dataLevel + "><span>" + $sort + '.' + dataName +
                         "</span><ul></ul>" +
                         " </li>";
                     $parentObject.children('ul').append(template);
 
                 } else {
-                    var template = " <li data-id=" + dataId + " data-parent=" + dataParentId + "><span>" + dataCode + dataName +
+                    var template = " <li data-id=" + dataId + " data-parent=" + dataParentId + " data-level=" + dataLevel + "><span>" + dataCode + dataName +
                         "</span><ul></ul>" +
                         " </li>";
                     $(".category_name").children('ul').append(template);
@@ -179,7 +180,6 @@
                 }
                 else{
                     $.each(category_ids,function(i,item){
-                        console.log('item', item);
                         if (item[1]  == id) {
                             return false;
                         }
@@ -212,7 +212,7 @@
             // console.log("$(this).is(':checked')", $(this).is(':checked'));
             if ($(this).is(':checked')) { // 选中状态
                 operator($parentCategoryContent, id, parentId, level, 1);
-                addTheOrderCheckedCat(id, parentId, name, code);
+                addTheOrderCheckedCat(id, parentId, name, level, code);
                 // 右边但凡有一个复选框选中，左边对应 复选框也自动选中
                 if($(".titCon02").find(".checked").length ==  1){
                     // console.log('input', $("input[data-uniqueId=categoryIds_" + parentId + "]").is(':checked'));

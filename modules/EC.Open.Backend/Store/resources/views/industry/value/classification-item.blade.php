@@ -66,14 +66,16 @@
     <div class="row category_name">
         <ul  class="category_ul">
             @if(isset($cateNames))
+                <?php $i=1; ?>
                 @foreach($cateNames as $val)
-                    <li class="" data-id="{{$val->id}}" data-parent="{{$val->parent_id | 0}}"><span class="tit02">{{$val->classification_code . ' ' . $val->classification_name}}</span>
+                    <li class="" data-id="{{$val->id}}" data-level="{{$val->level}}" data-parent="{{$val->parent_id | 0}}" ><span class="tit02">{{$val->classification_code . ' ' . $val->classification_name}}</span>
                         <ul>
                             @foreach($val->children as $key => $child)
-                                <li class="" data-id="{{$child->id}}" data-parent="{{$child->parent_id | 0}}">
-                                    <span class="tit02">{{$key + 1 .'.'. $child->classification_name}}</span>
+                                <li class="" data-id="{{$child->id}}" data-parent="{{$child->parent_id | 0}}" data-level="{{$child->level}}">
+                                    <span class="tit02">{{$i . '.' . $child->classification_name}}</span>
                                     <ul></ul>
                                 </li>
+                                <?php $i++; ?>
                             @endforeach
                         </ul>
                     </li>
