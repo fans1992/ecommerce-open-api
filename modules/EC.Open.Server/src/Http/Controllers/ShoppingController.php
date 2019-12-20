@@ -497,7 +497,7 @@ class ShoppingController extends Controller
                 $option_services_price = $optionServices->sum('attribute_value');
                 $item_meta['attribute_value_ids'] = $item['attribute_value_ids'];
                 $item_meta['option_service'] = $optionServices;
-                $unit_price += $option_services_price /100;
+                $unit_price += $option_services_price / 100;
             } else {
                 $option_services_price = 0;
                 $item_meta['attribute_value_ids'] = null;
@@ -514,8 +514,9 @@ class ShoppingController extends Controller
             }
 
             //自助申请
-            if (isset($item['self_apply_classifications'])) {
-                $this->submitUserClassifications($item['self_apply_classifications']['selected_classifications'], request()->user()->id);
+            if (isset($item['self_apply_classifications']) && $selectedClassifications = $item['self_apply_classifications']['selected_classifications']) {
+                $this->submitUserClassifications($selectedClassifications, request()->user()->id);
+                $unit_price += $this->getSelfApplyPrice($selectedClassifications);
                 $item_meta['self_apply_classifications'] = $item['self_apply_classifications'];
             }
 
@@ -676,7 +677,28 @@ class ShoppingController extends Controller
         event(new UserClassificationEvent($classifications, $userId));
     }
 
+    public function getSelfApplyPrice($classifications)
+    {
+        $totalPrice = 0;
+        foreach ($classifications as $top) {
+            $i = 0;
+            foreach ($top['children'] as $group) {
+                $i += count($group['children']);
+            }
+//
+//            if ($i <= 10) {
+//                $topPrice = 300;
+//            } else {
+//                $topPrice = 300 + ($i - 10) * 30;
+//            }
 
+            $topPrice = $i <= 10 ? 300 :  300 + ($i - 10) * 30;
+
+            $totalPrice += $topPrice;
+        }
+//        dd($totalPrice);
+        return $totalPrice;
+    }
 
 
 }

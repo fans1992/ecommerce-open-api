@@ -71,7 +71,7 @@ class NiceClassificationController extends Controller
     {
         if ($request->input('include') == 'children') {
             $industries = Industry::defaultOrder()->get()->toTree();
-//            dd($industries->toArray());
+
             // 关闭 Dingo 的预加载
             $transformerFactory->disableEagerLoading();
         } else {
@@ -176,8 +176,7 @@ class NiceClassificationController extends Controller
         //商品集合
         if ($request->include === 'children') {
             // 通过 with 方法提前加载数据，避免 N + 1 性能问题
-            $classifications = $builder->with(['parent.parent'])
-                ->get();
+            $classifications = $builder->with(['parent.parent'])->get();
 
             foreach ($classifications as $classification) {
                 //群组

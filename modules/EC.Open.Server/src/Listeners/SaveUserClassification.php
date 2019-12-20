@@ -33,29 +33,29 @@ class SaveUserClassification implements ShouldQueue
         // 从事件对象中取出对应的分类
         $submitClassifications = $event->getClassifications();
 
-        $classifications = NiceClassification::query()
-            ->whereIn('id', array_column($submitClassifications, 'id'))
-            ->with(['parent.parent:id,classification_name,classification_code,parent_id,level'])
-            ->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
-
-        foreach ($classifications as $classification) {
-            //群组
-            if (!$classifications->contains('id', $classification->parent->id)) {
-                $classifications->push($classification->parent);
-            }
-
-            //分类
-            if (!$classifications->contains('id', $classification->parent->parent->id)) {
-                $classifications->push($classification->parent->parent);
-            }
-        }
+//        $classifications = NiceClassification::query()
+//            ->whereIn('id', array_column($submitClassifications, 'id'))
+//            ->with(['parent.parent:id,classification_name,classification_code,parent_id,level'])
+//            ->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
+//
+//        foreach ($classifications as $classification) {
+//            //群组
+//            if (!$classifications->contains('id', $classification->parent->id)) {
+//                $classifications->push($classification->parent);
+//            }
+//
+//            //分类
+//            if (!$classifications->contains('id', $classification->parent->parent->id)) {
+//                $classifications->push($classification->parent->parent);
+//            }
+//        }
 
         $userId = $event->getUserId();
 
         UserClassification::query()->create([
             'name' => generaterandomstring(),
             'user_id' => $userId,
-            'content' => $classifications->toTree(),
+            'content' => $submitClassifications,
         ]);
     }
 }
