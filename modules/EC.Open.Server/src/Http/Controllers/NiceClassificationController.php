@@ -176,8 +176,8 @@ class NiceClassificationController extends Controller
         //商品集合
         if ($request->include === 'children') {
             // 通过 with 方法提前加载数据，避免 N + 1 性能问题
-            $classifications = $builder->with(['parent.parent:id,classification_name,classification_code,parent_id,level'])
-                ->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
+            $classifications = $builder->with(['parent.parent'])
+                ->get();
 
             foreach ($classifications as $classification) {
                 //群组
@@ -185,13 +185,11 @@ class NiceClassificationController extends Controller
                     $classifications->push($classification->parent);
                 }
 
-//                //分类
-//                if (!$classifications->contains('id', $classification->parent->parent->id)) {
-//                    $classifications->push($classification->parent->parent);
-//                }
+                //分类
+                if (!$classifications->contains('id', $classification->parent->parent->id)) {
+                    $classifications->push($classification->parent->parent);
+                }
             }
-
-//            dd($classifications->toArray());
 
             // 关闭 Dingo 的预加载
             $transformerFactory->disableEagerLoading();
