@@ -71,6 +71,7 @@ class NiceClassificationController extends Controller
     {
         if ($request->input('include') == 'children') {
             $industries = Industry::defaultOrder()->get()->toTree();
+//            dd($industries->toArray());
             // 关闭 Dingo 的预加载
             $transformerFactory->disableEagerLoading();
         } else {
@@ -184,11 +185,13 @@ class NiceClassificationController extends Controller
                     $classifications->push($classification->parent);
                 }
 
-                //分类
-                if (!$classifications->contains('id', $classification->parent->parent->id)) {
-                    $classifications->push($classification->parent->parent);
-                }
+//                //分类
+//                if (!$classifications->contains('id', $classification->parent->parent->id)) {
+//                    $classifications->push($classification->parent->parent);
+//                }
             }
+
+//            dd($classifications->toArray());
 
             // 关闭 Dingo 的预加载
             $transformerFactory->disableEagerLoading();
