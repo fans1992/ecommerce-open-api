@@ -76,6 +76,16 @@ class Goods extends LaravelModel
         return 0 == $this->is_del && $this->stock_qty >= $quantity;
     }
 
+    public function increaseSales($quantity)
+    {
+        return $this->sale_count = $this->sale_count + $quantity;
+    }
+
+    public function restoreSales($quantity)
+    {
+        return $this->sale_count = $this->sale_count - $quantity;
+    }
+
     public function photos()
     {
         return $this->hasMany(GoodsPhoto::class, 'goods_id');

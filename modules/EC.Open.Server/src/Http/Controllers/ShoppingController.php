@@ -205,8 +205,9 @@ class ShoppingController extends Controller
 
             //6. remove goods store.
             foreach ($order->getItems() as $item) {
+                /** @var Goods | Product $product */
                 $product = $item->getModel();
-                $product->reduceStock($item->quantity);
+//                $product->reduceStock($item->quantity);
                 $product->increaseSales($item->quantity);
                 $product->save();
             }
@@ -251,7 +252,7 @@ class ShoppingController extends Controller
         //TODO: 用户未付款前取消订单后，需要还原库存
         foreach ($order->getItems() as $item) {
             $product = $item->getModel();
-            $product->restoreStock($item->quantity);
+//            $product->restoreStock($item->quantity);
             $product->restoreSales($item->quantity);
             $product->save();
         }
@@ -492,7 +493,7 @@ class ShoppingController extends Controller
             $unit_price = $item->model->sell_price;
 
             //TODO 附加服务待优
-            if ($item['attribute_value_ids']) {
+            if (isset($item['attribute_value_ids']) && $item['attribute_value_ids']) {
                 $optionServices = $this->getOptionService($item['attribute_value_ids']);
                 $option_services_price = $optionServices->sum('attribute_value');
                 $item_meta['attribute_value_ids'] = $item['attribute_value_ids'];
