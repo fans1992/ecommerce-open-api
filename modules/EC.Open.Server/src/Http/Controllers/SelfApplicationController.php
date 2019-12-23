@@ -49,7 +49,13 @@ class SelfApplicationController extends Controller
                 $size = $chinese ? 20 :12;
                 break;
             case $length >= 20 && $length < 25:
-                $size = $chinese ? 20 :5;
+                $size = $chinese ? 16 :5;
+                break;
+            case $length >= 25 && $length < 31:
+                $size = $chinese ? 12 :5;
+                break;
+            case $length >= 31 && $length < 37:
+                $size = $chinese ? 8 :5;
                 break;
             default:
                 $size = 1;
