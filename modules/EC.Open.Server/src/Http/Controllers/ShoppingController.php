@@ -485,8 +485,8 @@ class ShoppingController extends Controller
                 'image' => $item->img,
                 'detail_id' => $item->model->detail_id,
                 'specs_text' => $item->model->specs_text,
-                'service_price' => $item->service_price * 100,
-                'official_price' => $item->official_price * 100,
+                'service_price' => $item->model->service_price * 100,
+                'official_price' => $item->model->official_price * 100,
             ];
 
             $unit_price = $item->model->sell_price;
@@ -516,7 +516,7 @@ class ShoppingController extends Controller
             //自助申请
             if (isset($item['self_apply_classifications']) && $selectedClassifications = $item['self_apply_classifications']['selected_classifications']) {
                 $this->submitUserClassifications($selectedClassifications, request()->user()->id);
-                $unit_price += $this->getSelfApplyPrice($selectedClassifications);
+                $unit_price += $this->getSelfApplyPrice($selectedClassifications, $item->model->official_price, $item->model->self_apply_additional_price);
                 $item_meta['self_apply_classifications'] = $item['self_apply_classifications'];
             }
 
@@ -677,13 +677,14 @@ class ShoppingController extends Controller
         event(new UserClassificationEvent($classifications, $userId));
     }
 
-    public function getSelfApplyPrice($classifications)
+    public function getSelfApplyPrice($classifications, $servicePrice, $additionPrice)
     {
         $totalPrice = 0;
+
         foreach ($classifications as $top) {
             $i = 0;
-            foreach ($top['children'] as $group) {
-                $i += count($group['children']);
+            foreach ($top['children']['data'] as $group) {
+                $i += count($group['children']['data']);
             }
 //
 //            if ($i <= 10) {
@@ -692,11 +693,11 @@ class ShoppingController extends Controller
 //                $topPrice = 300 + ($i - 10) * 30;
 //            }
 
-            $topPrice = $i <= 10 ? 300 :  300 + ($i - 10) * 30;
+            $topPrice = $i <= 10 ? $servicePrice :  $servicePrice + ($i - 10) * $additionPrice;
 
             $totalPrice += $topPrice;
         }
-//        dd($totalPrice);
+
         return $totalPrice;
     }
 
