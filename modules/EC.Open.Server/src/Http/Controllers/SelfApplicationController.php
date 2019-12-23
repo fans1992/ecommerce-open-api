@@ -26,23 +26,30 @@ class SelfApplicationController extends Controller
         $img = $image->canvas(150, 150, '#fff');
 
         $name = request('brand_name');
-        $length = mb_strlen($name);
+        $length = strlen($name);
+        $chinese = $this->isChinese($name);
 
         switch ($length) {
             case $length >= 0 && $length < 2:
-                $size = 80;
+                $size = 90;
                 break;
             case $length >= 2 && $length < 4:
+                $size = 70;
+                break;
+            case $length >= 4 && $length < 7:
                 $size = 40;
                 break;
-            case $length >= 4 && $length < 8:
-                $size = 20;
+            case $length >= 7 && $length < 10:
+                $size = $chinese ? 35 :20;
                 break;
-            case $length >= 8 && $length < 15:
-                $size = 10;
+            case $length >= 10 && $length < 15:
+                $size = $chinese ? 30 :15;
                 break;
-            case $length >= 15 && $length < 30:
-                $size = 5;
+            case $length >= 15 && $length < 20:
+                $size = $chinese ? 20 :12;
+                break;
+            case $length >= 20 && $length < 25:
+                $size = $chinese ? 20 :5;
                 break;
             default:
                 $size = 1;
@@ -232,6 +239,22 @@ class SelfApplicationController extends Controller
         $classificationList = UserClassification::all();
 
         return $this->response()->collection($classificationList, new UserClassificationTransformer());
+    }
+
+    /**
+     * 判断字符串是不是全为中文
+     *
+     * @param $string
+     * @return bool
+     */
+    protected function isChinese($string)
+    {
+        if (preg_match("/^[\x7f-\xff]+$/", $string)){
+            //全是汉字
+            return true;
+        }
+
+        return false;
     }
 
 }
