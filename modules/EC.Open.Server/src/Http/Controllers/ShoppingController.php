@@ -678,6 +678,14 @@ class ShoppingController extends Controller
         event(new UserClassificationEvent($classifications, $userId));
     }
 
+    /**
+     * 计算自助申请价格
+     *
+     * @param collection $classifications
+     * @param float $servicePrice
+     * @param float $additionPrice
+     * @return float|int
+     */
     public function getSelfApplyPrice($classifications, $servicePrice, $additionPrice)
     {
         $totalPrice = 0;
@@ -687,13 +695,8 @@ class ShoppingController extends Controller
             foreach ($top['children']['data'] as $group) {
                 $i += count($group['children']['data']);
             }
-//
-//            if ($i <= 10) {
-//                $topPrice = 300;
-//            } else {
-//                $topPrice = 300 + ($i - 10) * 30;
-//            }
 
+            //大类下超过10个叠加附加费用
             $topPrice = $i <= 10 ? $servicePrice :  $servicePrice + ($i - 10) * $additionPrice;
 
             $totalPrice += $topPrice;
