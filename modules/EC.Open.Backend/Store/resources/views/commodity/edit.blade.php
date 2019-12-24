@@ -161,7 +161,7 @@
                         <label class="col-sm-2 control-label">税率：</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" name="extra[tax_rate]" placeholder=""
-                                   value="{{$goods_info->extra->tax_rate}}">
+                                   value="{{$goods_info->extra->tax_rate ?? 0}}">
                         </div>
                     </div>
                 @endif
