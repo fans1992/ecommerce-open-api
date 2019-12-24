@@ -21,6 +21,7 @@ class Goods extends LaravelModel
     const MARKUP_PRICE_OFFICIAL = 200;
     const MARKUP_PRICE_TOTAL = 400;
 
+    const TAX_RATE_SELF_APPLICATION = 6;
 
     protected $guarded = ['id'];
 

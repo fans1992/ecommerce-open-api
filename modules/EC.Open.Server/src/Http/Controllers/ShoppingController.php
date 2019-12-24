@@ -21,6 +21,7 @@ use GuoJiangClub\Component\Product\Repositories\ProductRepository;
 use GuoJiangClub\Component\Shipping\Models\Shipping;
 use GuoJiangClub\EC\Open\Backend\Store\Model\NiceClassification;
 use GuoJiangClub\EC\Open\Core\Applicators\PointApplicator;
+use GuoJiangClub\EC\Open\Core\Applicators\TaxApplicator;
 use GuoJiangClub\EC\Open\Core\Processor\OrderProcessor;
 use GuoJiangClub\EC\Open\Core\Services\DiscountService;
 use GuoJiangClub\EC\Open\Server\Events\UserClassification;
@@ -44,6 +45,7 @@ class ShoppingController extends Controller
     private $orderProcessor;
     private $pointRepository;
     private $pointApplicator;
+    private $taxApplicator;
 
 
     public function __construct(GoodsRepository $goodsRepository
@@ -56,6 +58,7 @@ class ShoppingController extends Controller
         , OrderProcessor $orderProcessor
         , PointRepository $pointRepository
         , PointApplicator $pointApplicator
+        , TaxApplicator $taxApplicator
     )
     {
         $this->goodsRepository = $goodsRepository;
@@ -68,6 +71,7 @@ class ShoppingController extends Controller
         $this->orderProcessor = $orderProcessor;
         $this->pointRepository = $pointRepository;
         $this->pointApplicator = $pointApplicator;
+        $this->taxApplicator = $taxApplicator;
     }
 
     public function checkout()
@@ -190,7 +194,12 @@ class ShoppingController extends Controller
                 }
             }
 
-            //5. 保存订单联系人信息
+            //5. 叠加税费
+            if (request('invoice')) {
+                $this->taxApplicator->apply($order);
+            }
+
+            //6. 保存订单联系人信息
             if ($inputContact = request('order_contact')) {
                 $contact = $this->addressRepository->firstOrCreate(array_merge($inputContact, ['user_id' => request()->user()->id]));
 
@@ -200,10 +209,10 @@ class ShoppingController extends Controller
                 $order->address_name = $contact->address_name;
             }
 
-            //5. 保存订单状态
+            //7. 保存订单状态
             $this->orderProcessor->submit($order);
 
-            //6. remove goods store.
+            //8. remove goods store.
             foreach ($order->getItems() as $item) {
                 /** @var Goods | Product $product */
                 $product = $item->getModel();
@@ -212,7 +221,7 @@ class ShoppingController extends Controller
                 $product->save();
             }
 
-            //8. 移除购物车中已下单的商品
+            //9. 移除购物车中已下单的商品
             foreach ($order->getItems() as $orderItem) {
                 if ($carItem = Cart::search(['name' => $orderItem->item_name])->first()) {
                     Cart::remove($carItem->rawId());
@@ -697,7 +706,7 @@ class ShoppingController extends Controller
             }
 
             //大类下超过10个叠加附加费用
-            $topPrice = $i <= 10 ? $servicePrice :  $servicePrice + ($i - 10) * $additionPrice;
+            $topPrice = $i <= 10 ? $servicePrice : $servicePrice + ($i - 10) * $additionPrice;
 
             $totalPrice += $topPrice;
         }
