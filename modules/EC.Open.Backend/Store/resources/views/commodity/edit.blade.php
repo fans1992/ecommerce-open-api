@@ -157,6 +157,13 @@
                                value="{{$goods_info->self_apply_additional_price}}">
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">税率：</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="extra[tax_rate]" placeholder=""
+                                   value="{{$goods_info->extra->tax_rate}}">
+                        </div>
+                    </div>
                 @endif
                 <div class="form-group">
                     <label class="col-sm-2 control-label">服务费：</label>

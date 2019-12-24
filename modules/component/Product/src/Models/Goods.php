@@ -28,6 +28,7 @@ class Goods extends LaravelModel
 
     protected $casts = [
         'is_home_display' => 'boolean',
+        'extra' => 'json',
     ];
 
     public function __construct(array $attributes = [])

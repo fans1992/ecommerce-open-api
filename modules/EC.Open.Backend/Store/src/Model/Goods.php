@@ -12,6 +12,11 @@ class Goods extends Model implements Transformable
 
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'is_home_display' => 'boolean',
+        'extra' => 'json',
+    ];
+
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
