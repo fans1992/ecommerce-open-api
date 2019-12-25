@@ -22,6 +22,10 @@ class CreateBrandApplicantTable extends Migration
             $table->string('applicant_name')->comment('企业名称或者个人名称');
             $table->string('unified_social_credit_code')->nullable()->comment('统一社会信用代码');
             $table->string('id_card_no')->nullable()->comment('身份证号');
+            $table->string('province')->comment('省');
+            $table->string('city')->comment('市');
+            $table->string('district')->comment('区');
+            $table->string('address')->comment('具体地址');
             $table->string('postcode')->comment('邮政编码');
             $table->timestamps();
         });

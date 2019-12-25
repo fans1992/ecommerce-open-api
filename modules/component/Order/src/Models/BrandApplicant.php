@@ -2,6 +2,7 @@
 
 namespace GuoJiangClub\Component\Order\Models;
 
+use GuoJiangClub\Component\User\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class BrandApplicant extends Model
@@ -24,5 +25,15 @@ class BrandApplicant extends Model
     ];
 
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    //创建地址访问器
+    public function getFullAddressAttribute()
+    {
+        return "{$this->province}{$this->city}{$this->district}{$this->address}";
+    }
 
 }
