@@ -45,6 +45,10 @@ class Order extends Model implements DiscountSubjectContract
 
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'need_invoice' => 'boolean',
+    ];
+
     public function __construct(array $attributes = [])
     {
         $this->setTable(config('ibrand.app.database.prefix', 'ibrand_').'order');

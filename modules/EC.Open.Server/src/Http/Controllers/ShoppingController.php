@@ -147,6 +147,10 @@ class ShoppingController extends Controller
             $order->note = $note;
         }
 
+        if (request()->has('need_invoice')) {
+            $order->need_invoice = request('need_invoice');
+        }
+
         //1. check stock.
         foreach ($order->getItems() as $item) { // 再次checker库存
             $model = $item->getModel();
