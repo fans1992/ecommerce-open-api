@@ -74,6 +74,11 @@ class ShoppingController extends Controller
         $this->taxApplicator = $taxApplicator;
     }
 
+    /**
+     * 购物车结算(商品直接下单)
+     *
+     * @return \Dingo\Api\Http\Response|mixed
+     */
     public function checkout()
     {
         $user = request()->user();
@@ -127,8 +132,11 @@ class ShoppingController extends Controller
         ]);
     }
 
+
     /**
      * confirm the order to be waiting to pay.
+     *
+     * @return \Dingo\Api\Http\Response|mixed
      */
     public function confirm()
     {
@@ -199,7 +207,7 @@ class ShoppingController extends Controller
             }
 
             //5. 叠加税费
-            if (request('invoice')) {
+            if (request('need_invoice')) {
                 $this->taxApplicator->apply($order);
             }
 
