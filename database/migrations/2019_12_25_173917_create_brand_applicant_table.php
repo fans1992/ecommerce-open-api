@@ -27,6 +27,9 @@ class CreateBrandApplicantTable extends Migration
             $table->string('district')->comment('区');
             $table->string('address')->comment('具体地址');
             $table->string('postcode')->comment('邮政编码');
+            $table->string('id_card_picture')->nullable()->comment('身份证复印件');
+            $table->string('business_license_picture')->comment('营业执照');
+            $table->string('authorization_picture')->nullable()->comment('委托书');
             $table->timestamps();
         });
     }
