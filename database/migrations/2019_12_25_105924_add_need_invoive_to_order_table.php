@@ -15,6 +15,7 @@ class AddNeedInvoiveToOrderTable extends Migration
     {
         Schema::table('ibrand_order', function (Blueprint $table) {
             $table->boolean('need_invoice')->default(true)->after('note')->comment('需要开发票');
+            $table->unsignedInteger('applicant_id')->nullable()->after('need_invoice')->comment('申请人信息');
         });
     }
 
@@ -27,6 +28,7 @@ class AddNeedInvoiveToOrderTable extends Migration
     {
         Schema::table('ibrand_order', function (Blueprint $table) {
             $table->dropColumn('need_invoice');
+            $table->dropColumn('applicant_id');
         });
     }
 }
