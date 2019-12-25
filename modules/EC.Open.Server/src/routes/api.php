@@ -66,7 +66,6 @@ $router->group(config('ibrand.ec-open-api.routeAuthAttributes'), function ($rout
     //手机登录扫码绑定微信
     $router->post('oauth/qrcode/binding', 'WechatController@wechatBind');
 
-
     /********************************************** 商标自助注册 ****************************************************/
     $router->post('application/brand/images', 'SelfApplicationController@createBrandImage')->name('api.application.brand.image');       //生成商标图样
     $router->post('application/brand/upload', 'SelfApplicationController@uploadBrandImage')->name('api.application.brand.upload');      //手动上传商标图样
@@ -135,6 +134,9 @@ $router->group(config('ibrand.ec-open-api.routeAuthAttributes'), function ($rout
     $router->post('discount', 'DiscountController@create')->name('api.discount.create');
     $router->post('coupon', 'CouponController@create')->name('api.coupon.create');
     $router->post('coupon/take', 'CouponController@take')->name('api.coupon.take');
+
+    /************************************************** 其他 ****************************************************/
+    $router->post('images', 'UploadController@store')->name('api.upload.store');      //上传图片
 
 
 });

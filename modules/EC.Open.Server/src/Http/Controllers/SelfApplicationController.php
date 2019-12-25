@@ -99,7 +99,7 @@ class SelfApplicationController extends Controller
 
         //获取扩展名，上传OSS
         $extension = $file->getClientOriginalExtension();
-        $path = 'brand/upload/' . date('Ymd') . '/' . generaterandomstring() . '.' . $extension;;
+        $path = 'brand/upload/' . date('Ymd') . '/' . generaterandomstring() . '.' . $extension;
         $url = upload_image($path, $img->__toString());
 
         return $this->success(['url' => $url]);
