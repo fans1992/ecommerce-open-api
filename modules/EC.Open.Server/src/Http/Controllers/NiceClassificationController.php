@@ -121,7 +121,8 @@ class NiceClassificationController extends Controller
 
         if ($request->include === 'children') {
             //TODO 推荐修复
-            $recommendClassifications = $industry->recommendClassifications;
+            $recommendClassifications = $industry->recommendClassifications()->orderBy('id')->get();
+
             $recommendClassifications->each(function ($item) {
                 $item->recommendation = true;
             });
