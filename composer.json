@@ -16,6 +16,7 @@
 		"barryvdh/laravel-snappy": "^0.4.6",
 		"dingo/api": "2.0.0-alpha1",
 		"doctrine/dbal": "^2.10",
+		"doododo/ocr": "^1.0",
 		"encore/laravel-admin": "1.5.19",
 		"fideloper/proxy": "~3.3",
 		"foridom/ali-oss-storage": "dev-master",

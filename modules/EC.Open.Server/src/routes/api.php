@@ -73,6 +73,7 @@ $router->group(config('ibrand.ec-open-api.routeAuthAttributes'), function ($rout
     $router->get('classifications/search', 'NiceClassificationController@search')->name('api.classification.search.tree');              //尼斯分类关键词搜索
     $router->post('classifications/export', 'SelfApplicationController@getClassificationsExportData')->name('api.classification.getClassificationsExportData'); //尼斯分类导出
     $router->get('classifications/record', 'SelfApplicationController@userRecordIndex')->name('api.classifications.user.record');       //历史申请类别列表
+    $router->get('credentialsInfo', 'SelfApplicationController@queryCredentialsInfo')->name('api.application.credentialsInfo');       //历史申请类别列表
 
     /************************************************* 购物车 ****************************************************/
     $router->post('shopping/cart', 'ShoppingCartController@store')->name('api.shopping.cart.store');

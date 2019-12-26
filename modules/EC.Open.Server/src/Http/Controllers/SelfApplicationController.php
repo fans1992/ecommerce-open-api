@@ -12,6 +12,7 @@ use Validator;
 use Image;
 use Cache;
 use Storage;
+use OCR;
 
 class SelfApplicationController extends Controller
 {
@@ -261,6 +262,51 @@ class SelfApplicationController extends Controller
         }
 
         return false;
+    }
+
+    /**
+     *
+     * @param Request $request
+     * @return \Dingo\Api\Http\Response
+     */
+    public function queryCredentialsInfo(Request $request)
+    {
+        $file = $request->input('url');
+        $type = $request->input('fileType');
+
+        switch ($type) {
+            case 'id_card':
+                $result = OCR::baidu()->idcard($file, [
+                        'detect_direction'      => false,      //是否检测图像朝向
+                        'id_card_side'          => 'front',    //front：身份证正面；back：身份证背面 （注意，该参数必选）
+                        'detect_risk'           => false,      //是否开启身份证风险类型功能，默认false
+                ]);
+
+                $credentialsInfo = [
+                    'applicant_name' => $result['words_result']['姓名']['words'],
+                    'id_card_no' => $result['words_result']['公民身份号码']['words'],
+                    'address' => $result['words_result']['住址']['words']
+                ];
+
+                break;
+            case 'business_license':
+//                $result = OCR::baidu()->businessLicense($file, []);
+                $ocr = app('ocr');
+                $result = $ocr->businessLicense($file);
+                dd($result);
+
+
+                $credentialsInfo = [
+                    'applicant_name' => $result['words_result']['单位名称']['words'],
+                    'address' => $result['words_result']['地址']['words'],
+                    'unified_social_credit_code' => $result['words_result']['社会信用代码']['words'],
+                ];
+                break;
+            default:
+                return $this->failed('illegal params');
+        }
+
+        return $this->success($credentialsInfo);
     }
 
 }
