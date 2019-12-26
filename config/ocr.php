@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'app_id' => '2127022466',
-    'app_key' => 'BK325j0TSatGD82B'
+    'app_id' => env('OCR_APP_ID'),
+    'app_key' => env('OCR_APP_KEY'),
 ];

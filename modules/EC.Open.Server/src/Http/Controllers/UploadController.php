@@ -4,6 +4,7 @@ namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 
 use Illuminate\Http\Request;
 use OCR;
+use Image;
 
 class UploadController extends Controller
 {
@@ -13,25 +14,21 @@ class UploadController extends Controller
      * @param Request $request
      * @return \Dingo\Api\Http\Response
      */
-    public function store(Request $request)
+    public function credentialsStore(Request $request)
     {
         $file = $request->file('file');
         $dir = $request->get('fileType');
 
-        $ocr = app('ocr');
-        $result = $ocr->businessLicense($file);
-        dd($result);
+        //图片处理
+        $img = Image::make($file);
+        $img->resize(1000, null, function ($constraint) {
+            $constraint->aspectRatio();
+        })->stream();
 
         //获取扩展名，上传OSS
         $extension = strtolower($file->getClientOriginalExtension());
         $path = 'brand/' . $dir . '/' . date('Ymd') . '/' . generaterandomstring() . '.' . $extension;
-        $url = upload_image($path, fopen($file, 'r'));
-
-//        $result = OCR::baidu()->idcard('http://aliyuncdn.foridom.com/brand/id_card/20191226/rxpYPwbJlf.jpg', [
-//            'detect_direction'      => false,      //是否检测图像朝向
-//            'id_card_side'          => 'front',    //front：身份证正面；back：身份证背面 （注意，该参数必选）
-//            'detect_risk'           => false,      //是否开启身份证风险类型功能，默认false
-//        ]);
+        $url = upload_image($path, $img->__toString());
 
         return $this->success(['url' => $url]);
 

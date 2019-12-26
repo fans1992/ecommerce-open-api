@@ -73,7 +73,8 @@ $router->group(config('ibrand.ec-open-api.routeAuthAttributes'), function ($rout
     $router->get('classifications/search', 'NiceClassificationController@search')->name('api.classification.search.tree');              //尼斯分类关键词搜索
     $router->post('classifications/export', 'SelfApplicationController@getClassificationsExportData')->name('api.classification.getClassificationsExportData'); //尼斯分类导出
     $router->get('classifications/record', 'SelfApplicationController@userRecordIndex')->name('api.classifications.user.record');       //历史申请类别列表
-    $router->get('credentialsInfo', 'SelfApplicationController@queryCredentialsInfo')->name('api.application.credentialsInfo');       //历史申请类别列表
+    $router->post('credentials', 'UploadController@credentialsStore')->name('api.upload.credentials.store');                            //上传证件
+    $router->get('credentialsInfo', 'SelfApplicationController@queryCredentialsInfo')->name('api.application.credentialsInfo');         //证件识别
 
     /************************************************* 购物车 ****************************************************/
     $router->post('shopping/cart', 'ShoppingCartController@store')->name('api.shopping.cart.store');
@@ -137,7 +138,6 @@ $router->group(config('ibrand.ec-open-api.routeAuthAttributes'), function ($rout
     $router->post('coupon/take', 'CouponController@take')->name('api.coupon.take');
 
     /************************************************** 其他 ****************************************************/
-    $router->post('images', 'UploadController@store')->name('api.upload.store');      //上传图片
 
 
 });
