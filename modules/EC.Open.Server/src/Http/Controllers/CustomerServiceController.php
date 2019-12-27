@@ -12,23 +12,14 @@
 namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 
 use GuoJiangClub\Component\User\Models\CustomerFeedback;
+use GuoJiangClub\EC\Open\Server\Http\Requests\CustomerServiceRequest;
 use Validator;
 
 class CustomerServiceController extends Controller
 {
-    public function store()
+    public function store(CustomerServiceRequest $customerServiceRequest)
     {
-        $input = request()->all();
-
-        $validator = Validator::make($input, [
-            'message' => 'required|string',
-            'mobile' => 'required|regex:/^1[3456789]\d{9}$/',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->failed($validator->errors());
-        }
-
+        $input = $customerServiceRequest->all();
         CustomerFeedback::query()->create($input);
 
         return $this->success();
