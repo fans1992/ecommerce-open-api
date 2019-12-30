@@ -318,7 +318,7 @@ class SelfApplicationController extends Controller
     {
         /** @var User $user */
         $user = $brandApplicantRequest->user();
-        $applicant = $user->applicants()->create($brandApplicantRequest->all());
+        $applicant = $user->applicants()->create($brandApplicantRequest->except(['order_no']));
 
         return $this->response()->item($applicant, new UserBrandApplicantTransformer())->setStatusCode(201);
     }
