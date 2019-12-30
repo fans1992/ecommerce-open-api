@@ -12,7 +12,7 @@ class BrandApplicant extends Model
 
     public function __construct(array $attributes = [])
     {
-        $this->setTable('brand_applicant');
+        $this->setTable('user_brand_applicants');
         parent::__construct($attributes);
     }
 

@@ -119,7 +119,7 @@ class User extends Authenticatable
     }
 
     /**
-     * 商标申请主题列表
+     * 商标申请主体列表
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */

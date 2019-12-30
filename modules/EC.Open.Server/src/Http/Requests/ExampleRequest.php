@@ -8,29 +8,22 @@ class ExampleRequest extends FormRequest
 {
     public function rules()
     {
-        switch($this->method())
-        {
+        switch ($this->method()) {
             // CREATE
             case 'POST':
-                {
-                    return [
-                        // CREATE ROLES
-                    ];
-                }
+                return [
+                    // CREATE ROLES
+                ];
             // UPDATE
             case 'PUT':
             case 'PATCH':
-                {
-                    return [
-                        // UPDATE ROLES
-                    ];
-                }
+                return [
+                    // UPDATE ROLES
+                ];
             case 'GET':
             case 'DELETE':
             default:
-                {
-                    return [];
-                };
+                return [];
         }
     }
 
