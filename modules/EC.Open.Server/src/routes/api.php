@@ -75,6 +75,9 @@ $router->group(config('ibrand.ec-open-api.routeAuthAttributes'), function ($rout
     $router->get('classifications/record', 'SelfApplicationController@userRecordIndex')->name('api.classifications.user.record');       //历史申请类别列表
     $router->post('credentials', 'UploadController@credentialsStore')->name('api.upload.credentials.store');                            //上传证件
     $router->get('credentialsInfo', 'SelfApplicationController@queryCredentialsInfo')->name('api.application.credentialsInfo');         //证件识别
+    $router->post('application/brand/applicants', 'SelfApplicationController@storeBrandApplicants')->name('api.application.brand.applicantStore');   //提交申请人信息
+    $router->get('application/brand/applicants', 'SelfApplicationController@getBrandApplicantsList')->name('api.application.brand.applicantList');   //申请人列表
+
 
     /************************************************* 购物车 ****************************************************/
     $router->post('shopping/cart', 'ShoppingCartController@store')->name('api.shopping.cart.store');

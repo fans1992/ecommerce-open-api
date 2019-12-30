@@ -4,6 +4,10 @@ namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 
 use GuoJiangClub\Component\NiceClassification\Models\UserClassification;
 use GuoJiangClub\Component\NiceClassification\NiceClassification;
+use GuoJiangClub\Component\User\Models\User;
+use GuoJiangClub\EC\Open\Server\Http\Requests\BrandApplicantRequest;
+use GuoJiangClub\EC\Open\Server\Transformers\UserBrandApplicantTransformer;
+use GuoJiangClub\EC\Open\Server\Transformers\UserBrandApplicationTransformer;
 use GuoJiangClub\EC\Open\Server\Transformers\UserClassificationTransformer;
 use Intervention\Image\ImageManager;
 use Illuminate\Http\Request;
@@ -41,22 +45,22 @@ class SelfApplicationController extends Controller
                 $size = 40;
                 break;
             case $length >= 7 && $length < 10:
-                $size = $chinese ? 35 :20;
+                $size = $chinese ? 35 : 20;
                 break;
             case $length >= 10 && $length < 15:
-                $size = $chinese ? 30 :15;
+                $size = $chinese ? 30 : 15;
                 break;
             case $length >= 15 && $length < 20:
-                $size = $chinese ? 20 :12;
+                $size = $chinese ? 20 : 12;
                 break;
             case $length >= 20 && $length < 25:
-                $size = $chinese ? 16 :5;
+                $size = $chinese ? 16 : 5;
                 break;
             case $length >= 25 && $length < 31:
-                $size = $chinese ? 12 :5;
+                $size = $chinese ? 12 : 5;
                 break;
             case $length >= 31 && $length < 37:
-                $size = $chinese ? 8 :5;
+                $size = $chinese ? 8 : 5;
                 break;
             default:
                 $size = 1;
@@ -256,7 +260,7 @@ class SelfApplicationController extends Controller
      */
     protected function isChinese($string)
     {
-        if (preg_match("/^[\x7f-\xff]+$/", $string)){
+        if (preg_match("/^[\x7f-\xff]+$/", $string)) {
             //全是汉字
             return true;
         }
@@ -302,6 +306,41 @@ class SelfApplicationController extends Controller
         }
 
         return $this->success($credentialsInfo);
+    }
+
+    /**
+     *申请人信息填写
+     *
+     * @param BrandApplicantRequest $brandApplicantRequest
+     * @return \Dingo\Api\Http\Response
+     */
+    public function storeBrandApplicants(BrandApplicantRequest $brandApplicantRequest)
+    {
+        /** @var User $user */
+        $user = $brandApplicantRequest->user();
+        $applicant = $user->applicants()->create($brandApplicantRequest->all());
+
+        return $this->response()->item($applicant, new UserBrandApplicantTransformer())->setStatusCode(201);
+    }
+
+    /**
+     * 申请人列表
+     *
+     * @param BrandApplicantRequest $brandApplicantRequest
+     * @return \Dingo\Api\Http\Response
+     */
+    public function getBrandApplicantsList(BrandApplicantRequest $brandApplicantRequest)
+    {
+        // 创建一个查询构造器
+        $builder = $brandApplicantRequest->user()->applicants();
+
+        if ($applicantSubject = $brandApplicantRequest->input('applicant_subject', '')) {
+            $builder->where('applicant_subject', $applicantSubject);
+        }
+
+        $applicants = $builder->paginate(20);
+
+        return $this->response()->paginator($applicants, new UserBrandApplicantTransformer());
     }
 
 }
