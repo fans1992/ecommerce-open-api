@@ -59,4 +59,17 @@ class OrderPolicy
         //只有已收货的订单才能够进行评价商品和订单
         return $user->id == $order->user_id and $order->id == $orderItem->order_id and Order::STATUS_RECEIVED == $order->status;
     }
+
+    public function submitApplicantInformation (User $user, Order $order)
+    {
+        //只有该订单属于该用户，并且订单处于已支付状态下，才能进行提交申请人信息操作。
+        return $user->id == $order->user_id and Order::STATUS_PAY == $order->status and Order::APPLICANT_STATUS_CONFIRMED != $order->applicant_status;
+    }
+
+    public function confirmApplicantInformation (User $user, Order $order)
+    {
+        //只有该订单属于该用户，并且订单处于已支付状态下，才能进行确认申请人信息操作。
+        return $user->id == $order->user_id and Order::STATUS_PAY == $order->status and Order::APPLICANT_STATUS_PENDING == $order->applicant_status;
+    }
+
 }

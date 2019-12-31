@@ -76,6 +76,7 @@ $router->group(config('ibrand.ec-open-api.routeAuthAttributes'), function ($rout
     $router->post('credentials', 'UploadController@credentialsStore')->name('api.upload.credentials.store');                            //上传证件
     $router->get('credentialsInfo', 'SelfApplicationController@queryCredentialsInfo')->name('api.application.credentialsInfo');         //证件识别
     $router->post('application/brand/applicants', 'SelfApplicationController@storeBrandApplicants')->name('api.application.brand.applicantStore');   //提交申请人信息
+    $router->post('application/brand/applicants/confirm', 'SelfApplicationController@confirmBrandApplicants')->name('api.application.brand.applicantConfirm');   //确认申请人信息
     $router->get('application/brand/applicants', 'SelfApplicationController@getBrandApplicantsList')->name('api.application.brand.applicantList');   //申请人列表
 
 

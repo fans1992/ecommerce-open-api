@@ -43,6 +43,9 @@ class Order extends Model implements DiscountSubjectContract
     const DELIVERED_STATUS = 1; //已全部发货
     const DELIVERED_PARTLY = 2; //部分发货
 
+    const APPLICANT_STATUS_PENDING = 'pending';
+    const APPLICANT_STATUS_CONFIRMED = 'confirmed';
+
     protected $guarded = ['id'];
 
     protected $casts = [

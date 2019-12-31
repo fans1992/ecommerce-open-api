@@ -1,5 +1,6 @@
 <?php
 
+use GuoJiangClub\Component\Order\Models\BrandApplicant;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -31,7 +32,7 @@ class AddNeedInvoiveToOrderTable extends Migration
         Schema::table('ibrand_order', function (Blueprint $table) {
             $table->dropColumn('need_invoice');
             $table->dropColumn('applicant_status');
-            $table->dropColumn('applicant_id');
+            $table->dropColumn('applicant_data');
             $table->dropColumn('extra');
         });
     }

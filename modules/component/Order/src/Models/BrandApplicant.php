@@ -24,7 +24,6 @@ class BrandApplicant extends Model
         self::BRAND_APPLICANT_INDIVIDUAL => '个体工商户',
     ];
 
-
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');

@@ -4,8 +4,11 @@ namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 
 use GuoJiangClub\Component\NiceClassification\Models\UserClassification;
 use GuoJiangClub\Component\NiceClassification\NiceClassification;
+use GuoJiangClub\Component\Order\Models\Order;
+use GuoJiangClub\Component\Order\Repositories\OrderRepository;
 use GuoJiangClub\Component\User\Models\User;
 use GuoJiangClub\EC\Open\Server\Http\Requests\BrandApplicantRequest;
+use GuoJiangClub\EC\Open\Server\Transformers\OrderTransformer;
 use GuoJiangClub\EC\Open\Server\Transformers\UserBrandApplicantTransformer;
 use GuoJiangClub\EC\Open\Server\Transformers\UserBrandApplicationTransformer;
 use GuoJiangClub\EC\Open\Server\Transformers\UserClassificationTransformer;
@@ -20,6 +23,13 @@ use OCR;
 
 class SelfApplicationController extends Controller
 {
+    private $orderRepository;
+
+    public function __construct(OrderRepository $orderRepository)
+    {
+        $this->orderRepository = $orderRepository;
+    }
+
     /**
      * 生成商标图片
      *
@@ -318,9 +328,58 @@ class SelfApplicationController extends Controller
     {
         /** @var User $user */
         $user = $brandApplicantRequest->user();
-        $applicant = $user->applicants()->create($brandApplicantRequest->except(['order_no']));
+        $order_no = request('order_no');
 
-        return $this->response()->item($applicant, new UserBrandApplicantTransformer())->setStatusCode(201);
+        if (!$order_no || !$order = $this->orderRepository->getOrderByNo($order_no)) {
+            return $this->failed('订单不存在');
+        }
+
+        //校验权限
+        if ($user->cant('submitApplicantInformation', $order)) {
+            return $this->failed('订单状态有误，无法录入申请信息');
+        }
+
+        $applicant = $user->applicants()->firstOrCreate($brandApplicantRequest->except(['order_no']));
+
+        //修改订单申请人状态和信息
+        $order->update([
+            'applicant_status' => Order::APPLICANT_STATUS_PENDING,
+            'applicant_data' =>$applicant,
+        ]);
+
+        return $this->response()->item($order, new OrderTransformer());
+    }
+
+    /**
+     * 确认申请人信息
+     *
+     * @param BrandApplicantRequest $brandApplicantRequest
+     * @return \Dingo\Api\Http\Response|mixed
+     */
+    public function confirmBrandApplicants(BrandApplicantRequest $brandApplicantRequest)
+    {
+        /** @var User $user */
+        $user = $brandApplicantRequest->user();
+        $order_no = request('order_no');
+
+        if (!$order_no || !$order = $this->orderRepository->getOrderByNo($order_no)) {
+            return $this->failed('订单不存在');
+        }
+
+        //校验权限
+        if ($user->cant('confirmApplicantInformation', $order)) {
+            return $this->failed('订单状态有误，无法确认申请信息');
+        }
+
+        $applicant = $user->applicants()->firstOrCreate($brandApplicantRequest->except(['order_no']));
+
+        //修改订单申请人状态和信息
+        $order->update([
+            'applicant_status' => Order::APPLICANT_STATUS_CONFIRMED,
+            'applicant_data' =>$applicant,
+        ]);
+
+        return $this->response()->item($order, new OrderTransformer());
     }
 
     /**
