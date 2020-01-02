@@ -14,6 +14,7 @@ class CustomerServiceRequest extends FormRequest
                 return [
                     'message' => 'required|string',
                     'mobile' => 'required|regex:/^1[3456789]\d{9}$/',
+                    'code' => 'required|string'
                 ];
             // UPDATE
             case 'PUT':
