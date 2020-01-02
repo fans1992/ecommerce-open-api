@@ -28,7 +28,9 @@
 
             <td>{{!empty($item->item_info['specs_text'])?$item->item_info['specs_text']:''}}</td>
             <td>
-                {{implode(' ', array_column($item->item_info['option_service'], 'name'))}}
+                @if($item->item_info['option_service'])
+                    {{implode(' ', array_column($item->item_info['option_service'], 'name'))}}
+                @endif
             </td>
             <td>
                 {{$item->getModel() ? $item->getModel()->sku : ''}}
