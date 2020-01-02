@@ -211,7 +211,7 @@ class ShoppingController extends Controller
                 $this->taxApplicator->apply($order);
             }
 
-            //6. 保存订单联系人信息
+            //6. 保存订单联系人信息 生成服务协议
             if ($inputContact = request('order_contact')) {
                 $contact = $this->addressRepository->firstOrCreate(array_merge($inputContact, ['user_id' => request()->user()->id]));
 
@@ -219,6 +219,9 @@ class ShoppingController extends Controller
                 $order->mobile = $contact->mobile;
                 $order->address = $contact->address;
                 $order->address_name = $contact->address_name;
+                $order->email = $contact->contact_email;
+
+                $order->agreement()->create(['party_a_name'=> $contact->accept_name]);
             }
 
             //7. 保存订单状态

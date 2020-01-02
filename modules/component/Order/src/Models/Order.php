@@ -105,6 +105,11 @@ class Order extends Model implements DiscountSubjectContract
         return $this->hasMany(Shipping::class);
     }
 
+    public function agreement()
+    {
+        return $this->hasOne(Agreement::class, 'order_id', 'id');
+    }
+
     /**
      * get subject total amount.
      *

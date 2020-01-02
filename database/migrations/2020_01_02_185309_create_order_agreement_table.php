@@ -18,6 +18,9 @@ class CreateOrderAgreementTable extends Migration
         Schema::create($prefix . 'order_agreement', function (Blueprint $table) {
             $table->increments('id');
             $table->string('agreement_no')->unique()->comment('协议编号');
+            $table->unsignedInteger('order_id')->comment('订单ID');
+            $table->foreign('order_id')->references('id')->on('ibrand_order')->onDelete('cascade');
+            $table->string('party_a_name')->comment('甲方');
             $table->timestamps();
         });
     }
