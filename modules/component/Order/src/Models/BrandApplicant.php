@@ -10,12 +10,6 @@ class BrandApplicant extends Model
 
     protected $guarded = ['id'];
 
-    public function __construct(array $attributes = [])
-    {
-        $this->setTable('user_brand_applicants');
-        parent::__construct($attributes);
-    }
-
     const BRAND_APPLICANT_ENTERPRISE = 'enterprise';
     const BRAND_APPLICANT_INDIVIDUAL = 'individual';
 
@@ -23,6 +17,12 @@ class BrandApplicant extends Model
         self::BRAND_APPLICANT_ENTERPRISE => '企业',
         self::BRAND_APPLICANT_INDIVIDUAL => '个体工商户',
     ];
+
+    public function __construct(array $attributes = [])
+    {
+        $this->setTable('user_brand_applicants');
+        parent::__construct($attributes);
+    }
 
     public function user()
     {

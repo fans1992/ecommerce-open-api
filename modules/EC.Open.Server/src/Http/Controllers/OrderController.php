@@ -12,7 +12,10 @@
 namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 
 use GuoJiangClub\Component\Order\Repositories\OrderRepository;
+use GuoJiangClub\EC\Open\Server\Http\Requests\OrderAgreementRequest;
+use GuoJiangClub\EC\Open\Server\Transformers\OrderAgreementTransformer;
 use GuoJiangClub\EC\Open\Server\Transformers\OrderTransformer;
+use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
@@ -71,5 +74,37 @@ class OrderController extends Controller
         }
 
         return $this->response()->item($order, new OrderTransformer());
+    }
+
+    public function updateAgreement($orderNo, OrderAgreementRequest $request)
+    {
+        if (!$orderNo || !$order = $this->orderRepository->getOrderByNo($orderNo)) {
+            return $this->failed('订单不存在');
+        }
+
+        $user = $request->user();
+        if ($user->cant('update', $order)) {
+            return $this->failed('无权操作');
+        }
+
+        $input = $request->all();
+        $contact = $input['order_contact'];
+        $order->update([
+            'accept_name' => $contact['accept_name'],
+            'mobile' => $contact['mobile'],
+            'email' => $contact['email'],
+            'address' => $contact['address'],
+        ]);
+
+        if ($request->has('invoice_title')) {
+            $invoice = $input['invoice_title'];
+            $order->agreement()->update([
+                'invoice_type' => $invoice['invoice_type'],
+                'tax_no' => $invoice['tax_no'],
+                'opening_bank' => $invoice['opening_bank'],
+            ]);
+        }
+
+        return $this->success();
     }
 }

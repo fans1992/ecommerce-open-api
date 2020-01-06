@@ -11,6 +11,14 @@ class Agreement extends Model
 {
     protected $guarded = ['id'];
 
+    const INVOICE_TYPE_SPECIAL = 'special';
+    const INVOICE_TYPE_GENERAL = 'general';
+
+    public static $invoiceTypeMap = [
+        self::INVOICE_TYPE_SPECIAL   => '增值税专用发票',
+        self::INVOICE_TYPE_GENERAL => '增值税普通发票',
+    ];
+
     public function __construct(array $attributes = [])
     {
         $this->setTable(config('ibrand.app.database.prefix', 'ibrand_').'order_agreement');

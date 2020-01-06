@@ -101,7 +101,6 @@ $router->group(config('ibrand.ec-open-api.routeAuthAttributes'), function ($rout
     $router->post('shopping/order/delivery', 'ShoppingController@delivery')->name('api.order.delivery');             //发货
 
 
-
     /************************************************* 订单联系人 **************************************************/
     $router->get('contacts', 'ContactsController@index')->name('api.contact.list');
     $router->post('contacts', 'ContactsController@store')->name('api.contact.store');
@@ -130,8 +129,11 @@ $router->group(config('ibrand.ec-open-api.routeAuthAttributes'), function ($rout
     $router->patch('users/update/password', 'UserController@updatePassword')->name('api.user.update.password');
     $router->post('users/update/mobile', 'UserController@updateMobile')->name('api.user.update.mobile');
     $router->post('users/upload/avatar', 'UserController@uploadAvatar')->name('api.user.upload.avatar');
+
+    /************************************************* 订单及协议 **********************************************/
     $router->get('order/list', 'OrderController@getOrders')->name('api.order.list');
-    $router->get('order/{order_no}', 'OrderController@getOrderDetails')->name('api.order');
+    $router->get('order/{order_no}', 'OrderController@getOrderDetails')->name('api.order.show');
+    $router->patch('order/{order_no}/agreement', 'OrderController@updateAgreement')->name('api.order.agreement.update');
 
     $router->get('coupon', 'CouponController@index')->name('api.coupon.list');
     $router->get('coupon/{id}', 'CouponController@show')->name('api.coupon.show');
