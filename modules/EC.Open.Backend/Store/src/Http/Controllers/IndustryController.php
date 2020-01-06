@@ -143,7 +143,7 @@ class IndustryController extends Controller
 
         return LaravelAdmin::content(function (Content $content) use ($industry) {
 
-            $content->header($industry->name. '---推荐类别列表');
+            $content->header($industry->name . '---推荐类别列表');
 
             $content->breadcrumb(
                 ['text' => '行业推荐类别管理', 'url' => 'store/industry', 'no-pjax' => 1],
@@ -238,7 +238,6 @@ class IndustryController extends Controller
     }
 
 
-
     /**
      * 编辑单个推荐分类
      *
@@ -250,7 +249,7 @@ class IndustryController extends Controller
         $industry = Industry::query()->find($request->input('industry_id'));
 
         $classification_id = $request->input('nice_classification_id');
-        $classification =  $industry->recommendClassifications()->wherePivot('nice_classification_id', $classification_id)->first();
+        $classification = $industry->recommendClassifications()->wherePivot('nice_classification_id', $classification_id)->first();
 
         return view('store-backend::industry.value.edit_value', compact('classification', 'classification_id'));
     }
@@ -313,7 +312,7 @@ class IndustryController extends Controller
 
         //根节点以及所有子节点
         $niceClassificationIds = $industry->recommendClassifications()
-            ->where('nice_classification.id',  $niceClassificationId)
+            ->where('nice_classification.id', $niceClassificationId)
             ->orWhere('parent_id', $niceClassificationId)
             ->orWhereHas('parent', function ($query) use ($niceClassificationId) {
                 $query->where('parent_id', $niceClassificationId);
@@ -349,7 +348,7 @@ class IndustryController extends Controller
             //二级分类
             $niceClassificationQuery = NiceClassification::query()->where('parent_id', $parentId);
             if ($search = request()->input('search')) {
-                $niceClassificationQuery->whereHas('children', function ($query) use($search) {
+                $niceClassificationQuery->whereHas('children', function ($query) use ($search) {
                     $query->where('classification_name', $search);
                 });
             }
@@ -358,20 +357,21 @@ class IndustryController extends Controller
             $industry = Industry::query()->find(request('industryId'));
 
             $recommendClassifications = $industry->recommendClassifications()
-                ->where('parent_id', $parentId)
-                ->orWhereHas('parent', function ($query) use($parentId) {
-                    $query->where('parent_id', $parentId);
-                })
-                ->get(['parent_id', 'nice_classification.id']);
+                ->where(function ($query) use ($parentId) {
+                    $query->where('parent_id', $parentId)
+                        ->orWhereHas('parent', function ($query) use ($parentId) {
+                            $query->where('parent_id', $parentId);
+                        });
+                })->get();
 
-            $cateIds = $recommendClassifications->pluck('id')->all();
+            $cateIds = array_unique($recommendClassifications->pluck('id')->all());
 
             if ($search = request()->input('search')) {
                 $cateNames = collect();
             } else {
                 $cateNames = $industry->recommendClassifications()->where('parent_id', $parentId)->get();
                 foreach ($cateNames as $cateName) {
-                    $cateName->children =  $industry->recommendClassifications()->where('parent_id', $cateName->id)->get();
+                    $cateName->children = $industry->recommendClassifications()->where('parent_id', $cateName->id)->get();
                 }
 
             }
@@ -425,9 +425,6 @@ class IndustryController extends Controller
 //            return view('store-backend::industry.value.classification-item', compact('classifications'));
         }
     }
-
-
-
 
 
 }
