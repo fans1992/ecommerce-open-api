@@ -364,7 +364,8 @@ class IndustryController extends Controller
                                 $query->where('parent_id', $parentId);
                             });
                     })->orWhere('nice_classification.id', $parentId);
-                })->get();
+                })->get(['nice_classification.id', 'parent_id']);
+
 
             $cateIds = array_unique($recommendClassifications->pluck('id')->all());
 
@@ -402,8 +403,7 @@ class IndustryController extends Controller
 //            }
 
 //            dd($categoriesLevelTwo);
-
-            return view('store-backend::industry.value.classification-item', compact('classifications', 'categoriesLevelTwo', 'cateNames', 'cateIds'));
+            return view('store-backend::industry.value.classification-item', compact('classifications', 'categoriesLevelTwo', 'cateNames', 'cateIds', 'recommendClassifications'));
 
         } else {
 //            $parentId = request('parentId');

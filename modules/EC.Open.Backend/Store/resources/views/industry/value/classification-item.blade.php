@@ -57,9 +57,9 @@
 
 <div class="major">
     <div id="hidden-category-id">
-        @if(isset($cateIds))
-            @foreach($cateIds as $cate)
-                <input type="hidden" name="category_id[]" id=category_{{$cate}} value="{{$cate}}">
+        @if(isset($recommendClassifications))
+            @foreach($recommendClassifications as $classification)
+                <input type="hidden" name="category_id[]" id=category_{{$classification->id}} data-val={{$classification->parent_id}} value="{{$classification->id}}">
             @endforeach
         @endif
     </div>

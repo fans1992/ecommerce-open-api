@@ -13,51 +13,44 @@
     // input框输入的值
     var inputVal = "";
     // 点击select下拉框
-    $("body .td_c").on("change", ".type-s", function () {
+    $("body .td_c").off('change').on("change", ".type-s", function () {
         // console.log('inputVal', inputVal);
         var that = $(this);
         var val = that.find("option:selected").val();
-        $('.type-s').attr("disabled","disabled");
+        // $('.type-s').attr("disabled","disabled");
 
         // var category_checked = [];
         var category_ids = [];
 
         // 初始化
-        function initCategory() {
-            // category_checked = [];
-            category_ids = [];
-            var data = {
-                search: inputVal,
-                parentId: val,
-                industryId: industry_id,
-                "type-select-category-button": true,
-                _token: _token
-            };
-            // console.log('$.trim(inputVal).length', $.trim(inputVal).length);
-            // if ($.trim(inputVal).length > 0) {
-            //     data[search] = inputVal;
-            // }
-            $.get('{{route('admin.industry.get_classification')}}', data, function (html) {
-                // console.log('initCategory', html);
-                $('#category-box').children().remove();
-                $('#category-box').append(html);
-                $('#category-box').find("input").iCheck({
-                    checkboxClass: 'icheckbox_square-green',
-                    radioClass: 'iradio_square-green',
-                    increaseArea: '20%'
-                });
+        // category_checked = [];
+        category_ids = [];
+        var data = {
+            search: inputVal,
+            parentId: val,
+            industryId: industry_id,
+            "type-select-category-button": true,
+            _token: _token
+        };
+        // console.log('$.trim(inputVal).length', $.trim(inputVal).length);
+        // if ($.trim(inputVal).length > 0) {
+        //     data[search] = inputVal;
+        // }
+        $.get('{{route('admin.industry.get_classification')}}', data, function (html) {
+            $('#category-box').children().remove();
+            $('#category-box').append(html);
+            $('#category-box').find("input").iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+                increaseArea: '20%'
             });
-        }
 
-        @if(!isset($goods_info))
-        initCategory();
-        @endif
-
-
-        $("#hidden-category-id input").each(function () {
-            let parID = $(this).data("val");
-            category_ids.push([parseInt(parID), parseInt($(this).val())]);
+            $("#hidden-category-id input").each(function () {
+                let parID = $(this).attr("data-val");
+                category_ids.push([parseInt(parID), parseInt($(this).val())]);
+            });
         });
+
         // category_checked = $(".category_name").text().split("/");
 
         initTheOrderCheckedCats();
@@ -115,7 +108,6 @@
         }
 
         function operator($object, id, parentId, level, flag) {
-            console.log('请求一次');
             // $flag =1 表示checked操作， $flag=2 表示unchecked操作， $flag=3表示点击钮
             // $object 表示 category-content类对象
 
