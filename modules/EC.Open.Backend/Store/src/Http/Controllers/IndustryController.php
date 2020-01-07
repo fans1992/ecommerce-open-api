@@ -437,4 +437,16 @@ class IndustryController extends Controller
     }
 
 
+
+    public function recommend_sort(Request $request)
+    {
+        $input = $request->except('_token');
+        $niceClassificationId = $input['nice_classification_id'];
+        $industry = Industry::query()->findOrFail($input['industry_id']);
+        $industry->recommendClassifications()->updateExistingPivot($niceClassificationId, $input);
+
+        return $this->ajaxJson();
+    }
+
+
 }

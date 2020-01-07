@@ -25,6 +25,7 @@
                 <table class='border_table table table-bordered'>
                     <thead>
                     <tr>
+                        <th>排序</th>
                         <th>商标类别</th>
                         <th>推荐别名</th>
                         <th>操作</th>

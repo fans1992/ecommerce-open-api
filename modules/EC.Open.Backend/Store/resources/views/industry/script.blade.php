@@ -42,6 +42,11 @@
     <script type="text/html" id="page-temp">
         <tr>
             <td>
+                <input style="width: 45px" id="s{#id#}" value="{#pivot.sort#}"
+                       class="form-control" type="text" size="2"
+                       onblur="toRecommendSort( '{#id#}');">
+            </td>
+            <td>
                 {#classification_code#} - {#classification_name#}
             </td>
             <td>
@@ -132,6 +137,37 @@
             getList();
 
         });
+
+
+        //排序
+        function toRecommendSort(id) {
+            console.log(id);
+            if (id != '') {
+                var va = $('#s' + id).val();
+                console.log(va);
+                var part = /^\d+$/i;
+                if (va != '' && va != undefined && part.test(va)) {
+                    $.get("{{ route('admin.industry.recommend_sort') }}", {
+                        'nice_classification_id': id,
+                        'sort': va,
+                        'industry_id': $('input[name="industry_id"]').val(),
+                        _token: _token
+                    }, function (data) {
+                        if (data.status) {
+                            swal({
+                                title: "修改分类排序成功！",
+                                text: "",
+                                type: "success"
+                            }, function() {
+                                location.reload();
+                            });
+                        } else {
+                            swal("修改分类排序失败!", "", "error");
+                        }
+                    });
+                }
+            }
+        }
 
 
     </script>
