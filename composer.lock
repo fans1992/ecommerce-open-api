@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e31b41424d147dc2acf7b921b7251d3f",
+    "content-hash": "6a2f9695c08bf7e54acc45f3ab56c99f",
     "packages": [
         {
             "name": "aliyuncs/oss-sdk-php",
@@ -2983,7 +2983,7 @@
             "time": "2019-01-19T21:32:55+00:00"
         },
         {
-            "name": "jeremeamia/SuperClosure",
+            "name": "jeremeamia/superclosure",
             "version": "2.4.0",
             "source": {
                 "type": "git",
@@ -3110,55 +3110,6 @@
                 "nsm"
             ],
             "time": "2019-02-27T15:22:30+00:00"
-        },
-        {
-            "name": "kiddyu/beanbun",
-            "version": "1.0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/kiddyuchina/Beanbun.git",
-                "reference": "3b84c35de3470a3a2a44d47d201bdc3b7602e666"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/kiddyuchina/Beanbun/zipball/3b84c35de3470a3a2a44d47d201bdc3b7602e666",
-                "reference": "3b84c35de3470a3a2a44d47d201bdc3b7602e666",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
-            },
-            "require": {
-                "guzzlehttp/guzzle": "^6.0",
-                "php": ">=5.5.0",
-                "workerman/workerman": "^3.3"
-            },
-            "type": "application",
-            "autoload": {
-                "psr-4": {
-                    "Beanbun\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Kidd Yu",
-                    "email": "58631254@qq.com"
-                }
-            ],
-            "description": "Beanbun 是用 PHP 编写的多进程网络爬虫框架，具有良好的开放性、高可扩展性",
-            "keywords": [
-                "crawler",
-                "scraper",
-                "spider"
-            ],
-            "time": "2017-06-11T17:13:59+00:00"
         },
         {
             "name": "knplabs/knp-snappy",
@@ -6631,9 +6582,9 @@
             "authors": [
                 {
                     "name": "Freek Van der Herten",
-                    "role": "Developer",
                     "email": "freek@spatie.be",
-                    "homepage": "https://spatie.be"
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
                 }
             ],
             "description": "Dump databases",
@@ -8976,58 +8927,6 @@
             "time": "2017-04-25T02:31:25+00:00"
         },
         {
-            "name": "workerman/workerman",
-            "version": "v3.5.22",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/walkor/Workerman.git",
-                "reference": "488f108f9e446f31bac4d689bb9f9fe3705862cf"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/walkor/Workerman/zipball/488f108f9e446f31bac4d689bb9f9fe3705862cf",
-                "reference": "488f108f9e446f31bac4d689bb9f9fe3705862cf",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
-            },
-            "require": {
-                "php": ">=5.3"
-            },
-            "suggest": {
-                "ext-event": "For better performance. "
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Workerman\\": "./"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "walkor",
-                    "email": "walkor@workerman.net",
-                    "homepage": "http://www.workerman.net",
-                    "role": "Developer"
-                }
-            ],
-            "description": "An asynchronous event driven PHP framework for easily building fast, scalable network applications.",
-            "homepage": "http://www.workerman.net",
-            "keywords": [
-                "asynchronous",
-                "event-loop"
-            ],
-            "time": "2019-09-06T03:42:47+00:00"
-        },
-        {
             "name": "yansongda/pay",
             "version": "v2.7.8",
             "source": {
@@ -9211,6 +9110,7 @@
                 "psr",
                 "psr-7"
             ],
+            "abandoned": "laminas/laminas-diactoros",
             "time": "2019-08-06T17:53:53+00:00"
         }
     ],
