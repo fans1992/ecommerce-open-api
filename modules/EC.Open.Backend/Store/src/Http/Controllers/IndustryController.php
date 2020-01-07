@@ -357,11 +357,13 @@ class IndustryController extends Controller
             $industry = Industry::query()->find(request('industryId'));
 
             $recommendClassifications = $industry->recommendClassifications()
-                ->where(function ($query) use ($parentId) {
-                    $query->where('parent_id', $parentId)
-                        ->orWhereHas('parent', function ($query) use ($parentId) {
-                            $query->where('parent_id', $parentId);
-                        });
+                ->where(function ($query) use($parentId) {
+                    $query->where(function ($query) use ($parentId) {
+                        $query->where('parent_id', $parentId)
+                            ->orWhereHas('parent', function ($query) use ($parentId) {
+                                $query->where('parent_id', $parentId);
+                            });
+                    })->orWhere('nice_classification.id', $parentId);
                 })->get();
 
             $cateIds = array_unique($recommendClassifications->pluck('id')->all());
