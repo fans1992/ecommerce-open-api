@@ -383,15 +383,23 @@ class IndustryController extends Controller
 
             //三级分类
             $categoriesLevelTwo = [];
-            foreach ($classifications as $classification) {
-                if (in_array($classification->id, $cateIds)) {
-                    $productQuery = NiceClassification::query()->where('parent_id', $classification->id);
-                    if ($search = request()->input('search')) {
-                        $productQuery->where('classification_name', $search);
-                    }
-                    $categoriesLevelTwo[] = $productQuery->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
-                }
+            $productQuery = NiceClassification::query()->where('parent_id', $classifications->first()->id);
+            if ($search = request()->input('search')) {
+                $productQuery->where('classification_name', $search);
             }
+            $categoriesLevelTwo[] = $productQuery->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
+
+//            foreach ($classifications as $classification) {
+//                if (in_array($classification->id, $cateIds)) {
+//                    $productQuery = NiceClassification::query()->where('parent_id', $classification->id);
+//                    if ($search = request()->input('search')) {
+//                        $productQuery->where('classification_name', $search);
+//                    }
+//                    $categoriesLevelTwo[] = $productQuery->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level']);
+//                }
+//            }
+
+//            dd($categoriesLevelTwo);
 
             return view('store-backend::industry.value.classification-item', compact('classifications', 'categoriesLevelTwo', 'cateNames', 'cateIds'));
 
