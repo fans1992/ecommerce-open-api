@@ -17,23 +17,11 @@
         var that = $(this);
         var val = that.find("option:selected").val();
 
-
-        $.get("{{ route('admin.industry.get_top_classification') }}", {
-            'nice_classification_id': val,
-            'industry_id': industry_id,
-            _token: _token
-        }, function (data) {
-            if ($.isEmptyObject(data)) {
-                $('.alias').attr('value', '');
-            } else {
-                $('.alias').attr('value', data.pivot.alias);
-            }
-        });
-
         // $('.type-s').attr("disabled","disabled");
 
         // var category_checked = [];
         var category_ids = [];
+        getTopClassification(industry_id, val);
 
         // 初始化
         // category_checked = [];
@@ -67,6 +55,21 @@
         // category_checked = $(".category_name").text().split("/");
 
         initTheOrderCheckedCats();
+
+        //获取下拉框分类信息
+        function getTopClassification(industry_id, val) {
+            $.get("{{ route('admin.industry.get_top_classification') }}", {
+                'nice_classification_id': val,
+                'industry_id': industry_id,
+                _token: _token
+            }, function (data) {
+                if ($.isEmptyObject(data)) {
+                    $('.alias').attr('value', '');
+                } else {
+                    $('.alias').attr('value', data.pivot.alias);
+                }
+            });
+        }
 
         function moveTheOrderCat($parentObject, template) {
             if ($parentObject.length == 1) {
