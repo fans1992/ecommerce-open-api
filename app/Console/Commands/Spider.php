@@ -9,6 +9,7 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Console\Command;
 use Log;
+use DB;
 
 class Spider extends Command
 {
@@ -92,7 +93,7 @@ class Spider extends Command
                 //爬取45大类
                 $classifications = json_decode($response->getBody()->getContents(), true);
                 foreach ($classifications['msg'] as $classification) {
-                    NiceClassification::query()->create([
+                     DB::table('nice_classification')->insert([
                         'id' => $classification['fcgid'],
                         'classification_name' => $classification['fcgname'],
                         'classification_code' => $classification['fcgnum'],
@@ -104,7 +105,7 @@ class Spider extends Command
                     $groups = json_decode($groupResponse->getBody()->getContents(), true);
 
                     foreach ($groups['msg'] as $group) {
-                        NiceClassification::query()->create([
+                        DB::table('nice_classification')->insert([
                             'id' => $group['fcgid'],
                             'classification_name' => $group['fcgname'],
                             'classification_code' => $group['fcgnum'],
@@ -115,7 +116,7 @@ class Spider extends Command
                         $productResponse = $client->request('POST', $uri, ['form_params' => ['pid' => $group['fcgid']]]);
                         $products = json_decode($productResponse->getBody()->getContents(), true);
                         foreach ($products['msg'] as $product) {
-                            NiceClassification::query()->create([
+                            DB::table('nice_classification')->insert([
                                 'id' => $product['fcgid'],
                                 'classification_name' => $product['fcgname'],
                                 'classification_code' => $product['fcgnum'],
