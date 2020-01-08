@@ -133,6 +133,7 @@ $router->group(config('ibrand.ec-open-api.routeAuthAttributes'), function ($rout
     /************************************************* 订单及协议 **********************************************/
     $router->get('order/list', 'OrderController@getOrders')->name('api.order.list');
     $router->get('order/{order_no}', 'OrderController@getOrderDetails')->name('api.order.show');
+    $router->get('order/{order_no}/agreement', 'OrderController@getAgreement')->name('api.order.agreement.show');
     $router->patch('order/{order_no}/agreement', 'OrderController@updateAgreement')->name('api.order.agreement.update');
 
     $router->get('coupon', 'CouponController@index')->name('api.coupon.list');

@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of ibrand/EC-Open-Server.
- *
- * (c) 果酱社区 <https://guojiang.club>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 
 use GuoJiangClub\Component\Order\Repositories\OrderRepository;
@@ -26,6 +17,11 @@ class OrderController extends Controller
         $this->orderRepository = $orderRepository;
     }
 
+    /**
+     * 订单列表
+     *
+     * @return \Dingo\Api\Http\Response
+     */
     public function getOrders()
     {
 //        $orderConditions['channel'] = \request('channel') ? \request('channel') : 'ec';
@@ -45,7 +41,7 @@ class OrderController extends Controller
 
         $itemConditions = [];
 
-        $limit = request('limit') ? request('limit') : 10;
+        $limit = request('limit') ?: 10;
 
         if ($criteria = request('criteria')) {
             $itemConditions['order_no'] = ['order_no', 'like', '%'.$criteria.'%'];
@@ -58,7 +54,7 @@ class OrderController extends Controller
                 $limit, ['items', 'shippings', 'adjustments', 'items.product', 'items.product.goods']);
         }
 
-        $transformer = request('transformer') ? request('transformer') : 'list';
+        $transformer = request('transformer') ?: 'list';
 
         return $this->response()->paginator($order, new OrderTransformer($transformer));
     }
@@ -76,6 +72,13 @@ class OrderController extends Controller
         return $this->response()->item($order, new OrderTransformer());
     }
 
+    /**
+     * 修改协议
+     *
+     * @param $orderNo
+     * @param OrderAgreementRequest $request
+     * @return \Dingo\Api\Http\Response|mixed
+     */
     public function updateAgreement($orderNo, OrderAgreementRequest $request)
     {
         if (!$orderNo || !$order = $this->orderRepository->getOrderByNo($orderNo)) {
@@ -106,5 +109,23 @@ class OrderController extends Controller
         }
 
         return $this->success();
+    }
+
+    public function getAgreement($orderNo, OrderAgreementRequest $request)
+    {
+        if (!$orderNo || !$order = $this->orderRepository->getOrderByNo($orderNo)) {
+            return $this->failed('订单不存在');
+        }
+
+        $user = $request->user();
+        if ($user->cant('update', $order)) {
+            return $this->failed('无权操作');
+        }
+
+        if (!$agreeement = $order->agreement) {
+            return $this->failed('未找到相关协议');
+        }
+
+        return $this->response()->item($agreeement, new OrderAgreementTransformer());
     }
 }

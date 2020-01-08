@@ -2,14 +2,21 @@
 
 namespace GuoJiangClub\EC\Open\Server\Transformers;
 
+use GuoJiangClub\Component\Order\Models\Agreement;
+
 class OrderAgreementTransformer extends BaseTransformer
 {
-    public static $excludeable = [
-        'order_id',
-    ];
-
-    public function transformData($model)
+    public function transformData($agreement)
     {
-        return array_except($model->toArray(), self::$excludeable);
+        $order = $agreement->order;
+
+        return [
+            'id' => $agreement->id,
+            'party_a_name' => $agreement->party_a_name,
+            'accept_name'=> $order->accept_name,
+            'mobile' => $order->mobile,
+            'email' => $order->email,
+            'address' => $order->address,
+        ];
     }
 }
