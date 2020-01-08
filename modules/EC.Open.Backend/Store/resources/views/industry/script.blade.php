@@ -47,7 +47,7 @@
                        onblur="toRecommendSort( '{#id#}');">
             </td>
             <td>
-                {#classification_code#} - {#classification_name#}
+                第 {#classification_code#} 类
             </td>
             <td>
                 {#pivot.alias#}

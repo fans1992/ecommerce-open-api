@@ -12,7 +12,7 @@ use DB;
 
 class Spider extends Command
 {
-    private $totalPageCount =1;
+    private $totalPageCount = 1;
     private $counter = 1;
     private $concurrency = 5;  // 同时并发抓取
 
@@ -92,10 +92,12 @@ class Spider extends Command
                 //爬取45大类
                 $classifications = json_decode($response->getBody()->getContents(), true);
                 foreach ($classifications['msg'] as $classification) {
-                     DB::table('nice_classification')->insert([
+                    DB::table('nice_classification')->insert([
                         'id' => $classification['fcgid'],
                         'classification_name' => $classification['fcgname'],
                         'classification_code' => $classification['fcgnum'],
+                        'level' => 1,
+                        'path' => '/',
                         'parent_id' => $classification['fcgparent'],
                     ]);
 
@@ -108,6 +110,8 @@ class Spider extends Command
                             'id' => $group['fcgid'],
                             'classification_name' => $group['fcgname'],
                             'classification_code' => $group['fcgnum'],
+                            'level' => 2,
+                            'path' => '/' . $group['fcgparent'] . '/',
                             'parent_id' => $group['fcgparent'],
                         ]);
 
@@ -119,6 +123,8 @@ class Spider extends Command
                                 'id' => $product['fcgid'],
                                 'classification_name' => $product['fcgname'],
                                 'classification_code' => $product['fcgnum'],
+                                'level' => 3,
+                                'path' => '/' . $group['fcgparent'] . '/' . $product['fcgparent'] . '/',
                                 'parent_id' => $product['fcgparent'],
                             ]);
                         }
@@ -126,7 +132,7 @@ class Spider extends Command
                         $this->info("已爬取 " . $group['fcgname'] . "--" . $group['fcgnum'] . " 所有商品");
                     }
 
-                    $this->info("-----------已爬取第". $classification['fcgnum'] . "大类 " . $classification['fcgname'] . " 所有群组-----------------");
+                    $this->info("-----------已爬取第" . $classification['fcgnum'] . "大类 " . $classification['fcgname'] . " 所有群组-----------------");
 
                 }
 
