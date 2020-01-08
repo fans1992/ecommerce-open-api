@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use GuoJiangClub\Component\NiceClassification\NiceClassification;
 use GuzzleHttp\Client;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Psr7\Request;
@@ -15,7 +14,7 @@ class Spider extends Command
 {
     private $totalPageCount =1;
     private $counter = 1;
-    private $concurrency = 1;  // 同时并发抓取
+    private $concurrency = 5;  // 同时并发抓取
 
 //    private $pids = [1];
 

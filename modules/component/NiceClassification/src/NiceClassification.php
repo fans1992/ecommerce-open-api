@@ -16,7 +16,7 @@ use Kalnoy\Nestedset\NodeTrait;
 
 class NiceClassification extends Model
 {
-//    use NodeTrait;
+    use NodeTrait;
 
     const STATUS_OPEN = 1; // 可用状态
 
