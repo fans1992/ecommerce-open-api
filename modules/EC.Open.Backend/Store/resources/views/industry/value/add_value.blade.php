@@ -63,7 +63,7 @@
                                 @endforeach
                             </select>
                         </td>
-                        <td><input type="text" class="form-control" name="alias"></td>
+                        <td><input type="text" class="form-control alias" name="alias" value=""></td>
                     </tr>
 
                     </tbody>

@@ -345,6 +345,9 @@ class IndustryController extends Controller
             //下拉框筛选分类
             $parentId = request('parentId');
 
+            //一级分类
+            $topClassification = NiceClassification::query()->findOrFail($parentId);
+
             //二级分类
             $niceClassificationQuery = NiceClassification::query()->where('parent_id', $parentId);
             if ($search = request()->input('search')) {
@@ -402,8 +405,7 @@ class IndustryController extends Controller
 //                }
 //            }
 
-//            dd($categoriesLevelTwo);
-            return view('store-backend::industry.value.classification-item', compact('classifications', 'categoriesLevelTwo', 'cateNames', 'cateIds', 'recommendClassifications'));
+            return view('store-backend::industry.value.classification-item', compact('classifications', 'topClassification', 'categoriesLevelTwo', 'cateNames', 'cateIds', 'recommendClassifications'));
 
         } else {
 //            $parentId = request('parentId');
@@ -436,8 +438,12 @@ class IndustryController extends Controller
         }
     }
 
-
-
+    /**
+     * 推荐分类排序
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function recommend_sort(Request $request)
     {
         $input = $request->except('_token');
@@ -448,5 +454,19 @@ class IndustryController extends Controller
         return $this->ajaxJson();
     }
 
+    /**
+     * 获取推荐顶级分类
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getTopClassification(Request $request)
+    {
+        $input = $request->all();
+        $industry = Industry::query()->findOrFail($input['industry_id']);
+        $classification = $industry->recommendClassifications()->find($input['nice_classification_id']);
+
+        return response()->json($classification);
+    }
 
 }

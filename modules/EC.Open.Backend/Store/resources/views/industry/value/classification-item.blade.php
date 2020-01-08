@@ -1,55 +1,93 @@
 <style>
-    .category-wrap{margin-top:15px}
-    .category-content{margin-left:15px;padding: 0;}
-    .major{width:100%;background-color:#fff;overflow:auto}
-    .category-contents{background-color:#fff}
-    .btn{margin-left:10px}
-    .category_name{padding:5px;width:100%;background-color:#fafafa;overflow:auto}
-    .category_name ul{list-style:none}
-    /* 左边内容 */
-    .category-content.titCon01 .category-wrap{
-            margin-top: 5px;display: flex;align-items: center;
+    .category-wrap {
+        margin-top: 15px
     }
-    .category-content.titCon01 .btn-primary.btn-outline{
+
+    .category-content {
+        margin-left: 15px;
+        padding: 0;
+    }
+
+    .major {
+        width: 100%;
+        background-color: #fff;
+        overflow: auto
+    }
+
+    .category-contents {
+        background-color: #fff
+    }
+
+    .btn {
+        margin-left: 10px
+    }
+
+    .category_name {
+        padding: 5px;
+        width: 100%;
+        background-color: #fafafa;
+        overflow: auto
+    }
+
+    .category_name ul {
+        list-style: none
+    }
+
+    /* 左边内容 */
+    .category-content.titCon01 .category-wrap {
+        margin-top: 5px;
+        display: flex;
+        align-items: center;
+    }
+
+    .category-content.titCon01 .btn-primary.btn-outline {
         padding: 6px 0;
         background-color: transparent;
         color: #000 !important;
         border: none;
         margin-left: 0;
     }
-    .modal-dialog{
+
+    .modal-dialog {
         width: 1200px !important;
     }
+
     .titCon02 {
         display: flex;
-        flex-wrap: wrap;  
+        flex-wrap: wrap;
         height: auto;
         align-content: flex-start;
     }
-    .titCon02  .btn-primary.btn-outline{
+
+    .titCon02 .btn-primary.btn-outline {
         color: #555 !important;
         font-size: 12px;
         background-color: transparent;
         padding: 6px 0;
-        border: none;margin-left: 4px;
+        border: none;
+        margin-left: 4px;
     }
-    .titCon02 .category-wrap{
+
+    .titCon02 .category-wrap {
         display: flex;
         align-items: center;
-        margin-top:6px;
+        margin-top: 6px;
         margin-right: 15px;
     }
+
     /* .category_name ul span{
         font-size:12px;
     } */
-    .tit02{
-        font-size:15px;
+    .tit02 {
+        font-size: 15px;
     }
-    .category_ul li ul{
+
+    .category_ul li ul {
         display: flex;
-        flex-direction: row; 
+        flex-direction: row;
     }
-    .category_ul li ul li{
+
+    .category_ul li ul li {
         margin-right: 20px;
     }
 </style>
@@ -59,19 +97,23 @@
     <div id="hidden-category-id">
         @if(isset($recommendClassifications))
             @foreach($recommendClassifications as $classification)
-                <input type="hidden" name="category_id[]" id=category_{{$classification->id}} data-val={{$classification->parent_id}} value="{{$classification->id}}">
+                <input type="hidden" name="category_id[]"
+                       id=category_{{$classification->id}} data-val={{$classification->parent_id}} value="{{$classification->id}}">
             @endforeach
         @endif
     </div>
     <div class="row category_name">
-        <ul  class="category_ul">
+        <ul class="category_ul">
             @if(isset($cateNames))
-                <?php $i=1; ?>
+                <?php $i = 1; ?>
                 @foreach($cateNames as $val)
-                    <li class="" data-id="{{$val->id}}" data-level="{{$val->level}}" data-parent="{{$val->parent_id | 0}}" ><span class="tit02">{{$val->classification_code . ' ' . $val->classification_name}}</span>
+                    <li class="" data-id="{{$val->id}}" data-level="{{$val->level}}"
+                        data-parent="{{$val->parent_id | 0}}"><span
+                                class="tit02">{{$val->classification_code . ' ' . $val->classification_name}}</span>
                         <ul>
                             @foreach($val->children as $key => $child)
-                                <li class="" data-id="{{$child->id}}" data-parent="{{$child->parent_id | 0}}" data-level="{{$child->level}}">
+                                <li class="" data-id="{{$child->id}}" data-parent="{{$child->parent_id | 0}}"
+                                    data-level="{{$child->level}}">
                                     <span class="tit02">{{$i . '.' . $child->classification_name}}</span>
                                     <ul></ul>
                                 </li>
@@ -87,8 +129,13 @@
         <div class="category-content titCon01" data-position="left">
             @foreach($classifications as $key => $val)
                 <div class="category-wrap">
-                    <input data-id="{{$val->id}}" data-parent="{{$val->parent_id | 0}}" data-code="{{$val->classification_code}}" data-level="{{$val->level}}" data-name="{{$val->classification_name}}" data-uniqueId="categoryIds_{{$val->id}}" class="category_checks" type="checkbox" @if(isset($cateIds)) {{in_array($val->id, $cateIds) ? 'checked' : ''}} @endif />
-                    &nbsp; <input class="btn btn-outline btn-primary category-btn" type="button" value="{{$val->classification_code . ' ' . $val->classification_name}}"/>
+                    <input data-id="{{$val->id}}" data-parent="{{$val->parent_id | 0}}"
+                           data-code="{{$val->classification_code}}" data-level="{{$val->level}}"
+                           data-name="{{$val->classification_name}}" data-uniqueId="categoryIds_{{$val->id}}"
+                           class="category_checks"
+                           type="checkbox" @if(isset($cateIds)) {{in_array($val->id, $cateIds) ? 'checked' : ''}} @endif />
+                    &nbsp; <input class="btn btn-outline btn-primary category-btn" type="button"
+                                  value="{{$val->classification_code . ' ' . $val->classification_name}}"/>
                 </div>
             @endforeach
         </div>
@@ -97,9 +144,13 @@
                 @foreach($categoriesLevelTwo as $val)
                     @foreach($val as $v)
                         <div class="category-wrap">
-                            <input data-id="{{$v->id}}" data-parent="{{$v->parent_id | 0}}" data-name="{{$v->classification_name}}" data-level="{{$v->level}}" data-uniqueId="categoryIds_{{$v->id}}" class="category_checks" type="checkbox" @if(isset($cateIds)) {{in_array($v->id, $cateIds) ? 'checked' : ''}} @endif />
+                            <input data-id="{{$v->id}}" data-parent="{{$v->parent_id | 0}}"
+                                   data-name="{{$v->classification_name}}" data-level="{{$v->level}}"
+                                   data-uniqueId="categoryIds_{{$v->id}}" class="category_checks"
+                                   type="checkbox" @if(isset($cateIds)) {{in_array($v->id, $cateIds) ? 'checked' : ''}} @endif />
                             &nbsp;&nbsp;&nbsp;
-                            <input class="btn btn-outline btn-primary category-btn" type="button" value="{{$v->classification_name}}"/>
+                            <input class="btn btn-outline btn-primary category-btn" type="button"
+                                   value="{{$v->classification_name}}"/>
                         </div>
                     @endforeach
                 @endforeach

@@ -14,9 +14,22 @@
     var inputVal = "";
     // 点击select下拉框
     $("body .td_c").off('change').on("change", ".type-s", function () {
-        // console.log('inputVal', inputVal);
         var that = $(this);
         var val = that.find("option:selected").val();
+
+
+        $.get("{{ route('admin.industry.get_top_classification') }}", {
+            'nice_classification_id': val,
+            'industry_id': industry_id,
+            _token: _token
+        }, function (data) {
+            if ($.isEmptyObject(data)) {
+                $('.alias').attr('value', '');
+            } else {
+                $('.alias').attr('value', data.pivot.alias);
+            }
+        });
+
         // $('.type-s').attr("disabled","disabled");
 
         // var category_checked = [];
@@ -327,7 +340,7 @@
         //数据
         var specRow = '<tr class="td_c"><td>' + '<select class="form-control"  name="top_nice_classification_id">'
             + '<option value="">请选择</option>' + @foreach($classifications as $item)' + <option value="{{$item->id}}">{{$item->classification_code. '-' .$item->classification_name}}</option>' + @endforeach' + </select>'
-            + '<td><input type="text" class="form-control" name="alias" />' +
+            + '<td><input type="text" class="form-control" name="alias" value=""/>' +
             '</td>' +
             '<td><a href="javascript:;" class="btn btn-xs btn-primary operatorPhy">' +
             '<i class="fa fa-trash" data-toggle="tooltip" data-placement="top" data-original-title="删除"></i></a></td></tr>';

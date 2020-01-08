@@ -164,6 +164,7 @@ $router->group(['prefix' => 'admin/store'], function () use ($router) {
     $router->post('industry/delClassification', 'IndustryController@delClassification')->name('admin.industry.classification.delete');
 
     $router->get('industry/get_classification', 'IndustryController@getClassificationByGroupID')->name('admin.industry.get_classification');
+    $router->get('industry/get_top_classification', 'IndustryController@getTopClassification')->name('admin.industry.get_top_classification');
 
     $router->get('industry/industry_sort', 'IndustryController@industry_sort')->name('admin.industry.industry_sort');
     $router->get('industry/recommend_sort', 'IndustryController@recommend_sort')->name('admin.industry.recommend_sort');
