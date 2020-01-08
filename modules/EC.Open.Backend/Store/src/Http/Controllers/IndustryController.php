@@ -175,6 +175,20 @@ class IndustryController extends Controller
         $input = $request->except('_token');
         $industry = Industry::query()->find($input['industry_id']);
 
+        $niceClassificationId = $request->input('top_nice_classification_id');
+
+        //根节点以及所有子节点
+        $niceClassificationIds = $industry->recommendClassifications()
+            ->where(function ($query) use($niceClassificationId){
+                $query->where('nice_classification.id', $niceClassificationId)
+                    ->orWhere('parent_id', $niceClassificationId)
+                    ->orWhereHas('parent', function ($query) use ($niceClassificationId) {
+                        $query->where('parent_id', $niceClassificationId);
+                    });
+            })->pluck('nice_classification.id')->toArray();
+
+        $industry->recommendClassifications()->detach($niceClassificationIds);
+
 //        if ($classification = $industry->recommendClassifications()->find($input['top_nice_classification_id'])) {
 //            return $this->ajaxJson(false, [], 500, '无法重复添加,该行业对应' . $classification->classification_code . '分类已存在相关记录');
 //        }
