@@ -11,18 +11,22 @@ use Illuminate\Http\Request;
 use Encore\Admin\Facades\Admin as LaravelAdmin;
 use Encore\Admin\Layout\Content;
 use Validator;
+use Excel;
+use Carbon\Carbon;
+
 
 class IndustryController extends Controller
 {
     protected $industryRepository;
 
     protected $niceClassificationRepository;
+    protected $cache;
 
     public function __construct(IndustryRepository $industryRepository, NiceClassificationRepository $niceClassificationRepository)
     {
         $this->industryRepository = $industryRepository;
         $this->niceClassificationRepository = $niceClassificationRepository;
-
+        $this->cache = cache();
     }
 
     public function index()
@@ -482,5 +486,78 @@ class IndustryController extends Controller
 
         return response()->json($classification);
     }
+
+
+    public function importClassificationModal()
+    {
+        return view('store-backend::industry.import');
+    }
+
+    /**
+     * 计算导入的数据数量.
+     *
+     * @param $path
+     */
+    public function getImportDataCount()
+    {
+        $filename = 'public' . request('path');
+
+        Excel::load($filename, function ($reader) {
+            $reader = $reader->getSheet(0);
+
+            //获取表中的数据
+            $count = count($reader->toArray()) - 1;
+            $expiresAt = Carbon::now()->addMinutes(30);
+            $this->cache->forget('classificationImportCount');
+            $this->cache->put('classificationImportCount', $count, $expiresAt);
+        });
+
+        $limit = 100;
+        $total = ceil($this->cache->get('classificationImportCount') / $limit);
+        $url = route('admin.industry.saveImportData', ['total' => $total, 'limit' => $limit, 'path' => request('path')]);
+
+        return $this->ajaxJson(true, ['status' => 'goon', 'url' => $url]);
+    }
+
+    /**
+     * 执行导入操作.
+     *
+     * @return mixed
+     */
+    public function saveImportData()
+    {
+        $filename = 'public' . request('path');
+        $conditions = [];
+        $page = request('page') ? request('page') : 1;
+        $total = request('total');
+        $limit = request('limit');
+
+        if ($page > $total) {
+            return $this->ajaxJson(true, ['status' => 'complete']);
+        }
+
+        Excel::load($filename, function ($reader) use ($conditions, $page, $limit) {
+            $data = $reader->get()->first()->forPage($page, $limit)->toArray();
+            dd($data);
+
+            if (count($data) > 0) {
+                foreach ($data as $key => $value) {
+                    if (!empty($value['mobile']) and $user = User::where('mobile', $value['mobile'])->first()) {
+                        Point::create([
+                            'user_id' => $user->id,
+                            'action' => 'admin_import_action',
+                            'note' => $value['note'],
+                            'value' => $value['value'],
+                            'status' => 1]);
+                    }
+                }
+            }
+        });
+
+        $url = route('admin.industry.saveImportData', ['page' => $page + 1, 'total' => $total, 'limit' => $limit, 'path' => request('path')]);
+
+        return $this->ajaxJson(true, ['status' => 'goon', 'url' => $url, 'current_page' => $page, 'total' => $total]);
+    }
+
 
 }

@@ -168,6 +168,11 @@ $router->group(['prefix' => 'admin/store'], function () use ($router) {
 
     $router->get('industry/industry_sort', 'IndustryController@industry_sort')->name('admin.industry.industry_sort');
     $router->get('industry/recommend_sort', 'IndustryController@recommend_sort')->name('admin.industry.recommend_sort');
+    //导入推荐分类
+    $router->get('industry/importClassificationModal', 'IndustryController@importClassificationModal')->name('admin.industry.importClassificationModal');
+    $router->get('industry/getImportDataCount', 'IndustryController@getImportDataCount')->name('admin.industry.getImportDataCount');
+    $router->get('industry/saveImportData', 'IndustryController@saveImportData')->name('admin.industry.saveImportData');
+
 });
 
 //促销
