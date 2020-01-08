@@ -54,7 +54,7 @@ class Spider extends Command
 
         $client = new Client([
             'headers' => [
-                'User-Agent' => 'Name of your tool/v1.0',
+                'User-Agent' => null,
                 'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
                 'Accept-Encoding' => 'gzip, deflate, br',
             ],
