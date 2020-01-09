@@ -13,6 +13,7 @@ use Encore\Admin\Layout\Content;
 use Validator;
 use Excel;
 use Carbon\Carbon;
+use DB;
 
 
 class IndustryController extends Controller
@@ -183,7 +184,7 @@ class IndustryController extends Controller
 
         //根节点以及所有子节点
         $niceClassificationIds = $industry->recommendClassifications()
-            ->where(function ($query) use($niceClassificationId){
+            ->where(function ($query) use ($niceClassificationId) {
                 $query->where('nice_classification.id', $niceClassificationId)
                     ->orWhere('parent_id', $niceClassificationId)
                     ->orWhereHas('parent', function ($query) use ($niceClassificationId) {
@@ -378,7 +379,7 @@ class IndustryController extends Controller
             $industry = Industry::query()->find(request('industryId'));
 
             $recommendClassifications = $industry->recommendClassifications()
-                ->where(function ($query) use($parentId) {
+                ->where(function ($query) use ($parentId) {
                     $query->where(function ($query) use ($parentId) {
                         $query->where('parent_id', $parentId)
                             ->orWhereHas('parent', function ($query) use ($parentId) {
@@ -490,7 +491,7 @@ class IndustryController extends Controller
 
     public function importClassificationModal()
     {
-        return view('store-backend::industry.import');
+        return view('store-backend::industry.classification_import');
     }
 
     /**
@@ -514,6 +515,7 @@ class IndustryController extends Controller
 
         $limit = 100;
         $total = ceil($this->cache->get('classificationImportCount') / $limit);
+
         $url = route('admin.industry.saveImportData', ['total' => $total, 'limit' => $limit, 'path' => request('path')]);
 
         return $this->ajaxJson(true, ['status' => 'goon', 'url' => $url]);
@@ -524,39 +526,80 @@ class IndustryController extends Controller
      *
      * @return mixed
      */
-    public function saveImportData()
+    public function saveImportData(Request $request)
     {
-        $filename = 'public' . request('path');
-        $conditions = [];
-        $page = request('page') ? request('page') : 1;
-        $total = request('total');
-        $limit = request('limit');
+        $filename = 'public' . $request['upload_excel'];
+        $error_list = [];
+        try {
+            DB::beginTransaction();
+            Excel::load($filename, function ($reader) use (&$error_list) {
+                $reader = $reader->getSheet(0);
+                //获取表中的数据
+                $results = $reader->toArray();
 
-        if ($page > $total) {
-            return $this->ajaxJson(true, ['status' => 'complete']);
-        }
+                foreach ($results as $key => $value) {
+                    //跳过标题
+                    if ($key <= 0) {
+                        continue;
+                    }
 
-        Excel::load($filename, function ($reader) use ($conditions, $page, $limit) {
-            $data = $reader->get()->first()->forPage($page, $limit)->toArray();
-            dd($data);
+                    $industry_name = trim($value[0]);
+                    $classification_code = trim($value[1]);
+                    $alias = trim($value[2]);
+                    $products = trim($value[3]);
+                    if (!$industry_name || !$classification_code || !$alias || !$products) {
+                        $error_list[] = '遇到空白行数据，中断导入';
+                        break;
+                    }
 
-            if (count($data) > 0) {
-                foreach ($data as $key => $value) {
-                    if (!empty($value['mobile']) and $user = User::where('mobile', $value['mobile'])->first()) {
-                        Point::create([
-                            'user_id' => $user->id,
-                            'action' => 'admin_import_action',
-                            'note' => $value['note'],
-                            'value' => $value['value'],
-                            'status' => 1]);
+                    //行业
+                    $industry = Industry::query()->where('name', $industry_name)->first();
+                    if (!$industry) {
+                        $error_list[] = '第[' . ($key + 1) . ']行, 行业 ' . $industry_name . ' 不存在；';
+                        continue;
+                    }
+
+                    //大类
+                    $classification = NiceClassification::query()->where('classification_code', $classification_code)->first();
+                    if (!$classification) {
+                        $error_list[] = '第[' . ($key + 1) . ']行, 大类 ' . $classification_code . ' 不存在；';
+                        continue;
+                    }
+                    if (!$industry->recommendClassifications()->find($classification->id)) {
+                        $industry->recommendClassifications()->attach($classification->id, ['alias' => $alias, 'nice_classification_parent_id' => $classification->parent_id]);
+                    }
+
+                    //商品服务项
+                    $productsList = explode('，', $products);
+                    foreach ($productsList as $productName) {
+                        $product = NiceClassification::query()->where('classification_name', trim($productName))->first();
+                        if (!$product) {
+                            $error_list[] = '第[' . ($key + 1) . ']行, 商品 ' . $productName . ' 不存在；';
+                            continue;
+                        }
+                        //商品
+                        if (!$industry->recommendClassifications()->find($product->id)) {
+                            $industry->recommendClassifications()->attach($product->id, ['nice_classification_parent_id' => $product->parent_id]);
+                        }
+                        //群组
+                        if (!$industry->recommendClassifications()->find($product->parent_id)) {
+                            $industry->recommendClassifications()->attach($product->parent_id, ['nice_classification_parent_id' => $product->parent_id]);
+                        }
                     }
                 }
-            }
-        });
+            });
+            DB::commit();
 
-        $url = route('admin.industry.saveImportData', ['page' => $page + 1, 'total' => $total, 'limit' => $limit, 'path' => request('path')]);
+            return response()->json(['status' => true
+                , 'error_code' => 0
+                , 'data' => ['error_list' => $error_list],
+            ]);
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            \Log::info($exception);
 
-        return $this->ajaxJson(true, ['status' => 'goon', 'url' => $url, 'current_page' => $page, 'total' => $total]);
+            return $this->ajaxJson(false, [], 404, '操作失败');
+        }
     }
 
 
