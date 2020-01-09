@@ -16,7 +16,7 @@ yarn-error.log
 .env
 public/uploads
 public/vendor
-public/assets
+public/assets/backend
 resources/views/vendor
 resources/lang
 /github
