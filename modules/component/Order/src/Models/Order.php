@@ -37,6 +37,7 @@ class Order extends Model implements DiscountSubjectContract
 
     const TYPE_DEFAULT = 0; //默认类型
     const TYPE_DISCOUNT = 1; //折扣订单
+    const TYPE_SELF_APPLICATION = 2; //自助申请
 
     /*distribution_status*/
     const DELIVERED_WAIT = 0;  //待发货

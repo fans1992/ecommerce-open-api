@@ -540,6 +540,7 @@ class ShoppingController extends Controller
 
             //自助申请
             if (isset($item['self_apply_classifications']) && $selectedClassifications = $item['self_apply_classifications']['selected_classifications']) {
+                $order->type = Order::TYPE_SELF_APPLICATION;
                 $this->submitUserClassifications($selectedClassifications, request()->user()->id);
                 $unit_price += $this->getSelfApplyPrice($selectedClassifications, $item->model->official_price, $item->model->self_apply_additional_price);
                 $item_meta['self_apply_classifications'] = $item['self_apply_classifications'];

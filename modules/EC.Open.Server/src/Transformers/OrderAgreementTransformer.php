@@ -17,6 +17,9 @@ class OrderAgreementTransformer extends BaseTransformer
             'mobile' => $order->mobile,
             'email' => $order->email,
             'address' => $order->address,
+            'service_items' => $agreement->service_items,
+            'total'=> $order->total / 100,
+            'agreement_no' => $agreement->agreement_no,
         ];
     }
 }

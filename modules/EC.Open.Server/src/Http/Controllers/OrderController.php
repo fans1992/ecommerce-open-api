@@ -2,6 +2,7 @@
 
 namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 
+use GuoJiangClub\Component\Order\Models\Order;
 use GuoJiangClub\Component\Order\Repositories\OrderRepository;
 use GuoJiangClub\EC\Open\Server\Http\Requests\OrderAgreementRequest;
 use GuoJiangClub\EC\Open\Server\Transformers\OrderAgreementTransformer;
@@ -44,9 +45,9 @@ class OrderController extends Controller
         $limit = request('limit') ?: 10;
 
         if ($criteria = request('criteria')) {
-            $itemConditions['order_no'] = ['order_no', 'like', '%'.$criteria.'%'];
-            $itemConditions['item_name'] = ['item_name', 'like', '%'.$criteria.'%'];
-            $itemConditions['item_id'] = ['item_id', 'like', '%'.$criteria.'%'];
+            $itemConditions['order_no'] = ['order_no', 'like', '%' . $criteria . '%'];
+            $itemConditions['item_name'] = ['item_name', 'like', '%' . $criteria . '%'];
+            $itemConditions['item_id'] = ['item_id', 'like', '%' . $criteria . '%'];
 
             $order = $this->orderRepository->getOrdersByCriteria($orderConditions, $itemConditions, $limit);
         } else {
@@ -124,6 +125,35 @@ class OrderController extends Controller
 
         if (!$agreeement = $order->agreement) {
             return $this->failed('未找到相关协议');
+        }
+
+        if ($order->type == Order::TYPE_DEFAULT) {
+            $service_items = [];
+            $order->items->each(function ($item) use(&$service_items) {
+                $service_items[] = [
+                    'item_name' => $item->item_name,
+                    'bussiness_name' => '',
+                    'selected_classification' => '/',
+                    'remark' => '/',
+                    'total' => $item->total / 100,
+                ];
+//                $bussiness_name = '';
+//                $item->selected_classification = '/';
+//                $item->remark = '/';
+//                $item->total /= 100;
+            });
+
+            if ($adjustments_total = $order->adjustments_total) {
+                $service_items[] = [
+                    'item_name' => '优惠抵扣',
+                    'bussiness_name' => '/',
+                    'selected_classification' => '/',
+                    'remark' => '/',
+                    'total' => $adjustments_total / 100,
+                ];
+            }
+
+            $agreeement->service_items = $service_items;
         }
 
         return $this->response()->item($agreeement, new OrderAgreementTransformer());
