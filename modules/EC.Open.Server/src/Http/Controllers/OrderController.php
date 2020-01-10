@@ -2,12 +2,13 @@
 
 namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 
+use App\Mail\OrderAgreement;
 use GuoJiangClub\Component\Order\Models\Order;
 use GuoJiangClub\Component\Order\Repositories\OrderRepository;
 use GuoJiangClub\EC\Open\Server\Http\Requests\OrderAgreementRequest;
 use GuoJiangClub\EC\Open\Server\Transformers\OrderAgreementTransformer;
 use GuoJiangClub\EC\Open\Server\Transformers\OrderTransformer;
-use Illuminate\Http\Request;
+use Mail;
 
 class OrderController extends Controller
 {
@@ -139,6 +140,12 @@ class OrderController extends Controller
         return $this->response()->item($agreement, new OrderAgreementTransformer());
     }
 
+    /**
+     * 下载协议
+     *
+     * @param $orderNo
+     * @return \Dingo\Api\Http\Response|mixed
+     */
     public function exportAgreement($orderNo)
     {
         if (!$orderNo || !$order = $this->orderRepository->getOrderByNo($orderNo)) {
@@ -164,6 +171,36 @@ class OrderController extends Controller
 
         return $this->success(['url' => $url]);
 
+    }
+
+
+    /**
+     * 邮箱发送协议
+     *
+     * @param $orderNo
+     * @return \Dingo\Api\Http\Response|mixed
+     */
+    public function sendAgreement($orderNo)
+    {
+        if (!$orderNo || !$order = $this->orderRepository->getOrderByNo($orderNo)) {
+            return $this->failed('订单不存在');
+        }
+
+        $user = request()->user();
+        if ($user->cant('update', $order)) {
+            return $this->failed('无权操作');
+        }
+
+        if (!$agreement = $order->agreement) {
+            return $this->failed('未找到相关协议');
+        }
+
+        $agreement = $this->generateAgreementItems($order, $agreement);
+        $pdf = \PDF::loadView('server::order.agreement', compact('agreement'))->setPaper('a4')->setOrientation('landscape')->setOption('margin-bottom', 0);
+
+        Mail::to(request('send_email'))->send(new OrderAgreement($pdf->output()));
+
+        return $this->success();
     }
 
     /**
