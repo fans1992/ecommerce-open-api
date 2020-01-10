@@ -12,7 +12,9 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $pdf = \PDF::loadView('agreement');
+    return $pdf->download('agreement.pdf');
 });
+
 
 \LaravelUploader::routes();

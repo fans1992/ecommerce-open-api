@@ -112,6 +112,13 @@ class OrderController extends Controller
         return $this->success();
     }
 
+    /**
+     * 查看协议
+     *
+     * @param $orderNo
+     * @param OrderAgreementRequest $request
+     * @return \Dingo\Api\Http\Response|mixed
+     */
     public function getAgreement($orderNo, OrderAgreementRequest $request)
     {
         if (!$orderNo || !$order = $this->orderRepository->getOrderByNo($orderNo)) {
@@ -123,10 +130,45 @@ class OrderController extends Controller
             return $this->failed('无权操作');
         }
 
-        if (!$agreeement = $order->agreement) {
+        if (!$agreement = $order->agreement) {
             return $this->failed('未找到相关协议');
         }
 
+        $agreement = $this->generateAgreementItems($order, $agreement);
+
+        return $this->response()->item($agreement, new OrderAgreementTransformer());
+    }
+
+    public function exportAgreement($orderNo)
+    {
+        if (!$orderNo || !$order = $this->orderRepository->getOrderByNo($orderNo)) {
+            return $this->failed('订单不存在');
+        }
+
+        $user = request()->user();
+        if ($user->cant('update', $order)) {
+            return $this->failed('无权操作');
+        }
+
+        if (!$agreement = $order->agreement) {
+            return $this->failed('未找到相关协议');
+        }
+
+        $agreement = $this->generateAgreementItems($order, $agreement);
+        $pdf = \PDF::loadView('server::order.agreement', compact('agreement'));
+
+        return $pdf->download('agreement.pdf');
+    }
+
+    /**
+     * 生成协议条目
+     *
+     * @param $order
+     * @param $agreement
+     * @return mixed
+     */
+    public function generateAgreementItems($order, $agreement)
+    {
         if ($order->type == Order::TYPE_DEFAULT) {
             $service_items = [];
             $order->items->each(function ($item) use(&$service_items) {
@@ -135,7 +177,7 @@ class OrderController extends Controller
                     'bussiness_name' => '',
                     'selected_classification' => '/',
                     'remark' => '/',
-                    'total' => $item->total / 100,
+                    'total' => sprintf("%.2f",$item->total / 100),
                 ];
 //                $bussiness_name = '';
 //                $item->selected_classification = '/';
@@ -149,13 +191,13 @@ class OrderController extends Controller
                     'bussiness_name' => '/',
                     'selected_classification' => '/',
                     'remark' => '/',
-                    'total' => $adjustments_total / 100,
+                    'total' => sprintf("%.2f",$adjustments_total / 100),
                 ];
             }
 
-            $agreeement->service_items = $service_items;
+            $agreement->service_items = $service_items;
         }
 
-        return $this->response()->item($agreeement, new OrderAgreementTransformer());
+        return $agreement;
     }
 }
