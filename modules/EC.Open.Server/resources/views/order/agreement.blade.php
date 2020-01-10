@@ -93,7 +93,7 @@
                 <td colspan="5" class="total">
                     合计
                 </td>
-                <td>{{$agreement->order->total / 100}}元</td>
+                <td>{{sprintf("%.2f",$agreement->order->total / 100)}}元</td>
             </tr>
             </tbody>
         </table>
