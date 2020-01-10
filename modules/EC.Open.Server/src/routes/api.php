@@ -136,6 +136,7 @@ $router->group(config('ibrand.ec-open-api.routeAuthAttributes'), function ($rout
     $router->get('order/{order_no}/agreement', 'OrderController@getAgreement')->name('api.order.agreement.show');       //查看协议
     $router->patch('order/{order_no}/agreement', 'OrderController@updateAgreement')->name('api.order.agreement.update');//修改协议
     $router->post('order/{order_no}/agreement/export', 'OrderController@exportAgreement')->name('api.order.agreement.export'); //下载协议
+    $router->post('order/{order_no}/agreement/send', 'OrderController@sendAgreement')->name('api.order.agreement.send'); //发送邮箱
 
 
 

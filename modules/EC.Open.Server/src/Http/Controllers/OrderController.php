@@ -155,9 +155,15 @@ class OrderController extends Controller
         }
 
         $agreement = $this->generateAgreementItems($order, $agreement);
-        $pdf = \PDF::loadView('server::order.agreement', compact('agreement'));
+        $pdf = \PDF::loadView('server::order.agreement', compact('agreement'))->setPaper('a4')->setOrientation('landscape')->setOption('margin-bottom', 0);
 
-        return $pdf->download('agreement.pdf');
+//        return $pdf->download('agreement.pdf');
+//        //获取扩展名，上传OSS
+        $path = 'order/agreement/' . date('Ymd') . '/' . generaterandomstring() . '.pdf';
+        $url = upload_image($path, $pdf->output());
+
+        return $this->success(['url' => $url]);
+
     }
 
     /**
