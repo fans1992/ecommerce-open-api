@@ -553,7 +553,7 @@ class IndustryController extends Controller
                     }
 
                     //行业
-                    $industry = Industry::query()->where('name', $industry_name)->first();
+                    $industry = Industry::query()->where('name', $industry_name)->where('level',2)->first();
                     if (!$industry) {
                         $error_list[] = '第[' . ($key + 1) . ']行, 行业 ' . $industry_name . ' 不存在；';
                         continue;
