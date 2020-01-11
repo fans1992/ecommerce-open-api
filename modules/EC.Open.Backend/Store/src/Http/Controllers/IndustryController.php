@@ -558,9 +558,10 @@ class IndustryController extends Controller
                         $error_list[] = '第[' . ($key + 1) . ']行, 行业 ' . $industry_name . ' 不存在；';
                         continue;
                     }
-
                     //大类
-                    $classification = NiceClassification::query()->where('classification_code', $classification_code)->first();
+                    $classification = NiceClassification::query()
+                        ->where('classification_code', $classification_code)
+                        ->where('level',1)->first();
                     if (!$classification) {
                         $error_list[] = '第[' . ($key + 1) . ']行, 大类 ' . $classification_code . ' 不存在；';
                         continue;
@@ -572,7 +573,7 @@ class IndustryController extends Controller
                     //商品服务项
                     $productsList = explode('，', $products);
                     foreach ($productsList as $productName) {
-                        $product = NiceClassification::query()->where('classification_name', trim($productName))->first();
+                        $product = NiceClassification::query()->where('classification_name', trim($productName))->where('level', 3)->first();
                         if (!$product) {
                             $error_list[] = '第[' . ($key + 1) . ']行, 商品 ' . $productName . ' 不存在；';
                             continue;
