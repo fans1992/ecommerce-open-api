@@ -212,34 +212,79 @@ class OrderController extends Controller
      */
     public function generateAgreementItems($order, $agreement)
     {
-        if ($order->type == Order::TYPE_DEFAULT) {
-            $service_items = [];
-            $order->items->each(function ($item) use(&$service_items) {
-                $service_items[] = [
-                    'item_name' => $item->item_name,
-                    'bussiness_name' => '',
-                    'selected_classification' => '/',
-                    'remark' => '/',
-                    'total' => sprintf("%.2f",$item->total / 100),
-                ];
+        switch ($order->type) {
+            case Order::TYPE_DEFAULT:
+                $service_items = [];
+                $order->items->each(function ($item) use (&$service_items) {
+                    $service_items[] = [
+                        'item_name' => $item->item_name,
+                        'bussiness_name' => '',
+                        'selected_classification' => '/',
+                        'remark' => '/',
+                        'total' => sprintf("%.2f", $item->total / 100),
+                    ];
 //                $bussiness_name = '';
 //                $item->selected_classification = '/';
 //                $item->remark = '/';
 //                $item->total /= 100;
-            });
+                });
 
-            if ($adjustments_total = $order->adjustments_total) {
-                $service_items[] = [
-                    'item_name' => '优惠抵扣',
-                    'bussiness_name' => '/',
-                    'selected_classification' => '/',
-                    'remark' => '/',
-                    'total' => sprintf("%.2f",$adjustments_total / 100),
-                ];
-            }
+                if ($adjustments_total = $order->adjustments_total) {
+                    $service_items[] = [
+                        'item_name' => '优惠抵扣',
+                        'bussiness_name' => '/',
+                        'selected_classification' => '/',
+                        'remark' => '/',
+                        'total' => sprintf("%.2f", $adjustments_total / 100),
+                    ];
+                }
 
-            $agreement->service_items = $service_items;
+                break;
+            case Order::TYPE_SELF_APPLICATION:
+                $orderItem = $order->items->first();
+                $selfApplyClassifications = $orderItem->item_meta['self_apply_classifications'];
+
+                $service_items = [];
+
+                foreach ($selfApplyClassifications['selected_classifications'] as $classification) {
+                    $remark = '';
+                    $i = 0;
+
+                    foreach ($classification['children']['data'] as $group) {
+                        foreach ($group['children']['data'] as $key => $product) {
+                            $i += 1;
+                            $remark .= $key+1 . '.' . $product['classification_name'] . ' ';
+                        }
+                    }
+
+                    //大类下超过10个叠加附加费用
+                    $classificationPrice = $i <= 10 ? 300 : 300 + ($i - 10) * 30;
+
+                    $service_items[] = [
+                        'item_name' => $orderItem->item_name,
+                        'bussiness_name' => $selfApplyClassifications['brand_name'] ?: '/',
+                        'selected_classification' => $classification['classification_code'],
+                        'remark' => $remark,
+                        'total' => sprintf("%.2f", $classificationPrice),
+                    ];
+                }
+
+                if ($adjustments_total = $order->adjustments_total) {
+                    $service_items[] = [
+                        'item_name' => '发票税费',
+                        'bussiness_name' => '/',
+                        'selected_classification' => '/',
+                        'remark' => '/',
+                        'total' => sprintf("%.2f", $adjustments_total / 100),
+                    ];
+                }
+
+                break;
+            default:
+                return $this->failed('illegal params');
         }
+
+        $agreement->service_items = $service_items;
 
         return $agreement;
     }

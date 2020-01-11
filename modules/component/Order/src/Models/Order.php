@@ -51,6 +51,7 @@ class Order extends Model implements DiscountSubjectContract
 
     protected $casts = [
         'need_invoice' => 'boolean',
+        'applicant_data' => 'json',
     ];
 
     public function __construct(array $attributes = [])

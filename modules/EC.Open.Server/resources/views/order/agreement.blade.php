@@ -21,7 +21,7 @@
         <div class="infoCon">
             <div class="one">
                 <div class=" name">
-                    <p>甲方：<span>{{$agreement->order->accept_name}}</span></p>
+                    <p>甲方：<span>{{$agreement->order->applicant_data['applicant_name'] ?: $agreement->order->accept_name}}</span></p>
                 </div>
                 <div class="name concat">
                     <p class="phone">联系人：<span>{{$agreement->order->accept_name}}</span></p>
