@@ -24,6 +24,8 @@ class OrderItem extends Model
 
     protected $casts = [
         'item_meta' => 'json',
+        'brand_data' => 'json',
+        'applicant_data' => 'json',
     ];
 
     public function __construct(array $attributes = [])
