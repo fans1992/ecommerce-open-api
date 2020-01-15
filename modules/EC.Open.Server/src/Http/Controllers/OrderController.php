@@ -4,6 +4,7 @@ namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 
 use App\Mail\OrderAgreement;
 use GuoJiangClub\Component\Order\Models\Order;
+use GuoJiangClub\Component\Order\Models\OrderItem;
 use GuoJiangClub\Component\Order\Repositories\OrderRepository;
 use GuoJiangClub\EC\Open\Server\Http\Requests\OrderAgreementRequest;
 use GuoJiangClub\EC\Open\Server\Transformers\OrderAgreementTransformer;
@@ -287,5 +288,57 @@ class OrderController extends Controller
         $agreement->service_items = $service_items;
 
         return $agreement;
+    }
+
+    public function test()
+    {
+        $data = [
+            'brand_data' =>[
+                'application_no' => '23231',
+                'brand_name' => '测试商标',
+                'brand_image' => 'http://aliyuncdn.foridom.com/brand/create/20200115/oMWZYiUyac.png',
+                'registration_category'=>['01', '10', '45'],
+            ],
+            'company_progress' => [
+                [
+                    'date' => '2020-01-06',
+                    'progress' => '待处理',
+                ],
+                [
+                    'date' => '2020-01-06',
+                    'progress' => '已处理',
+                ],
+            ],
+            'applicant_data' => [
+                'applicant_subject' => 'enterprise',
+                'applicant_name' => '百一知识产权有限公司',
+                'unified_social_credit_code' => '422323223232323',
+                'id_card_no'=> '4223232423111323',
+                'province' => '上海',
+                'city' => '浦东新区',
+                'district' => '三林镇',
+                'address' => '上南路100号',
+                'postcode' => '021000',
+                'id_card_picture' => 'http://aliyuncdn.foridom.com/brand/business_license/20200108/0fDy5MCA0F.jpg',
+                'business_license_picture' => 'http://aliyuncdn.foridom.com/brand/business_license/20200108/glnczQZpBE.jpeg',
+                'attorney_picture' => 'http://aliyuncdn.foridom.com/brand/business_license/20200108/7KzQNvHoge.jpg',
+            ],
+            'official_progress' => [
+                [
+                    'date' => '2020-01-06',
+                    'progress' => '文件整理中',
+                ],
+                [
+                    'date' => '2020-01-06',
+                    'progress' => '文件撰写中',
+                ],
+
+                [
+                    'date' => '2020-01-06',
+                    'progress' => '材料已提交',
+                ],
+            ],
+        ];
+        OrderItem::find(request('order_item_id'))->update($data);
     }
 }

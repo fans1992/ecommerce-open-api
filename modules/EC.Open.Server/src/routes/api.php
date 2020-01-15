@@ -1,7 +1,5 @@
 <?php
 
-$router->get('test', 'BeanbunController@test');
-
 /************************************************************* PC注册登录 ************************************************/
 //手机号短信登录
 $router->post('oauth/sms', 'AuthController@smsLogin')->name('api.oauth.sms');
@@ -149,6 +147,6 @@ $router->group(config('ibrand.ec-open-api.routeAuthAttributes'), function ($rout
     $router->post('coupon/take', 'CouponController@take')->name('api.coupon.take');
 
     /************************************************** 其他 ****************************************************/
-
+    $router->post('test', 'OrderController@test');
 
 });
