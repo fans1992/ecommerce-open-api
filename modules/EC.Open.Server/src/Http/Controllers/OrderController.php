@@ -294,10 +294,10 @@ class OrderController extends Controller
     {
         $data = [
             'brand_data' =>[
-                'application_no' => '23231',
-                'brand_name' => '测试商标',
+                'application_no' => '232333332221',
+                'brand_name' => '商标11122',
                 'brand_image' => 'http://aliyuncdn.foridom.com/brand/create/20200115/oMWZYiUyac.png',
-                'registration_category'=>['01', '10', '45'],
+                'registration_category'=>['02', '08', '30'],
             ],
             'company_progress' => [
                 [
@@ -306,19 +306,27 @@ class OrderController extends Controller
                 ],
                 [
                     'date' => '2020-01-06',
+                    'progress' => '处理中',
+                ],
+                [
+                    'date' => '2020-01-06',
                     'progress' => '已处理',
+                ],
+                [
+                    'date' => '2020-01-06',
+                    'progress' => '已完成',
                 ],
             ],
             'applicant_data' => [
                 'applicant_subject' => 'enterprise',
                 'applicant_name' => '百一知识产权有限公司',
-                'unified_social_credit_code' => '422323223232323',
-                'id_card_no'=> '4223232423111323',
-                'province' => '上海',
+                'unified_social_credit_code' => '22285874775894',
+                'id_card_no'=> '9485747348575444',
+                'province' => '上海市',
                 'city' => '浦东新区',
                 'district' => '三林镇',
-                'address' => '上南路100号',
-                'postcode' => '021000',
+                'address' => '上南路12323200号',
+                'postcode' => '021003330',
                 'id_card_picture' => 'http://aliyuncdn.foridom.com/brand/business_license/20200108/0fDy5MCA0F.jpg',
                 'business_license_picture' => 'http://aliyuncdn.foridom.com/brand/business_license/20200108/glnczQZpBE.jpeg',
                 'attorney_picture' => 'http://aliyuncdn.foridom.com/brand/business_license/20200108/7KzQNvHoge.jpg',
@@ -330,12 +338,19 @@ class OrderController extends Controller
                 ],
                 [
                     'date' => '2020-01-06',
+                    'progress' => '文件整理中',
+                ],
+                [
+                    'date' => '2020-01-06',
                     'progress' => '文件撰写中',
                 ],
-
                 [
                     'date' => '2020-01-06',
                     'progress' => '材料已提交',
+                ],
+                [
+                    'date' => '2020-01-06',
+                    'progress' => '已完成',
                 ],
             ],
         ];

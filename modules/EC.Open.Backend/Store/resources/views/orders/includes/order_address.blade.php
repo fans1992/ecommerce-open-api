@@ -1,7 +1,7 @@
 <table class="table table-hover table-striped">
     <tbody>
     <tr>
-        <th>收货人</th>
+        <th>联系人</th>
         <th>电话</th>
         <th>收货地址</th>
         <th>收货时间</th>

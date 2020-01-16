@@ -2,7 +2,7 @@
     <ul class="nav nav-tabs">
 
         <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">基本信息</a></li>
-        <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false">收货人信息</a></li>
+        <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false">联系人信息</a></li>
         <li class=""><a href="#tab_3" data-toggle="tab" aria-expanded="false">发货信息</a></li>
         <li class=""><a href="#tab_4" data-toggle="tab" aria-expanded="false">商品清单</a></li>
         <li class=""><a href="#tab_5" data-toggle="tab" aria-expanded="false">费用信息</a></li>
