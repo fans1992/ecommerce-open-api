@@ -5,6 +5,10 @@ $router->group(['prefix' => 'admin/store'], function () use ($router) {
     $router->post('upload/excel', 'ImageController@ExcelUpload')->name('upload.excel');
     $router->post('upload/uploadExcelFile', 'ImageController@uploadExcelFile')->name('upload.uploadExcelFile');
 
+    $router->get('dashboard', 'DashboardController@dashboard')->name('admin.store.dashboard.index');
+    $router->get('getMonthData', 'DashboardController@getMonthData')->name('admin.store.dashboard.getMonthData');
+
+
     $router->group(['prefix' => 'setting'], function () use ($router) {
         $router->group(['prefix' => 'micro/page','namespace' => 'MicroPage'], function () use ($router) {
             $router->get('/', 'MicroPageController@index')->name('admin.setting.micro.page.index');
