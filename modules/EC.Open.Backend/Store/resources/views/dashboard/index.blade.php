@@ -25,10 +25,10 @@
                 <div class="num">{{$paidCount}}</div>
                 <div class="text">待发货</div>
             </div>
-            {{--<div class="col-sm-2 detail-item">--}}
-                {{--<div class="num red">{{$refund}}</div>--}}
-                {{--<div class="text">售后</div>--}}
-            {{--</div>--}}
+            <div class="col-sm-2 detail-item">
+                <div class="num red">1</div>
+                <div class="text">售后</div>
+            </div>
         </div>
     </div>
     <div class="seven-income row">
