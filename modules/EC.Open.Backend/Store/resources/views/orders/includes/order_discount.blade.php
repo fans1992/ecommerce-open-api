@@ -10,7 +10,7 @@
         @foreach($adjustments as $item)
             <tr>
                 <td>{{$item->label}}</td>
-                <td>{{$item->amount/100}}</td>
+                <td>{{$item->amount/100 > 0 ? '+ '. $item->amount/100 : $item->amount/100}}</td>
                 <td>{!! $item->coupon_code !!}</td>
             </tr>
         @endforeach
