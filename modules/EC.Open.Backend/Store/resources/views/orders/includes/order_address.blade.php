@@ -2,16 +2,18 @@
     <tbody>
     <tr>
         <th>联系人</th>
-        <th>电话</th>
+        <th>联系电话</th>
+        <th>电子邮箱</th>
         <th>收货地址</th>
-        <th>收货时间</th>
+        {{--<th>收货时间</th>--}}
     </tr>
     <tr>
         <td>{{$order->accept_name}}</td>
         <td><i class="fa fa-mobile"></i>&nbsp;{{$order->mobile}}</td>
+        <td><i class="fa fa-envelope-o"></i>&nbsp;{{$order->email}}</td>
         <td><i class="fa fa-home">&nbsp;</i>{{$order->address_name}}  {{$order->address}}</td>
 
-        <td>{{$order->accept_time ? $order->accept_time:'/'}}</td>
+        {{--<td>{{$order->accept_time ? $order->accept_time:'/'}}</td>--}}
     </tr>
     </tbody>
 </table>
@@ -20,7 +22,7 @@
     <a data-toggle="modal" class="btn btn-primary"
        data-target="#modal" data-backdrop="static" data-keyboard="false"
        data-url="{{route('admin.orders.editAddress',['id'=>$order->id])}}"
-       href="javascript:;">修改收货地址</a>
+       href="javascript:;">修改联系方式</a>
 @endif
 
 
