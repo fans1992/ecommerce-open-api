@@ -22,6 +22,7 @@ use GuoJiangClub\EC\Open\Server\Transformers\UserTransformer;
 use iBrand\Sms\Facade as Sms;
 use Illuminate\Http\Request;
 use Image;
+use Auth;
 
 class UserController extends Controller
 {
@@ -52,7 +53,7 @@ class UserController extends Controller
     {
         $user = request()->user();
 
-        $data = array_filter(request()->only(['name', 'nick_name', 'sex', 'birthday', 'city', 'education', 'qq', 'avatar']));
+        $data = array_filter(request()->only(['name', 'nick_name', 'sex', 'birthday', 'city', 'education', 'qq', 'avatar', 'address']));
 
         if (isset($data['name']) and ($data['name']) != $user->name and User::where('name', $data['name'])->first()) {
             return $this->failed('此用户名已存在');
@@ -108,21 +109,25 @@ class UserController extends Controller
         return $this->success(['url' => url('/storage/uploads/' . $filename)]);
     }
 
+    /**
+     * 修改密码
+     *
+     * @return \Dingo\Api\Http\Response|mixed
+     */
     public function updatePassword()
     {
         $user = request()->user();
-        $credentials = ['mobile' => $user->mobile, 'password' => request(['password'])];
+//        $credentials = ['mobile' => $user->mobile, 'password' => request(['password'])];
 
-        //TODO: 旧密码校验
-//        if (!Auth::attempt($credentials)) {
-//            return $this->failed('手机号或者密码不正确, 请重新输入', 401);
-//        }
-
-        if (request('new_password') !== request('confirm_password')) {
-            return $this->failed('两次密码不一致, 请重新输入');
+        if (!\Hash::check(request('password'), $user->password)) {
+            return $this->failed('原密码不正确, 请重新输入', 401);
         }
 
-        $user->update(['password' => request('password')]);
+//        if (request('new_password') !== request('confirm_password')) {
+//            return $this->failed('两次密码不一致, 请重新输入');
+//        }
+
+        $user->update(['password' => request('new_password')]);
         return $this->success('密码修改成功');
 
     }

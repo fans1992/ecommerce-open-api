@@ -124,7 +124,7 @@ $router->group(config('ibrand.ec-open-api.routeAuthAttributes'), function ($rout
 
     $router->get('users/ucenter', 'UserController@ucenter')->name('api.user.ucenter');
     $router->post('users/update/info', 'UserController@updateInfo')->name('api.user.update.info');
-    $router->patch('users/update/password', 'UserController@updatePassword')->name('api.user.update.password');
+    $router->post('users/update/password', 'UserController@updatePassword')->name('api.user.update.password');
     $router->post('users/update/mobile', 'UserController@updateMobile')->name('api.user.update.mobile');
     $router->post('users/upload/avatar', 'UserController@uploadAvatar')->name('api.user.upload.avatar');
 
