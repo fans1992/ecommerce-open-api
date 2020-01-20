@@ -54,7 +54,7 @@ class OrderController extends Controller
             $order = $this->orderRepository->getOrdersByCriteria($orderConditions, $itemConditions, $limit);
         } else {
             $order = $this->orderRepository->getOrdersByConditions($orderConditions, $itemConditions,
-                $limit, ['items', 'shippings', 'adjustments', 'items.product', 'items.product.goods']);
+                $limit, ['items', 'shippings', 'adjustments', 'items.product', 'items.product.goods', 'agreement']);
         }
 
         $transformer = request('transformer') ?: 'list';
