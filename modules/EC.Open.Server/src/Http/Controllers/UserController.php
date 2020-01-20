@@ -134,16 +134,23 @@ class UserController extends Controller
 
     public function updateMobile(Request $request)
     {
-        if (!Sms::checkCode(\request('mobile'), \request('code'))) {
+        $user = $request->user();
+        list($mobile, $newMobile) = [$request->input('mobile'), $request->input('new_mobile')];
+
+        if ($mobile !== $user->mobile) {
+            return $this->failed('原始手机号有误');
+        }
+
+        if (!Sms::checkCode($mobile, $request->input('code'))) {
             return $this->failed('验证码错误');
         }
 
         $user = $request->user();
 
-        if ($existUser = $this->user->findWhere(['mobile' => request('mobile')])->first()) {
+        if ($existUser = $this->user->findWhere(['mobile' => $newMobile])->first()) {
             return $this->failed('此手机号已绑定账号');
         }
-        $user = $this->user->update(['mobile' => $request->input('mobile')], $user->id);
+        $user = $this->user->update(['mobile' => $newMobile], $user->id);
 
         return $this->response()->item($user, new UserTransformer());
     }
