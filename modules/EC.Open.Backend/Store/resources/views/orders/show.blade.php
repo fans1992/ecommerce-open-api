@@ -10,6 +10,7 @@
         <li class=""><a href="#tab_10" data-toggle="tab" aria-expanded="false">积分信息</a></li>
         <li class=""><a href="#tab_8" data-toggle="tab" aria-expanded="false">订单评论</a></li>
         <li class=""><a href="#tab_7" data-toggle="tab" aria-expanded="false">用户留言</a></li>
+        <li class=""><a href="#tab_11" data-toggle="tab" aria-expanded="false">申请人信息</a></li>
     </ul>
     <div class="tab-content">
         <div class="tab-pane active" id="tab_1">
@@ -68,6 +69,12 @@
         <div class="tab-pane" id="tab_10">
             <div class="panel-body">
                 @include('store-backend::orders.includes.order_points')
+            </div>
+        </div>
+
+        <div class="tab-pane" id="tab_11">
+            <div class="panel-body">
+                @include('store-backend::orders.includes.order_applicant')
             </div>
         </div>
 
