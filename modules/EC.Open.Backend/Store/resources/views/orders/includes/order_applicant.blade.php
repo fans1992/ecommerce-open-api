@@ -98,3 +98,10 @@
 
     </tbody>
 </table>
+
+@if($order->pay_status==1)
+    <a data-toggle="modal" class="btn btn-primary"
+       data-target="#modal" data-backdrop="static" data-keyboard="false"
+       data-url="{{route('admin.orders.editApplicant',['id'=>$order->id])}}"
+       href="javascript:;">修改申请人信息</a>
+@endif

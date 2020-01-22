@@ -427,4 +427,15 @@ class OrdersController extends Controller
 
         return $this->ajaxJson();
     }
+
+    /**
+     * 修改申请人信息
+     */
+    public function editApplicant($order_id)
+    {
+        $order = Order::find($order_id);
+//        $address = explode(' ', $order->address_name);
+
+        return view('store-backend::orders.includes.modal_applicant', compact('order'));
+    }
 }

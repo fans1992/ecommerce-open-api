@@ -253,6 +253,9 @@ $router->group(['prefix' => 'admin/store/order'], function () use ($router) {
 
     $router->get('editAddress/{id}', 'OrdersController@editAddress')->name('admin.orders.editAddress');
     $router->post('postAddress', 'OrdersController@postAddress')->name('admin.orders.postAddress');
+
+    $router->get('editApplicant/{id}', 'OrdersController@editApplicant')->name('admin.orders.editApplicant');
+    $router->post('postApplicant', 'OrdersController@postApplicant')->name('admin.orders.postApplicant');
 });
 
 
