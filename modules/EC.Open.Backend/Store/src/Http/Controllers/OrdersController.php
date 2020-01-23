@@ -438,4 +438,20 @@ class OrdersController extends Controller
 
         return view('store-backend::orders.includes.modal_applicant', compact('order'));
     }
+
+
+    /**
+     * 保存申请人信息
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function postApplicant(Request $request)
+    {
+        $order = Order::find($request->input('order_id'));
+        $data = $request->except(['order_id', 'file']);
+
+        $order->update(['applicant_data' => $data]);
+
+        return $this->ajaxJson();
+    }
 }

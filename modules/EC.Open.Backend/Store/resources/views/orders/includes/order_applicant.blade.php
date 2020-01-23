@@ -33,7 +33,7 @@
             <td>营业执照/身份证 所在地</td>
             <td>
                 @if(!empty($applicant['province'] && $applicant['city'] && $applicant['district'] && $applicant['address']))
-                    {{$applicant['province'].$applicant['city'].$applicant['district'].$applicant['address']}}
+                    {{$applicant['province']. ' ' . $applicant['city'] . ' ' . $applicant['district'] . ' ' . $applicant['address']}}
                 @else
                     <b style="color: #7e7e7e">暂无</b>
                 @endif
@@ -49,9 +49,9 @@
                 @if(!empty($applicant['business_license_picture']))
                     <a href="{{$applicant['business_license_picture']}}" target="_blank">查看</a>
                     &nbsp;&nbsp;&nbsp;
-                    <a href="{{$applicant['business_license_picture']}}" target="_blank" download="w3logo">
+                    {{--<a href="{{$applicant['business_license_picture']}}" download="123.png">--}}
                         {{--<img border="10"  :src='{{$applicant['business_license_picture']}}' :alt="imgName" />--}}
-                        下载</a>
+                        {{--下载</a>--}}
                 @else
                     <b style="color: #7e7e7e">暂无</b>
                 @endif
@@ -63,9 +63,9 @@
                 @if(!empty($applicant['id_card_picture']))
                     <a href="{{$applicant['id_card_picture']}}" target="_blank">查看</a>
                     &nbsp;&nbsp;&nbsp;
-                    <a href="{{$applicant['id_card_picture']}}" target="_blank" download="w3logo">
+                    {{--<a href="{{$applicant['id_card_picture']}}" target="_blank" download="123.png">--}}
                         {{--<img border="10"  :src='{{$applicant['business_license_picture']}}' :alt="imgName" />--}}
-                        下载</a>
+                        {{--下载</a>--}}
                 @else
                     <b style="color: #7e7e7e">暂无</b>
                 @endif
@@ -77,9 +77,9 @@
                 @if(!empty($applicant['attorney_picture']))
                     <a href="{{$applicant['attorney_picture']}}" target="_blank">查看</a>
                     &nbsp;&nbsp;&nbsp;
-                    <a href="{{$applicant['attorney_picture']}}" target="_blank" download="w3logo">
+                    {{--<a href="{{$applicant['attorney_picture']}}" target="_blank" download="123.pdf">--}}
                         {{--<img border="10"  :src='{{$applicant['business_license_picture']}}' :alt="imgName" />--}}
-                        下载</a>
+                        {{--下载</a>--}}
                 @else
                     <b style="color: #7e7e7e">暂无</b>
                 @endif
