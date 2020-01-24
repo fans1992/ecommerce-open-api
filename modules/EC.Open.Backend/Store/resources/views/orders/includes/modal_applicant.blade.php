@@ -194,15 +194,15 @@
             fileVal: 'file',
             accept: {
                 title: 'Images',
-                extensions: 'gif,jpg,jpeg,bmp,png',
-                mimeTypes: 'image/*'
+                extensions: 'gif,jpg,jpeg,bmp,png,pdf',
+                mimeTypes: 'image/*, application/pdf'
             }
         });
 
         // 文件上传成功，给item添加成功class, 用样式标记上传成功。
         uploader.on('uploadSuccess', function (file, response) {
             var img_url = response.url;
-            $('input[name="business_license_picture"]').val(AppUrl + img_url);
+            $('input[name="business_license_picture"]').val(img_url);
             $('.business_license_picture').attr('src', img_url);
         });
 

@@ -450,7 +450,10 @@ class OrdersController extends Controller
         $order = Order::find($request->input('order_id'));
         $data = $request->except(['order_id', 'file']);
 
-        $order->update(['applicant_data' => $data]);
+        $order->update([
+            'applicant_data' => $data,
+            'applicant_status' => 'confirmed',
+        ]);
 
         return $this->ajaxJson();
     }
