@@ -347,6 +347,10 @@ class SelfApplicationController extends Controller
             'applicant_data' =>$applicant,
         ]);
 
+        $order->items->first()->update([
+            'applicant_data' =>$applicant,
+        ]);
+
         return $this->response()->item($order, new OrderTransformer());
     }
 
@@ -376,6 +380,10 @@ class SelfApplicationController extends Controller
         //修改订单申请人状态和信息
         $order->update([
             'applicant_status' => Order::APPLICANT_STATUS_CONFIRMED,
+            'applicant_data' =>$applicant,
+        ]);
+
+        $order->items->first()->update([
             'applicant_data' =>$applicant,
         ]);
 

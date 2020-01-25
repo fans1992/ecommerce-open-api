@@ -4,7 +4,7 @@
     modal-lg
 @stop
 @section('title')
-    修改申请人信息
+    编辑申请人信息
 @stop
 
 @section('body')
@@ -13,7 +13,7 @@
         <form method="POST" action="{{route('admin.orders.postApplicant')}}" accept-charset="UTF-8"
               id="base-form" class="form-horizontal">
 
-            <input type="hidden" name="order_id" value="{{$order->id}}">
+            <input type="hidden" name="order_item_id" value="{{$orderItem->id}}">
 
             <div class="form-group">
                 {!! Form::label('name','申请人类型：', ['class' => 'col-md-3 control-label']) !!}
@@ -24,11 +24,11 @@
                 <div class="col-md-9">
                     <label class="control-label">
                         <input type="radio" value="enterprise"
-                               name="applicant_subject" {{$order->applicant_data['applicant_subject'] === 'enterprise' ? 'checked': ''}}>
+                               name="applicant_subject" {{$orderItem->applicant_data['applicant_subject'] === 'enterprise' ? 'checked': ''}}>
                         企业
                         &nbsp;&nbsp;
                         <input type="radio" value="individual"
-                               name="applicant_subject" {{$order->applicant_data['applicant_subject'] === 'individual' ? 'checked': ''}}>
+                               name="applicant_subject" {{$orderItem->applicant_data['applicant_subject'] === 'individual' ? 'checked': ''}}>
                         个人
                     </label>
                 </div>
@@ -37,14 +37,14 @@
             <div class="form-group">
                 {!! Form::label('name','申请人名称：', ['class' => 'col-md-3 control-label']) !!}
                 <div class="col-md-9">
-                    <input type="text" class="form-control" value="{{$order->applicant_data['applicant_name']}}" name="applicant_name" placeholder="" required>
+                    <input type="text" class="form-control" value="{{$orderItem->applicant_data['applicant_name']}}" name="applicant_name" placeholder="" required>
                 </div>
             </div>
 
             <div class="form-group">
                 {!! Form::label('name','统一社会信用代码：', ['class' => 'col-md-3 control-label']) !!}
                 <div class="col-md-9">
-                    <input type="text" class="form-control" value="{{$order->applicant_data['unified_social_credit_code']}}" name="unified_social_credit_code" placeholder="" required>
+                    <input type="text" class="form-control" value="{{$orderItem->applicant_data['unified_social_credit_code']}}" name="unified_social_credit_code" placeholder="" required>
                 </div>
             </div>
 
@@ -52,7 +52,7 @@
             <div class="form-group">
                 {!! Form::label('name','身份证号：', ['class' => 'col-md-3 control-label']) !!}
                 <div class="col-md-9">
-                    <input type="text" class="form-control" value="{{$order->applicant_data['id_card_no']}}" name="id_card_no" placeholder="" required>
+                    <input type="text" class="form-control" value="{{$orderItem->applicant_data['id_card_no']}}" name="id_card_no" placeholder="" required>
                 </div>
             </div>
 
@@ -77,7 +77,7 @@
             <div class="form-group">
                 {!! Form::label('name','营业执照/身份证 详细地址	：', ['class' => 'col-md-3 control-label']) !!}
                 <div class="col-md-9">
-                    <input type="text" class="form-control" value="{{$order->applicant_data['address']}}" name="address" placeholder="" required>
+                    <input type="text" class="form-control" value="{{$orderItem->applicant_data['address']}}" name="address" placeholder="" required>
                 </div>
             </div>
 
@@ -85,7 +85,7 @@
             <div class="form-group">
                 {!! Form::label('name','邮政编码：', ['class' => 'col-md-3 control-label']) !!}
                 <div class="col-md-9">
-                    <input type="text" class="form-control" value="{{$order->applicant_data['postcode']}}" name="postcode" placeholder="" required>
+                    <input type="text" class="form-control" value="{{$orderItem->applicant_data['postcode']}}" name="postcode" placeholder="" required>
                 </div>
             </div>
 
@@ -93,9 +93,9 @@
                 {!! Form::label('name','营业执照：', ['class' => 'col-md-3 control-label']) !!}
                 <div class="col-md-9">
                     <input type="hidden" name="business_license_picture"
-                           value="{{$order->applicant_data['business_license_picture']  ?: ''}}">
+                           value="{{$orderItem->applicant_data['business_license_picture']  ?: ''}}">
                     <img class="business_license_picture"
-                         src="{{$order->applicant_data['business_license_picture']  ?: ''}}" alt=""
+                         src="{{$orderItem->applicant_data['business_license_picture']  ?: ''}}" alt=""
                          style="max-width: 100px;">
                     <div id="businessLicensePicker">选择图片</div>
                     <div class="clearfix"></div>
@@ -106,9 +106,9 @@
                 {!! Form::label('name','身份证：', ['class' => 'col-md-3 control-label']) !!}
                 <div class="col-md-9">
                     <input type="hidden" name="id_card_picture"
-                           value="{{$order->applicant_data['id_card_picture']  ?: ''}}">
+                           value="{{$orderItem->applicant_data['id_card_picture']  ?: ''}}">
                     <img class="id_card_picture"
-                         src="{{$order->applicant_data['id_card_picture']  ?: ''}}" alt=""
+                         src="{{$orderItem->applicant_data['id_card_picture']  ?: ''}}" alt=""
                          style="max-width: 100px;">
                     <div id="idCardPicker">选择图片</div>
                     <div class="clearfix"></div>
@@ -120,9 +120,9 @@
                 {!! Form::label('name','委托书：', ['class' => 'col-md-3 control-label']) !!}
                 <div class="col-md-9">
                     <input type="hidden" name="attorney_picture"
-                           value="{{$order->applicant_data['attorney_picture']  ?: ''}}">
+                           value="{{$orderItem->applicant_data['attorney_picture']  ?: ''}}">
                     <img class="attorney_picture"
-                         src="{{$order->applicant_data['attorney_picture']  ?: ''}}" alt=""
+                         src="{{$orderItem->applicant_data['attorney_picture']  ?: ''}}" alt=""
                          style="max-width: 100px;">
                     <div id="attorneyPicker">选择图片</div>
                     <div class="clearfix"></div>
@@ -149,9 +149,9 @@
     <script>
         $(function () {
             $('#edit-address').distpicker({
-                province: '{{$order->applicant_data['province']}}',
-                city: '{{$order->applicant_data['city']}}',
-                district: '{{$order->applicant_data['district']}}'
+                province: '{{$orderItem->applicant_data['province']}}',
+                city: '{{$orderItem->applicant_data['city']}}',
+                district: '{{$orderItem->applicant_data['district']}}'
             });
         });
 

@@ -3,6 +3,7 @@
 namespace GuoJiangClub\EC\Open\Backend\Store\Http\Controllers;
 
 use Carbon\Carbon;
+use GuoJiangClub\EC\Open\Backend\Store\Model\OrderItem;
 use iBrand\Backend\Http\Controllers\Controller;
 use GuoJiangClub\EC\Open\Backend\Store\Model\Shipping;
 use GuoJiangClub\EC\Open\Backend\Store\Model\ShippingMethod;
@@ -431,12 +432,13 @@ class OrdersController extends Controller
     /**
      * 修改申请人信息
      */
-    public function editApplicant($order_id)
+    public function editApplicant($order_item_id)
     {
-        $order = Order::find($order_id);
+        $orderItem = OrderItem::find($order_item_id);
+
 //        $address = explode(' ', $order->address_name);
 
-        return view('store-backend::orders.includes.modal_applicant', compact('order'));
+        return view('store-backend::orders.includes.modal_applicant', compact('orderItem'));
     }
 
 
@@ -447,13 +449,19 @@ class OrdersController extends Controller
      */
     public function postApplicant(Request $request)
     {
-        $order = Order::find($request->input('order_id'));
-        $data = $request->except(['order_id', 'file']);
+        $orderItem = OrderItem::find($request->input('order_item_id'));
+        $data = $request->except(['order_item_id', 'file']);
 
-        $order->update([
+        $orderItem->update([
             'applicant_data' => $data,
-            'applicant_status' => 'confirmed',
         ]);
+
+        if ($orderItem->order->type === 2) {
+            $orderItem->order->update([
+                'applicant_data' => $data,
+                'applicant_status' => 'confirmed',
+            ]);
+        }
 
         return $this->ajaxJson();
     }
