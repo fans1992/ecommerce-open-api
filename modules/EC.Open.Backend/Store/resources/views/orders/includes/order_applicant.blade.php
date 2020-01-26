@@ -1,5 +1,10 @@
 @foreach($order->items as $item)
-    <h4>{{'商品项: ' . $item->item_name . '----' . ($item->item_info['specs_text'])}}</h4>
+    @if($item->item_info['specs_text'])
+        <h4>商品项: {{$item->item_name . '----' . ($item->item_info['specs_text'])}}</h4>
+    @else
+        <h4>商品项: {{$item->item_name}}</h4>
+    @endif
+
 
     <table class="table table-hover table-striped">
         @if($order->type === 2 ? $applicant = $order->applicant_data : $applicant = $item->applicant_data)
@@ -103,11 +108,11 @@
     </table>
 
     {{--@if($order->pay_status==1)--}}
-        <a data-toggle="modal" class="btn btn-primary"
-           data-target="#modal" data-backdrop="static" data-keyboard="false"
-           data-url="{{route('admin.orders.editApplicant',['id'=>$item->id])}}"
-           href="javascript:;">{{$applicant ? '修改' : '添加'}}申请人信息</a>
+    <a data-toggle="modal" class="btn btn-primary"
+       data-target="#modal" data-backdrop="static" data-keyboard="false"
+       data-url="{{route('admin.orders.editApplicant',['id'=>$item->id])}}"
+       href="javascript:;">{{$applicant ? '修改' : '添加'}}申请人信息</a>
     {{--@endif--}}
-    <hr />
+    <hr/>
 @endforeach
 
