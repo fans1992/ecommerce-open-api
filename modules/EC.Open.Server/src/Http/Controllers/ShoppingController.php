@@ -553,6 +553,7 @@ class ShoppingController extends Controller
                 'type' => $item->__model,
                 'item_name' => $item->name,
                 'item_meta' => $item_meta,
+                'brand_data' => $order->type === Order::TYPE_SELF_APPLICATION ? $item_meta['self_apply_classifications'] : null,
             ]);
 
             $orderItem->recalculateUnitsTotal();

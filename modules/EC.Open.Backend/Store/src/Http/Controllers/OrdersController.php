@@ -465,4 +465,34 @@ class OrdersController extends Controller
 
         return $this->ajaxJson();
     }
+
+    /**
+     * 修改商标信息
+     */
+    public function editBrandInfo($order_item_id)
+    {
+        $orderItem = OrderItem::find($order_item_id);
+
+//        $address = explode(' ', $order->address_name);
+
+        return view('store-backend::orders.includes.modal_brand_info', compact('orderItem'));
+    }
+
+
+    /**
+     * 保存商标信息
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function postBrandInfo(Request $request)
+    {
+        $orderItem = OrderItem::find($request->input('order_item_id'));
+        $data = $request->except(['order_item_id', 'file']);
+
+        $orderItem->update([
+            'brand_data' => $data,
+        ]);
+
+        return $this->ajaxJson();
+    }
 }
