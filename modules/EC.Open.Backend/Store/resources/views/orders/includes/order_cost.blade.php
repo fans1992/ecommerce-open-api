@@ -13,7 +13,7 @@
         <td>{{$order->total}}</td>
         <td>{{$order->payable_freight}}</td>
         <td>{{$order->real_freight}}</td>
-        <td>{{$order->adjustments_total}}</td>
+        <td>{{$order->adjustments_total > 0 ? '+ ' .$order->adjustments_total : $order->adjustments_total}}</td>
         <td>{{$order->total}}</td>
     </tr>
     </tbody>

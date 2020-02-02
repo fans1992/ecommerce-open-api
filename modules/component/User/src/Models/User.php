@@ -11,6 +11,8 @@
 
 namespace GuoJiangClub\Component\User\Models;
 
+use GuoJiangClub\Component\NiceClassification\Models\UserClassification;
+use GuoJiangClub\Component\Order\Models\BrandApplicant;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -105,6 +107,26 @@ class User extends Authenticatable
         return  '用户' . str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
     }
 
+
+    /**
+     * 用户提交的尼斯分类
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function classifications()
+    {
+        return $this->hasMany(UserClassification::class, 'user_id', 'id');
+    }
+
+    /**
+     * 商标申请主体列表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function applicants()
+    {
+        return $this->hasMany(BrandApplicant::class, 'user_id', 'id');
+    }
 
 
 

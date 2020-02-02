@@ -34,7 +34,7 @@ class OrderRepositoryEloquent extends BaseRepository implements OrderRepository
      */
     public function getOrderByNo($no)
     {
-        return $this->with(['items', 'shippings'])->findByField('order_no', $no)->first();
+        return $this->with(['items', 'shippings', 'agreement', 'payments'])->findByField('order_no', $no)->first();
     }
 
     /**

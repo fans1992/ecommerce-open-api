@@ -30,7 +30,7 @@ class StoreBackendTablesSeeder extends Seeder
             'title' => '商城管理',
             'icon' => 'iconfont icon-shangchengguanli-',
             'blank' => 1,
-            'uri' => 'store/goods',
+            'uri' => 'store/dashboord',
             'created_at' => date('Y-m-d H:i:s', time()),
             'updated_at' => date('Y-m-d H:i:s', time()),
         ]);

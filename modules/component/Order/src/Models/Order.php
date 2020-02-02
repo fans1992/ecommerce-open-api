@@ -37,13 +37,22 @@ class Order extends Model implements DiscountSubjectContract
 
     const TYPE_DEFAULT = 0; //默认类型
     const TYPE_DISCOUNT = 1; //折扣订单
+    const TYPE_SELF_APPLICATION = 2; //自助申请
 
     /*distribution_status*/
     const DELIVERED_WAIT = 0;  //待发货
     const DELIVERED_STATUS = 1; //已全部发货
     const DELIVERED_PARTLY = 2; //部分发货
 
+    const APPLICANT_STATUS_PENDING = 'pending';
+    const APPLICANT_STATUS_CONFIRMED = 'confirmed';
+
     protected $guarded = ['id'];
+
+    protected $casts = [
+        'need_invoice' => 'boolean',
+        'applicant_data' => 'json',
+    ];
 
     public function __construct(array $attributes = [])
     {
@@ -96,6 +105,11 @@ class Order extends Model implements DiscountSubjectContract
     public function shippings()
     {
         return $this->hasMany(Shipping::class);
+    }
+
+    public function agreement()
+    {
+        return $this->hasOne(Agreement::class, 'order_id', 'id');
     }
 
     /**

@@ -22,6 +22,13 @@ class OrderItem extends Model
     protected $guarded = ['id'];
     protected $model;
 
+    protected $casts = [
+        'item_meta' => 'json',
+        'brand_data' => 'json',
+        'applicant_data' => 'json',
+        'company_progress'=> 'json',
+        'official_progress'=> 'json',
+    ];
 
     public function __construct(array $attributes = [])
     {

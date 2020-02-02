@@ -60,12 +60,12 @@ class Product extends Model
 
     public function increaseSales($quantity)
     {
-        $this->goods->sale = $this->goods->sale + $quantity;
+        $this->goods->sale_count = $this->goods->sale_count + $quantity;
     }
 
     public function restoreSales($quantity)
     {
-        $this->goods->sale = $this->goods->sale - $quantity;
+        $this->goods->sale_count = $this->goods->sale_count - $quantity;
     }
 
     public function getIsInSale($quantity)

@@ -13,7 +13,7 @@
 
 @section('body')
     <div class="row">
-        {!! Form::open( [ 'route' => ['admin.industry.classification.storeClassification'], 'method' => 'POST', 'id' => 'edit_spec_value_form','class'=>'form-horizontal'] ) !!}
+        {!! Form::open( [ 'route' => ['admin.industry.classification.updateClassification'], 'method' => 'POST', 'id' => 'edit_spec_value_form','class'=>'form-horizontal'] ) !!}
         <input type="hidden" name="industry_id" value="{{$classification->pivot->industry_id}}">
         <input type="hidden" name="nice_classification_id" value="{{$classification->pivot->nice_classification_id}}">
         <div class="col-md-12">

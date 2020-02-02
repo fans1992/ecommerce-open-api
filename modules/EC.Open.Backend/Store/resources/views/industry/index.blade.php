@@ -2,7 +2,10 @@
     <div class="ibox float-e-margins">
         <div class="ibox-content" style="display: block;">
             <a href="{{ route('admin.industry.create') }}" class="btn btn-primary margin-bottom">添加行业</a>
-
+            <a  id="chapter-create-btn" data-toggle="modal"
+                data-target="#modal" data-backdrop="static" data-keyboard="false"
+                data-url="{{route('admin.industry.importClassificationModal')}}"
+                class="btn btn-primary pull-right  " style="margin-right: 5px">导入推荐分类</a>
             <!-- /.row -->
 
             <div class="dataTable_wrapper">
@@ -46,6 +49,7 @@
                 </table>
             </div>
         </div>
+        <div id="modal" class="modal inmodal fade" data-keyboard=false data-backdrop="static"></div>
         <!-- /.col-lg-12 -->
     </div>
     <!-- /.row -->

@@ -5,6 +5,10 @@ $router->group(['prefix' => 'admin/store'], function () use ($router) {
     $router->post('upload/excel', 'ImageController@ExcelUpload')->name('upload.excel');
     $router->post('upload/uploadExcelFile', 'ImageController@uploadExcelFile')->name('upload.uploadExcelFile');
 
+    $router->get('dashboard', 'DashboardController@dashboard')->name('admin.store.dashboard.index');
+    $router->get('getMonthData', 'DashboardController@getMonthData')->name('admin.store.dashboard.getMonthData');
+
+
     $router->group(['prefix' => 'setting'], function () use ($router) {
         $router->group(['prefix' => 'micro/page','namespace' => 'MicroPage'], function () use ($router) {
             $router->get('/', 'MicroPageController@index')->name('admin.setting.micro.page.index');
@@ -158,14 +162,20 @@ $router->group(['prefix' => 'admin/store'], function () use ($router) {
     $router->post('industry/classification/store', 'IndustryController@classifictionStore')->name('admin.industry.classification.store');
 
     $router->get('industry/editClassification', 'IndustryController@editClassification')->name('admin.industry.classification.editClassification');
-    $router->post('industry/storeClassification', 'IndustryController@storeClassification')->name('admin.industry.classification.storeClassification');
+    $router->post('industry/updateClassification', 'IndustryController@updateClassification')->name('admin.industry.classification.updateClassification');
     $router->get('industry/{id}/addClassification', 'IndustryController@addClassification')->name('admin.industry.classification.addClassification');
 
     $router->post('industry/delClassification', 'IndustryController@delClassification')->name('admin.industry.classification.delete');
 
     $router->get('industry/get_classification', 'IndustryController@getClassificationByGroupID')->name('admin.industry.get_classification');
+    $router->get('industry/get_top_classification', 'IndustryController@getTopClassification')->name('admin.industry.get_top_classification');
 
     $router->get('industry/industry_sort', 'IndustryController@industry_sort')->name('admin.industry.industry_sort');
+    $router->get('industry/recommend_sort', 'IndustryController@recommend_sort')->name('admin.industry.recommend_sort');
+    //导入推荐分类
+    $router->get('industry/importClassificationModal', 'IndustryController@importClassificationModal')->name('admin.industry.importClassificationModal');
+//    $router->get('industry/getImportDataCount', 'IndustryController@getImportDataCount')->name('admin.industry.getImportDataCount');
+    $router->post('industry/saveImportData', 'IndustryController@saveImportData')->name('admin.industry.saveImportData');
 });
 
 //促销
@@ -243,6 +253,12 @@ $router->group(['prefix' => 'admin/store/order'], function () use ($router) {
 
     $router->get('editAddress/{id}', 'OrdersController@editAddress')->name('admin.orders.editAddress');
     $router->post('postAddress', 'OrdersController@postAddress')->name('admin.orders.postAddress');
+
+    $router->get('editApplicant/{id}', 'OrdersController@editApplicant')->name('admin.orders.editApplicant');
+    $router->post('postApplicant', 'OrdersController@postApplicant')->name('admin.orders.postApplicant');
+
+    $router->get('editBrandInfo/{id}', 'OrdersController@editBrandInfo')->name('admin.orders.editBrandInfo');
+    $router->post('postBrandInfo', 'OrdersController@postBrandInfo')->name('admin.orders.postBrandInfo');
 });
 
 

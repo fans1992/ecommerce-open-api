@@ -11,9 +11,36 @@
     {!! Html::style(env("APP_URL").'/assets/backend/libs/ladda/ladda-themeless.min.css') !!}
 @stop
 
+<style>
+    .row {
+        padding-top: 20px;
+    }
 
+    .search {
+        position: absolute;
+        right: 10px;
+        top: 0;
+        display: flex;
+    }
+
+    button {
+        margin-left: 10px;
+        background-color: #fff;
+        outline: none;
+        border: none;
+        background-color: #2bc0be;
+        color: #fff;
+        padding: 5px 15px;
+    }
+</style>
 @section('body')
     <div class="row">
+        <!-- 搜索框 -->
+        <div class="search">
+            <input type="text" placeholder="输入商品/服务名称" class="searchVal">
+            <button>搜索</button>
+        </div>
+
         {!! Form::open( [ 'route' => ['admin.industry.classification.store'], 'method' => 'POST', 'id' => 'spec-value-form','class'=>'form-horizontal'] ) !!}
 
         <input type="hidden" name="industry_id" value="{{$industry_id}}">
@@ -24,25 +51,19 @@
                     <tr>
                         <th>商标类别</th>
                         <th>类别别名</th>
-                        <th>操作</th>
                     </tr>
                     </thead>
                     <tbody id='spec_box'>
                     <tr class="td_c">
-                        {{--<td><input type="text" class="form-control" name="add_value[0][name]"></td>--}}
                         <td>
-                            <select class="form-control type-s"  name="add_value[0][nice_classification_id]" >
+                            <select class="form-control type-s" name="top_nice_classification_id">
                                 <option value="">请选择</option>
                                 @foreach($classifications as $item)
-                                    <option value="{{$item->id}}">{{$item->classification_code. '-' .$item->classification_name}}</option>
+                                    <option value="{{$item->id}}">{{'第' . $item->classification_code .'类'}}</option>
                                 @endforeach
                             </select>
                         </td>
-                        <td><input type="text" class="form-control" name="add_value[0][alias]"></td>
-                        <td><a href="javascript:;" class="btn btn-xs btn-primary operatorPhy">
-                                <i class="fa fa-trash" data-toggle="tooltip" data-placement="top"
-                                   data-original-title="删除"></i></a>
-                        </td>
+                        <td><input type="text" class="form-control alias" name="alias" value=""></td>
                     </tr>
 
                     </tbody>
@@ -50,16 +71,11 @@
             </div>
 
             <div class="form-group col-md-25">
-                {{--<button id="specAddButton" type="button" class="btn btn-w-m btn-primary">继续添加</button>--}}
-                <label class="col-sm-2 control-label">所属分类：</label>
+                <label class="control-label" style="text-align: left;padding-left: 40px;">所属分类：</label>
                 <div class="col-sm-20" id="category-box">
 
                 </div>
             </div>
-
-            {{--<div class="form-group">--}}
-                {{--<button id="specAddButton" type="button" class="btn btn-w-m btn-primary">继续添加</button>--}}
-            {{--</div>--}}
         </div>
 
         {!! Form::close() !!}

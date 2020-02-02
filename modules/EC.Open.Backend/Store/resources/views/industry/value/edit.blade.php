@@ -6,6 +6,8 @@
             line-height: 28px;
             color: #fff;
             text-align: center
+        }.modal.in .modal-dialog{
+            width:1200px !important;
         }
     </style>
 
@@ -23,6 +25,7 @@
                 <table class='border_table table table-bordered'>
                     <thead>
                     <tr>
+                        <th>排序</th>
                         <th>商标类别</th>
                         <th>推荐别名</th>
                         <th>操作</th>
@@ -43,7 +46,6 @@
                     <!-- /.tab-content -->
         </div>
     </div>
-
     <div id="spu_modal" class="modal inmodal fade"></div>
 @include('store-backend::industry.script')
 

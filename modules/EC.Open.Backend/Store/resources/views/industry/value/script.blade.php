@@ -1,51 +1,75 @@
 {!! Html::script(env("APP_URL").'/assets/backend/libs/pop.js?v=20180807') !!}
 <script type="text/html" id="template">
     <div class="category-wrap">
-        <input data-id="{#id#}" data-parent="{#parent_id#}" data-name="{#value#}"
+        <input data-id="{#id#}" data-parent="{#parent_id#}" data-name="{#value#}" data-level="{#level#}"
                data-uniqueId="categoryIds_{#id#}" class="category_checks" type="checkbox"/>
-        &nbsp;&nbsp;&nbsp;
         <input class="btn btn-outline btn-primary category-btn" type="button" value="{#value#}"/>
     </div>
 </script>
 
 <script>
+    var industry_id = $('input[name="industry_id"]').val();
 
-    $("body .td_c").on("change", ".type-s", function () {
+    // input框输入的值
+    var inputVal = "";
+    // 点击select下拉框
+    $("body .td_c").off('change').on("change", ".type-s", function () {
         var that = $(this);
         var val = that.find("option:selected").val();
 
-        var category_checked = [];
+        // $('.type-s').attr("disabled","disabled");
+
+        // var category_checked = [];
         var category_ids = [];
+        getTopClassification(industry_id, val);
+
         // 初始化
-        function initCategory() {
-            category_checked = [];
-            category_ids = [];
-            var data = {
-                parentId:val,
-                "type-select-category-button": true,
-                _token: _token
-            };
-            $.get('{{route('admin.industry.get_classification')}}', data, function (html) {
-                $('#category-box').children().remove();
-                $('#category-box').append(html);
-                $('#category-box').find("input").iCheck({
-                    checkboxClass: 'icheckbox_square-green',
-                    radioClass: 'iradio_square-green',
-                    increaseArea: '20%'
-                });
+        // category_checked = [];
+        category_ids = [];
+        var data = {
+            search: inputVal,
+            parentId: val,
+            industryId: industry_id,
+            "type-select-category-button": true,
+            _token: _token
+        };
+        // console.log('$.trim(inputVal).length', $.trim(inputVal).length);
+        // if ($.trim(inputVal).length > 0) {
+        //     data[search] = inputVal;
+        // }
+        $.get('{{route('admin.industry.get_classification')}}', data, function (html) {
+            $('#category-box').children().remove();
+            $('#category-box').append(html);
+            $('#category-box').find("input").iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+                increaseArea: '20%'
             });
-        }
 
-        @if(!isset($goods_info))
-        initCategory();
-        @endif
-
-        $("#hidden-category-id input").each(function () {
-            category_ids.push(parseInt($(this).val()));
+            $("#hidden-category-id input").each(function () {
+                let parID = $(this).attr("data-val");
+                category_ids.push([parseInt(parID), parseInt($(this).val())]);
+            });
         });
-        category_checked = $(".category_name").text().split("/");
+
+        // category_checked = $(".category_name").text().split("/");
 
         initTheOrderCheckedCats();
+
+        //获取下拉框分类信息
+        function getTopClassification(industry_id, val) {
+            $.get("{{ route('admin.industry.get_top_classification') }}", {
+                'nice_classification_id': val,
+                'industry_id': industry_id,
+                _token: _token
+            }, function (data) {
+                if ($.isEmptyObject(data)) {
+                    $('.alias').attr('value', '');
+                } else {
+                    $('.alias').attr('value', data.pivot.alias);
+                }
+            });
+        }
 
         function moveTheOrderCat($parentObject, template) {
             if ($parentObject.length == 1) {
@@ -63,119 +87,212 @@
             });
         }
 
-        function addTheOrderCheckedCat(dataId, dataParentId, dataName) {
+        function addTheOrderCheckedCat(dataId, dataParentId, dataName, dataLevel, dataCode = '') {
+
             var whetherExistNode = $(".category_name").find('[data-id=' + dataId + ']').length;
+
             if (0 == whetherExistNode) {
-                var template = " <li data-id=" + dataId + " data-parent=" + dataParentId + "><span>" + dataName +
-                    "</span><ul></ul>" +
-                    " </li>";
                 var $parentObject = $(".category_name").find('[data-id=' + dataParentId + ']');
-                moveTheOrderCat($parentObject, template);
+                if ($parentObject.length == 1) {
+
+                    var $sort = $(".category_name").find('[data-level=3]').length + 1;
+                    var template = " <li data-id=" + dataId + " data-parent=" + dataParentId + " data-level=" + dataLevel + "><span>" + $sort + '.' + dataName +
+                        "</span><ul></ul>" +
+                        " </li>";
+                    $parentObject.children('ul').append(template);
+
+                } else {
+                    var template = " <li data-id=" + dataId + " data-parent=" + dataParentId + " data-level=" + dataLevel + "><span>" + dataCode + dataName +
+                        "</span><ul></ul>" +
+                        " </li>";
+                    $(".category_name").children('ul').append(template);
+
+                }
             }
         }
 
+        // 移除已经选中的二级与三级选项
         function removeTheOrderCheckedCat(dataId) {
             var $node = $(".category_name").find('[data-id=' + dataId + ']');
             var $childrenNode = $node.children('ul').children();
             if ($childrenNode.length > 0) {
                 var $nodeParent = $node.parents('li').first();
-                moveTheOrderCat($nodeParent, $childrenNode);
+                // moveTheOrderCat($nodeParent, $childrenNode);
+                $nodeParent.find('ul').html("");
             }
             $node.remove();
         }
 
-        function operator($object, parentId, parentName, flag) {
+        function operator($object, id, parentId, level, flag) {
             // $flag =1 表示checked操作， $flag=2 表示unchecked操作， $flag=3表示点击钮
             // $object 表示 category-content类对象
 
             // 首先 写unchecked操作
-            if (2 == flag) {
+            if (flag == 2) {
                 // 在category_ids里面找parentId
-                var positionIndex = category_ids.indexOf(parentId);
-                category_ids.splice(positionIndex, 1);
-
-                // 同上， 将parentName从category_checked中移除
-                positionIndex = category_checked.indexOf(parentName);
-                category_checked.splice(positionIndex, 1);
-
+                category_ids.forEach(function (item, i) {
+                    if (item[1] == id) {
+                        category_ids.splice(i, 1);
+                    }
+                })
                 //将表单中的hidden 某个category_id移除
-                $("#hidden-category-id").find("#category_" + parentId).remove();
+                $("#hidden-category-id").find("#category_" + id).remove();
             } else {
-                // 在flag =1 或者 flag=3时 一定会向后台请求数据
                 // html
                 var html = "";
-                //var groupId = $("select[name=category_group]").children('option:selected').val();
+                if (level == 3) {
+                    //3级分类直接处理
+                    handle($object, id, parentId, flag, html);
+                    return;
+                }
+
+                // 1级2级分类 在flag =1 或者 flag=3时 一定会向后台请求数据
                 var data = {
-                    "parentId": parentId,
-                    //"groupId": groupId,
+                    "search": inputVal,
+                    "parentId": id,
                     "type-click-category-button": true
                 };
+
+                outID = id;
+
                 $.get(
                     "{{route('admin.industry.get_classification')}}", data,
                     function (json) {
-                        console.log(json);
                         for (var i = 0; i < json.length; i++) {
-
                             var data = {
                                 id: json[i].id,
                                 value: json[i].classification_name,
                                 parent_id: json[i].parent_id,
+                                classification_code: json[i].classification_code,
+                                level: json[i].level,
                             }
                             html = html + $.convertTemplate('#template', data, '');
                         }
-                        // 异步请求后， 模板数据全都存在于var html中 下一步获得 类为 category-content的位置 这里有个bug,  应该要放进 ajax里面
-                        var categoryContentPosition = $object.data('position');
-
-                        if (categoryContentPosition != "right") {
-                            // categoryContentPosition 不等于 right 找到它的next sibling
-                            var $nextObject = $object.next();
-                            // 首先将 $nextObject里面的内容清空
-                            $nextObject.children().remove();
-                            $nextObject.append(html);
-                            // debugger;
-                            $(".category_checks").iCheck({checkboxClass: 'icheckbox_square-green'});
-                            //将id存在于 category_ids里的 checkbox checked
-                            for (var i = 0; i < category_ids.length; i++) {
-                                $("input[data-uniqueId=categoryIds_" + category_ids[i] + "]").iCheck('check');
-                            }
+                        // 点击左边标题， 将右边内容清空  重新复制
+                        var $nextObject = $object.next();
+                        // 首先将 $nextObject里面的内容清空
+                        $nextObject.children().remove();
+                        $nextObject.append(html);
+                        // debugger;
+                        $(".category_checks").iCheck({checkboxClass: 'icheckbox_square-green'});
+                        //将id存在于 category_ids里的 checkbox checked
+                        for (var i = 0; i < category_ids.length; i++) {
+                            $("input[data-uniqueId=categoryIds_" + category_ids[i][1] + "]").iCheck('check');
                         }
-                        if (1 == flag) {
-                            parentId = parseInt(parentId);
-                            if (category_ids.indexOf(parentId) < 0) {
-                                category_ids.push(parentId);
-                                category_checked.push(parentName);
-                                $("#hidden-category-id").append("<input  type=\"hidden\" name=\"category_id[]\" id=category_" + parentId + " value=" + parentId + ">");
-                            }
-                        }
+                        handle($object, id, parentId, flag, html);
                     });
+
             }
         }
 
-        $('body').on('click', '.category-btn', function () {
+        function handle($object, id, parentId, flag, html) {
+            // 异步请求后， 模板数据全都存在于var html中 下一步获得 类为 category-content的位置 这里有个bug,  应该要放进 ajax里面
+            if (1 == flag) {
+                id = parseInt(id);
+                if (category_ids.length == 0) {
+                    category_ids.push([parentId, id]);
+                    $("#hidden-category-id").append("<input  type=\"hidden\" name=\"category_id[]\" id=category_" + id + " data-val=" + parentId + "  value=" + id + ">");
+                }
+                else {
+                    $.each(category_ids, function (i, item) {
+                        if (item[1] == id) {
+                            return false;
+                        }
+                        if (item[1] != id && i == category_ids.length - 1) {
+                            category_ids.push([parentId, id]);
+                            $("#hidden-category-id").append("<input  type=\"hidden\" name=\"category_id[]\" id=category_" + id + " data-val=" + parentId + "  value=" + id + ">");
+                        }
+                    })
+                }
+                //    console.log('flag,1 category_ids',  category_ids);
+            }
+
+        }
+
+        $('body').off('click').on('click', '.category-btn', function () {
             // 获得相邻的checkbox
             var $checkbox = $(this).prev().find(':checkbox');
             var id = $checkbox.data('id');
             var name = $checkbox.data('name');
+            var level = $checkbox.data('level');
             var $parentCategoryContent = $checkbox.closest('.category-content');
-            operator($parentCategoryContent, id, name, 3);
+            operator($parentCategoryContent, id, name, level, 3);
         });
-        $('body').on('ifChanged', '.category_checks', function () {
+        $('body').off('ifChanged').on('ifChanged', '.category_checks', function () {
             var id = $(this).data('id');
             var name = $(this).data('name');
             var parentId = $(this).data('parent');
+            var level = $(this).data('level');
+            var code = $(this).data('code');
             var $parentCategoryContent = $(this).closest('.category-content');
-            if ($(this).is(':checked')) {
-                operator($parentCategoryContent, id, name, 1);
-                addTheOrderCheckedCat(id, parentId, name);
+            // console.log("$(this).is(':checked')", $(this).is(':checked'));
+            if ($(this).is(':checked')) { // 选中状态
+                operator($parentCategoryContent, id, parentId, level, 1);
+                addTheOrderCheckedCat(id, parentId, name, level, code);
+                // 右边但凡有一个复选框选中，左边对应 复选框也自动选中
+                if ($(".titCon02").find(".checked").length == 1) {
+                    // console.log('input', $("input[data-uniqueId=categoryIds_" + parentId + "]").is(':checked'));
+                    if (!$("input[data-uniqueId=categoryIds_" + parentId + "]").is(':checked')) {
+                        $("input[data-uniqueId=categoryIds_" + parentId + "]").iCheck('check');
+                    }
+
+                }
             } else {
-                operator($parentCategoryContent, id, name, 2);
+                // console.log('outID', outID, "id", id , "id == outID", id == outID);
+                // 点击右边的复选框
+                operator($parentCategoryContent, id, parentId, level, 2);
                 removeTheOrderCheckedCat(id);
+                if (parseInt(level) == 2) {
+                    // 判断当前选中的二级标题 跟 最后一次发送后台请求的二级标题 是否一样
+                    if (id == outID) {
+                        // 移除右边已经选中的所有复选框
+                        $('.titCon02 .category-wrap .icheckbox_square-green').each(function (item, i) {
+                            if ($(this).is(".checked")) {
+                                $(this).removeClass("checked");
+                                var rightID = $(this).find("input").data('id');
+                                // console.log('rightID', rightID);
+                                // var rightName  = $(this).find("input").data('name');
+                                // 在category_ids里面找parentId
+                                $.each(category_ids, function (i, item) {
+                                    if (item[1] == rightID) {
+                                        // console.log('移除右侧i', rightID);
+                                        category_ids.splice(i, 1);
+                                        $("#hidden-category-id").find("#category_" + rightID).remove();
+                                        return false;
+                                    }
+                                })
+                            }
+                        })
+                    } else {
+                        // 从数组category_ids中删除 右边的复选框已选中状态的id 与 左边复选框的id
+                        var iArr = [];
+                        var category_idsNew = []
+                        $.each(category_ids, function (i, item) {
+                            // console.log('item', item);
+                            if (item.indexOf(id) > -1) {
+                                // console.log('移除右侧item', item);
+                                $("#hidden-category-id").find("#category_" + item[1]).remove();
+                            } else {
+                                category_idsNew.push(item)
+                            }
+                        })
+
+                        category_ids = category_idsNew
+
+                    }
+                    // console.log('level =2, category_ids', category_ids);
+                }
+                // 右边的复选项取消选中
+                else {
+                    // console.log('category_ids', category_ids,"id", id);
+                    //将表单中的hidden 某个category_id移除
+                    $("#hidden-category-id").find("#category_" + id).remove();
+                }
             }
+            // console.log('category_ids', category_ids);
         });
     });
-</script>
-
-<script>
+    // 点击 保存 按钮
     $('#spec-value-form').ajaxForm({
         success: function (result) {
             if (result.status) {
@@ -187,22 +304,49 @@
                     location.reload();
                 });
             } else {
-                swal('存在重复的规格值', '', 'error');
+                swal(result.message, '', 'error');
             }
 
         }
     });
 
+    // 点击 搜索按钮 实现查询
+    var selOption = '<option value="">请选择</option>';
+    $(".search button").click(function () {
+        inputVal = $(".search input").val();
+        // console.log('inputVal', inputVal);
+        var data = {
+            parentId: 0,
+            search: inputVal,
+            _token: _token
+        };
+        $.get('{{route('admin.industry.get_classification')}}', data, function (html) {
+            // console.log('后台返回的字段', html);
+            // 搜索不到内容
+            if (html.length === 0) {
+                swal("暂无搜索结果", "", "error");
+            } else {
+                $.each(html, function (i, item) {
+                    selOption += '<option value="' + item.id + '">第' + item.classification_code + '类</option>';
+                })
+                $(".type-s").html(selOption);
+                // 下面的二级 三级内容标题清空
+                $(".titCon01").html("");
+                $(".titCon02").html("");
+                swal("搜到相关类别,请选择商标类别以及所属分类查看!", "", "success");
+            }
+        });
+    })
 
     //根据显示类型返回格式
-    function getTr(indexValue) {
+    function getTr() {
         //数据
-        var specRow = '<tr class="td_c"><td>' + '<select class="form-control"  name="add_value[' + indexValue + '][nice_classification_id]">'
-            + '<option value="">请选择</option>' + @foreach($classifications as $item)' + <option value="{{$item->id}}">{{$item->classification_code. '-' .$item->classification_name}}</option>' +@endforeach' + </select>'
-                +'<td><input type="text" class="form-control" name="add_value[' + indexValue + '][alias]" />' +
-                '</td>' +
-                        '<td><a href="javascript:;" class="btn btn-xs btn-primary operatorPhy">' +
-                '<i class="fa fa-trash" data-toggle="tooltip" data-placement="top" data-original-title="删除"></i></a></td></tr>';
+        var specRow = '<tr class="td_c"><td>' + '<select class="form-control"  name="top_nice_classification_id">'
+            + '<option value="">请选择</option>' + @foreach($classifications as $item)' + <option value="{{$item->id}}">{{$item->classification_code. '-' .$item->classification_name}}</option>' + @endforeach' + </select>'
+            + '<td><input type="text" class="form-control" name="alias" value=""/>' +
+            '</td>' +
+            '<td><a href="javascript:;" class="btn btn-xs btn-primary operatorPhy">' +
+            '<i class="fa fa-trash" data-toggle="tooltip" data-placement="top" data-original-title="删除"></i></a></td></tr>';
 
         return specRow;
     }
@@ -210,24 +354,22 @@
     //预定义
 
     $('#spec_box tr').each(
-            function (i) {
-                initButton(i);
-            }
+        function (i) {
+            initButton(i);
+        }
     );
 
 
     //添加规格按钮(点击绑定)
     $('#specAddButton').click(
-            function () {
+        function () {
 
-                var specSize = $('#spec_box tr').size();
+            var specRow = getTr();
 
-                var specRow = getTr(specSize);
-
-                $('#spec_box').append(specRow);
+            $('#spec_box').append(specRow);
 
             initButton(specSize);
-            }
+        }
     );
 
     //按钮(点击绑定)

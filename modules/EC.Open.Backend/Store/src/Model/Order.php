@@ -33,6 +33,11 @@ class Order extends Model implements Transformable
 
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'need_invoice' => 'boolean',
+        'applicant_data' => 'json',
+    ];
+
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
@@ -287,6 +292,7 @@ class Order extends Model implements Transformable
 
     public function getMobileAttribute($value)
     {
-        return substr_replace($value, '****', 3, 5);
+//        return substr_replace($value, '****', 3, 5);
+        return $value;
     }
 }

@@ -149,7 +149,22 @@
                                value="{{$goods_info->goods_no}}">
                     </div>
                 </div>
-
+                @if ($goods_info->id == 3)
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">自助申请附加费用：</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="self_apply_additional_price" placeholder=""
+                               value="{{$goods_info->self_apply_additional_price}}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">税率(%)：</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="extra[tax_rate]" placeholder=""
+                                   value="{{$goods_info->extra->tax_rate ?? 0}}">
+                        </div>
+                    </div>
+                @endif
                 <div class="form-group">
                     <label class="col-sm-2 control-label">服务费：</label>
                     <div class="col-sm-10">
@@ -185,13 +200,13 @@
                     </div>
                 </div>
 
-<!--                <div class="form-group">
+            <!--                <div class="form-group">
                     <label class="col-sm-2 control-label">是否推荐：</label>
                     <div class="col-sm-10">
                         <?php $commend = $goods_info->is_commend == 1 ? 'checked' : '';
-                        $uncommend = $goods_info->is_commend == 0 ? 'checked' : '';
-                        ?>
-                        <input name="is_commend" type="radio" value="1" {{$commend}}/> 是
+            $uncommend = $goods_info->is_commend == 0 ? 'checked' : '';
+            ?>
+                    <input name="is_commend" type="radio" value="1" {{$commend}}/> 是
                         <input name="is_commend" type="radio" value="0" {{$uncommend}}/> 否
                     </div>
                 </div>
@@ -257,7 +272,8 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">服务亮点：</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="service_highlights" placeholder="">
+                        <input type="text" class="form-control" name="service_highlights" placeholder=""
+                               value="{{$goods_info->service_highlights}}">
                     </div>
                 </div>
 
@@ -275,7 +291,8 @@
 
             <div class="app-actions">
                 <a data-id="2" data-action="next" class="btn btn-success app-action">下一步»</a>
-                <input type="submit" class="btn btn-success app-action-save" data-toggle="form-submit" data-target="#base-form"
+                <input type="submit" class="btn btn-success app-action-save" data-toggle="form-submit"
+                       data-target="#base-form"
                        value="保存">
             </div>
         </div><!-- /.tab-pane -->
@@ -289,7 +306,8 @@
             <div class="app-actions">
                 <a data-id="1" data-action="next" class="btn btn-success app-action-prev">«上一步</a>
                 <a data-id="3" data-action="next" class="btn btn-success app-action">下一步»</a>
-                <input type="submit" class="btn btn-success app-action-save" data-toggle="form-submit" data-target="#base-form"
+                <input type="submit" class="btn btn-success app-action-save" data-toggle="form-submit"
+                       data-target="#base-form"
                        value="保存">
             </div>
         </div>
@@ -311,7 +329,8 @@
             <div class="app-actions">
                 <a data-id="2" data-action="next" class="btn btn-success app-action-prev">«上一步</a>
                 <a data-id="4" data-action="next" class="btn btn-success app-action">下一步»</a>
-                <input type="submit" class="btn btn-success app-action-save" data-toggle="form-submit" data-target="#base-form"
+                <input type="submit" class="btn btn-success app-action-save" data-toggle="form-submit"
+                       data-target="#base-form"
                        value="保存">
             </div>
         </div><!-- /.tab-pane -->
@@ -332,7 +351,8 @@
             <div class="app-actions">
                 <a data-id="3" data-action="next" class="btn btn-success app-action-prev">«上一步</a>
                 <a data-id="5" data-action="next" class="btn btn-success app-action">下一步»</a>
-                <input type="submit" class="btn btn-success app-action-save" data-toggle="form-submit" data-target="#base-form"
+                <input type="submit" class="btn btn-success app-action-save" data-toggle="form-submit"
+                       data-target="#base-form"
                        value="保存">
             </div>
         </div><!-- /.tab-pane -->
@@ -362,7 +382,8 @@
             <div class="app-actions">
                 <a data-id="5" data-action="next" class="btn btn-success app-action-prev">«上一步</a>
                 <a data-id="7" data-action="next" class="btn btn-success app-action">下一步»</a>
-                <input type="submit" class="btn btn-success app-action-save" data-toggle="form-submit" data-target="#base-form"
+                <input type="submit" class="btn btn-success app-action-save" data-toggle="form-submit"
+                       data-target="#base-form"
                        value="保存">
             </div>
         </div><!-- /.tab-pane -->

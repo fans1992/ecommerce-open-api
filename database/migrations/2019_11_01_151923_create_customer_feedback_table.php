@@ -16,6 +16,7 @@ class CreateCustomerFeedbackTable extends Migration
         Schema::create('customer_feedback', function (Blueprint $table) {
             $table->increments('id');
             $table->text('message');
+            $table->string('name')->nullable();
             $table->string('mobile');
             $table->timestamps();
         });

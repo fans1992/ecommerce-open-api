@@ -3,6 +3,7 @@
 namespace GuoJiangClub\EC\Open\Backend\Store\Http\Controllers;
 
 use Carbon\Carbon;
+use GuoJiangClub\EC\Open\Backend\Store\Model\OrderItem;
 use iBrand\Backend\Http\Controllers\Controller;
 use GuoJiangClub\EC\Open\Backend\Store\Model\Shipping;
 use GuoJiangClub\EC\Open\Backend\Store\Model\ShippingMethod;
@@ -400,24 +401,97 @@ class OrdersController extends Controller
     }
 
     /**
-     * 修改收货地址
+     * 修改联系人信息
      */
     public function editAddress($order_id)
     {
         $order = Order::find($order_id);
-        $address = explode(' ', $order->address_name);
+//        $address = explode(' ', $order->address_name);
 
-        return view('store-backend::orders.includes.modal_address', compact('order', 'address'));
+        return view('store-backend::orders.includes.modal_address', compact('order'));
     }
 
+    /**
+     * 保存订单联系人
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function postAddress()
     {
         $order = Order::find(request('order_id'));
         $order->accept_name = request('accept_name');
         $order->mobile = request('mobile');
+        $order->email = request('email');
         $order->address = request('address');
-        $order->address_name = request('province') . ' ' . request('city') . ' ' . request('district');
+//        $order->address_name = request('province') . ' ' . request('city') . ' ' . request('district');
         $order->save();
+
+        return $this->ajaxJson();
+    }
+
+    /**
+     * 修改申请人信息
+     */
+    public function editApplicant($order_item_id)
+    {
+        $orderItem = OrderItem::find($order_item_id);
+
+//        $address = explode(' ', $order->address_name);
+
+        return view('store-backend::orders.includes.modal_applicant', compact('orderItem'));
+    }
+
+
+    /**
+     * 保存申请人信息
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function postApplicant(Request $request)
+    {
+        $orderItem = OrderItem::find($request->input('order_item_id'));
+        $data = $request->except(['order_item_id', 'file']);
+
+        $orderItem->update([
+            'applicant_data' => $data,
+        ]);
+
+        if ($orderItem->order->type === 2) {
+            $orderItem->order->update([
+                'applicant_data' => $data,
+                'applicant_status' => 'confirmed',
+            ]);
+        }
+
+        return $this->ajaxJson();
+    }
+
+    /**
+     * 修改商标信息
+     */
+    public function editBrandInfo($order_item_id)
+    {
+        $orderItem = OrderItem::find($order_item_id);
+
+//        $address = explode(' ', $order->address_name);
+
+        return view('store-backend::orders.includes.modal_brand_info', compact('orderItem'));
+    }
+
+
+    /**
+     * 保存商标信息
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function postBrandInfo(Request $request)
+    {
+        $orderItem = OrderItem::find($request->input('order_item_id'));
+        $data = $request->except(['order_item_id', 'file']);
+
+        $orderItem->update([
+            'brand_data' => $data,
+        ]);
 
         return $this->ajaxJson();
     }

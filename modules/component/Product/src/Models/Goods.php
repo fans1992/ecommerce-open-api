@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of ibrand/product.
- *
- * (c) 果酱社区 <https://guojiang.club>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace GuoJiangClub\Component\Product\Models;
 
 use GuoJiangClub\Component\Product\Brand;
@@ -16,12 +7,20 @@ use Illuminate\Database\Eloquent\Model as LaravelModel;
 
 class Goods extends LaravelModel
 {
+    //商标保障申请价格
+    const MARKUP_PRICE_SERVICE = 200;
+    const MARKUP_PRICE_OFFICIAL = 200;
+    const MARKUP_PRICE_TOTAL = 400;
+
+    const TAX_RATE_SELF_APPLICATION = 6;
+
     protected $guarded = ['id'];
 
     protected $hidden = ['cost_price'];
 
     protected $casts = [
         'is_home_display' => 'boolean',
+        'extra' => 'json',
     ];
 
     public function __construct(array $attributes = [])
@@ -68,6 +67,16 @@ class Goods extends LaravelModel
     public function getIsInSale($quantity)
     {
         return 0 == $this->is_del && $this->stock_qty >= $quantity;
+    }
+
+    public function increaseSales($quantity)
+    {
+        return $this->sale_count = $this->sale_count + $quantity;
+    }
+
+    public function restoreSales($quantity)
+    {
+        return $this->sale_count = $this->sale_count - $quantity;
     }
 
     public function photos()

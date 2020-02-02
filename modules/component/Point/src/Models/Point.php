@@ -13,6 +13,7 @@ namespace GuoJiangClub\Component\Point\Models;
 
 use GuoJiangClub\Component\User\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use GuoJiangClub\Component\Order\Models\OrderItem;
 
 class Point extends Model
 {
@@ -76,5 +77,11 @@ class Point extends Model
 
         return $this->hasOne(Point::class, 'id')
             ->where('item_type', 'GuoJiangClub\Component\Order\Models\OrderItem')->with('order_item.order');
+    }
+
+    public function order_item()
+    {
+
+        return $this->belongsTo(OrderItem::class, 'item_id');
     }
 }

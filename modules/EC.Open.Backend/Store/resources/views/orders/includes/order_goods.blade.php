@@ -5,7 +5,7 @@
         <th>商品名称</th>
         <th>商品单价</th>
         <th>数量</th>
-        <th>优惠金额</th>
+        <th>调整金额</th>
         <th>总价</th>
         <th>参数</th>
         <th>附加服务</th>
@@ -23,12 +23,14 @@
             </td>
             <td>{{$item->unit_price}}</td>
             <td>{{$item->quantity}}</td>
-            <td>{{$item->adjustments_total}}</td>
+            <td>{{$item->adjustments_total > 0 ? '+ ' . $item->adjustments_total : $item->adjustments_total}}</td>
             <td>{{$item->total}}</td>
 
             <td>{{!empty($item->item_info['specs_text'])?$item->item_info['specs_text']:''}}</td>
             <td>
-                {{implode(' ', array_column($item->item_info['option_service'], 'name'))}}
+                @if($item->item_info['option_service'])
+                    {{implode(' ', array_column($item->item_info['option_service'], 'name'))}}
+                @endif
             </td>
             <td>
                 {{$item->getModel() ? $item->getModel()->sku : ''}}

@@ -26,7 +26,8 @@ class OrderTransformer extends BaseTransformer
 
         switch ($model->type) {
             case 2:
-                $model->type_text = '内购订单';
+//                $model->type_text = '内购订单';
+                $model->type_text = '自助申请订单';
                 break;
             case 4:
                 $model->type_text = '套餐订单';
@@ -111,6 +112,46 @@ class OrderTransformer extends BaseTransformer
                 }
             }
         }*/
+
+        foreach ($model->items as $item) {
+
+            $brandRegistration = ['商标设计', '商标保障申请', '商标加急申请'];
+            $brandCase = ['商标驳回复审', '商标变更', '商标转让', '商标续展', '商标许可', '商标撤销', '撤销答辩', '商标异议申请', '异议答辩', '无效宣告', '无效宣告答辩', '商标宽展'];
+            $copyRight = ['软件著作权', '作品著作权'];
+
+            $name = $item->item_name;
+
+            if (in_array($name, $brandRegistration)) {
+                $brandType = 1;
+            } elseif ($name == '商标自助申请') {
+                $brandType = 2;
+            } elseif (in_array($name, $brandCase)) {
+                $brandType = 3;
+            } elseif (in_array($name, $copyRight)) {
+                $brandType = 4;
+            } else {
+                $brandType = 0;
+            }
+
+//            switch ($name = $item->item_name) {
+//                case in_array($name, $brandRegistration):
+//                    $brandType = 1;
+//                    break;
+//                case $name = '商标自助申请':
+//                    $brandType = 2;
+//                    break;
+//                case in_array($name, $brandCase):
+//                    $brandType = 3;
+//                    break;
+//                case in_array($name, $copyRight):
+//                    $brandType = 4;
+//                    break;
+//                default:
+//                    $brandType = 0;
+//            }
+
+            $item->brandType = $brandType;
+        }
 
         return $model->toArray();
     }

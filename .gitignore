@@ -2,6 +2,9 @@
 /public/hot
 /public/storage
 /public/laravel-u-editor
+/public/fonts
+/public/font
+/public/mix-manifest.json
 /storage/*.key
 /vendor
 /.idea
@@ -13,7 +16,7 @@ yarn-error.log
 .env
 public/uploads
 public/vendor
-public/assets
+public/assets/backend
 resources/views/vendor
 resources/lang
 /github

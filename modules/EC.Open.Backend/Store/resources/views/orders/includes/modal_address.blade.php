@@ -4,7 +4,7 @@
     modal-lg
 @stop
 @section('title')
-    修改收货地址
+    修改订单联系人
 @stop
 
 @section('body')
@@ -16,7 +16,7 @@
             <input type="hidden" name="order_id" value="{{$order->id}}">
 
             <div class="form-group">
-                {!! Form::label('name','收货人：', ['class' => 'col-md-2 control-label']) !!}
+                {!! Form::label('name','联系人：', ['class' => 'col-md-2 control-label']) !!}
                 <div class="col-md-9">
                     <input type="text" class="form-control" value="{{$order->accept_name}}" name="accept_name"
                            placeholder="" required>
@@ -24,7 +24,7 @@
             </div>
 
             <div class="form-group">
-                {!! Form::label('name','电话：', ['class' => 'col-md-2 control-label']) !!}
+                {!! Form::label('name','联系电话：', ['class' => 'col-md-2 control-label']) !!}
                 <div class="col-md-9">
                     <input type="text" class="form-control" value="{{$order->mobile}}" name="mobile" placeholder=""
                            required>
@@ -32,21 +32,29 @@
             </div>
 
             <div class="form-group">
-                {!! Form::label('name','地址：', ['class' => 'col-md-2 control-label']) !!}
-                <div class="col-md-9" id="edit-address">
-                    <div class="col-sm-4">
-                        <select class="form-control" name="province"></select><!-- 省 -->
-                    </div>
-
-                    <div class="col-sm-4">
-                        <select class="form-control" name="city"></select><!-- 市 -->
-                    </div>
-
-                    <div class="col-sm-4">
-                        <select class="form-control" name="district"></select><!-- 区 -->
-                    </div>
+                {!! Form::label('name','电子邮箱：', ['class' => 'col-md-2 control-label']) !!}
+                <div class="col-md-9">
+                    <input type="text" class="form-control" value="{{$order->email}}" name="email" placeholder=""
+                           required>
                 </div>
             </div>
+
+            {{--<div class="form-group">--}}
+                {{--{!! Form::label('name','地址：', ['class' => 'col-md-2 control-label']) !!}--}}
+                {{--<div class="col-md-9" id="edit-address">--}}
+                    {{--<div class="col-sm-4">--}}
+                        {{--<select class="form-control" name="province"></select><!-- 省 -->--}}
+                    {{--</div>--}}
+
+                    {{--<div class="col-sm-4">--}}
+                        {{--<select class="form-control" name="city"></select><!-- 市 -->--}}
+                    {{--</div>--}}
+
+                    {{--<div class="col-sm-4">--}}
+                        {{--<select class="form-control" name="district"></select><!-- 区 -->--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+            {{--</div>--}}
 
             <div class="form-group">
                 {!! Form::label('name','详细地址：', ['class' => 'col-md-2 control-label']) !!}
@@ -72,13 +80,13 @@
     </button>
 
     <script>
-        $(function () {
-            $('#edit-address').distpicker({
-                province: '{{$address[0]}}',
-                city: '{{$address[1]}}',
-                district: '{{$address[2]}}'
-            });
-        });
+        {{--$(function () {--}}
+            {{--$('#edit-address').distpicker({--}}
+                {{--province: '{{$address[0]}}',--}}
+                {{--city: '{{$address[1]}}',--}}
+                {{--district: '{{$address[2]}}'--}}
+            {{--});--}}
+        {{--});--}}
 
 
         $(document).ready(function () {

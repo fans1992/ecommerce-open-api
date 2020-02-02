@@ -1,35 +1,23 @@
 <?php
 
-/*
- * This file is part of ibrand/EC-Open-Server.
- *
- * (c) 果酱社区 <https://guojiang.club>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 
 use GuoJiangClub\Component\User\Models\CustomerFeedback;
+use GuoJiangClub\EC\Open\Server\Http\Requests\CustomerServiceRequest;
+use iBrand\Sms\Facade as Sms;
 use Validator;
 
 class CustomerServiceController extends Controller
 {
-    public function store()
+    public function store(CustomerServiceRequest $customerServiceRequest)
     {
-        $input = request()->all();
+        $input = $customerServiceRequest->only(['message', 'name', 'mobile', 'code']);
 
-        $validator = Validator::make($input, [
-            'message' => 'required|string',
-            'mobile' => 'required|regex:/^1[3456789]\d{9}$/',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->failed($validator->errors());
+        if (!Sms::checkCode($input['mobile'], $input['code'])) {
+            return $this->failed('验证码错误');
         }
 
-        CustomerFeedback::query()->create($input);
+        CustomerFeedback::query()->create(array_except($input, ['code']));
 
         return $this->success();
     }

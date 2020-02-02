@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of ibrand/EC-Open-Server.
- *
- * (c) 果酱社区 <https://guojiang.club>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace GuoJiangClub\EC\Open\Server\Http\Controllers;
 
 use Carbon\Carbon;
@@ -28,13 +19,18 @@ use GuoJiangClub\Component\Product\Models\AttributeValue;
 use GuoJiangClub\Component\Product\Repositories\GoodsRepository;
 use GuoJiangClub\Component\Product\Repositories\ProductRepository;
 use GuoJiangClub\Component\Shipping\Models\Shipping;
+use GuoJiangClub\EC\Open\Backend\Store\Model\NiceClassification;
 use GuoJiangClub\EC\Open\Core\Applicators\PointApplicator;
+use GuoJiangClub\EC\Open\Core\Applicators\TaxApplicator;
 use GuoJiangClub\EC\Open\Core\Processor\OrderProcessor;
 use GuoJiangClub\EC\Open\Core\Services\DiscountService;
+use GuoJiangClub\EC\Open\Server\Events\UserClassification;
+use GuoJiangClub\EC\Open\Server\Events\UserClassificationEvent;
 use Illuminate\Support\Collection;
 use GuoJiangClub\Component\Product\Models\Goods;
 use GuoJiangClub\Component\Product\Models\Product;
 use iBrand\Shoppingcart\Item;
+use Storage;
 use Log;
 
 class ShoppingController extends Controller
@@ -49,6 +45,7 @@ class ShoppingController extends Controller
     private $orderProcessor;
     private $pointRepository;
     private $pointApplicator;
+    private $taxApplicator;
 
 
     public function __construct(GoodsRepository $goodsRepository
@@ -61,6 +58,7 @@ class ShoppingController extends Controller
         , OrderProcessor $orderProcessor
         , PointRepository $pointRepository
         , PointApplicator $pointApplicator
+        , TaxApplicator $taxApplicator
     )
     {
         $this->goodsRepository = $goodsRepository;
@@ -73,8 +71,14 @@ class ShoppingController extends Controller
         $this->orderProcessor = $orderProcessor;
         $this->pointRepository = $pointRepository;
         $this->pointApplicator = $pointApplicator;
+        $this->taxApplicator = $taxApplicator;
     }
 
+    /**
+     * 购物车结算(商品直接下单)
+     *
+     * @return \Dingo\Api\Http\Response|mixed
+     */
     public function checkout()
     {
         $user = request()->user();
@@ -128,8 +132,11 @@ class ShoppingController extends Controller
         ]);
     }
 
+
     /**
      * confirm the order to be waiting to pay.
+     *
+     * @return \Dingo\Api\Http\Response|mixed
      */
     public function confirm()
     {
@@ -146,6 +153,10 @@ class ShoppingController extends Controller
 
         if ($note = request('note')) {
             $order->note = $note;
+        }
+
+        if (request()->has('need_invoice')) {
+            $order->need_invoice = request('need_invoice');
         }
 
         //1. check stock.
@@ -195,7 +206,12 @@ class ShoppingController extends Controller
                 }
             }
 
-            //5. 保存订单联系人信息
+            //5. 叠加税费
+            if (request('need_invoice')) {
+                $this->taxApplicator->apply($order);
+            }
+
+            //6. 保存订单联系人信息 生成服务协议
             if ($inputContact = request('order_contact')) {
                 $contact = $this->addressRepository->firstOrCreate(array_merge($inputContact, ['user_id' => request()->user()->id]));
 
@@ -203,20 +219,24 @@ class ShoppingController extends Controller
                 $order->mobile = $contact->mobile;
                 $order->address = $contact->address;
                 $order->address_name = $contact->address_name;
+                $order->email = $contact->contact_email;
+
+                $order->agreement()->create(['party_a_name'=> $contact->accept_name]);
             }
 
-            //5. 保存订单状态
+            //7. 保存订单状态
             $this->orderProcessor->submit($order);
 
-            //6. remove goods store.
+            //8. remove goods store.
             foreach ($order->getItems() as $item) {
+                /** @var Goods | Product $product */
                 $product = $item->getModel();
-                $product->reduceStock($item->quantity);
+//                $product->reduceStock($item->quantity);
                 $product->increaseSales($item->quantity);
                 $product->save();
             }
 
-            //8. 移除购物车中已下单的商品
+            //9. 移除购物车中已下单的商品
             foreach ($order->getItems() as $orderItem) {
                 if ($carItem = Cart::search(['name' => $orderItem->item_name])->first()) {
                     Cart::remove($carItem->rawId());
@@ -256,7 +276,7 @@ class ShoppingController extends Controller
         //TODO: 用户未付款前取消订单后，需要还原库存
         foreach ($order->getItems() as $item) {
             $product = $item->getModel();
-            $product->restoreStock($item->quantity);
+//            $product->restoreStock($item->quantity);
             $product->restoreSales($item->quantity);
             $product->save();
         }
@@ -319,7 +339,8 @@ class ShoppingController extends Controller
     public function review()
     {
         $user = request()->user();
-        $comments = request()->except('_token');
+//        $comments = request()->except('_token');
+        $comments = request('reviews');
 
         if (!is_array($comments)) {
             return $this->failed('提交参数错误');
@@ -334,9 +355,9 @@ class ShoppingController extends Controller
                 return $this->failed('请选择具体评价的商品');
             }
 
-            if ($user->cant('review', [$order, $orderItem])) {
-                return $this->failed('无权对该商品进行评价');
-            }
+//            if ($user->cant('review', [$order, $orderItem])) {
+//                return $this->failed('无权对该商品进行评价');
+//            }
 
             if ($order->comments()->where('order_item_id', $comment['order_item_id'])->count() > 0) {
                 return $this->failed('该产品已经评论，无法再次评论');
@@ -346,7 +367,15 @@ class ShoppingController extends Controller
             $point = isset($comment['point']) ? $comment['point'] : 5;
             $pic_list = isset($comment['images']) ? $comment['images'] : [];
 
-            $comment = new Comment(['user_id' => $user->id, 'order_item_id' => $comment['order_item_id'], 'item_id' => $orderItem->item_id, 'item_meta' => $orderItem->item_meta, 'contents' => $content, 'point' => $point, 'status' => 'show', 'pic_list' => $pic_list, 'goods_id' => $orderItem->item_meta['detail_id'],
+            $comment = new Comment([
+                'user_id' => $user->id,
+                'order_item_id' => $comment['order_item_id'],
+                'item_id' => $orderItem->item_id,
+                'item_meta' => $orderItem->item_meta,
+                'contents' => $content,
+                'point' => $point, 'status' => 'show',
+                'pic_list' => $pic_list,
+//                'goods_id' => $orderItem->item_meta['detail_id'],
             ]);
 
             $order->comments()->save($comment);
@@ -481,29 +510,50 @@ class ShoppingController extends Controller
                 'image' => $item->img,
                 'detail_id' => $item->model->detail_id,
                 'specs_text' => $item->model->specs_text,
-                'service_price' => $item->service_price * 100,
-                'official_price' => $item->official_price * 100,
+                'service_price' => $item->model->service_price * 100,
+                'official_price' => $item->model->official_price * 100,
             ];
 
-            //TODO 附加服务待优化
-            if ($item['attribute_value_ids']) {
+            $unit_price = $item->model->sell_price;
+
+            //TODO 附加服务待优
+            if (isset($item['attribute_value_ids']) && $item['attribute_value_ids']) {
                 $optionServices = $this->getOptionService($item['attribute_value_ids']);
                 $option_services_price = $optionServices->sum('attribute_value');
                 $item_meta['attribute_value_ids'] = $item['attribute_value_ids'];
-                $item_meta['option_service'] =  $optionServices;
+                $item_meta['option_service'] = $optionServices;
+                $unit_price += $option_services_price / 100;
             } else {
                 $option_services_price = 0;
                 $item_meta['attribute_value_ids'] = null;
                 $item_meta['option_service'] = null;
             }
 
+            //商标保障申请
+            $ensure_price = 0;
+            if (isset($item['classification_ids']) && $item['classification_ids']) {
+                $classificationIds = explode(',', $item['classification_ids']);
+                $ensure_price = count($classificationIds) * Goods::MARKUP_PRICE_TOTAL;
+                $unit_price += $ensure_price;
+                $item_meta['ensure_classifications'] = NiceClassification::query()->whereIn('id', $classificationIds)->get(['id', 'classification_name', 'classification_code', 'parent_id', 'level'])->toArray();
+            }
+
+            //自助申请
+            if (isset($item['self_apply_classifications']) && $selectedClassifications = $item['self_apply_classifications']['selected_classifications']) {
+                $order->type = Order::TYPE_SELF_APPLICATION;
+                $this->submitUserClassifications($selectedClassifications, request()->user()->id);
+                $unit_price += $this->getSelfApplyPrice($selectedClassifications, $item->model->official_price, $item->model->self_apply_additional_price);
+                $item_meta['self_apply_classifications'] = $item['self_apply_classifications'];
+            }
+
             $orderItem = new OrderItem([
                 'quantity' => $item->qty,
-                'unit_price' => $item->model->sell_price + $option_services_price / 100,
+                'unit_price' => $unit_price,
                 'item_id' => $item->id,
                 'type' => $item->__model,
                 'item_name' => $item->name,
                 'item_meta' => $item_meta,
+                'brand_data' => $order->type === Order::TYPE_SELF_APPLICATION ? $item_meta['self_apply_classifications'] : null,
             ]);
 
             $orderItem->recalculateUnitsTotal();
@@ -634,10 +684,52 @@ class ShoppingController extends Controller
             $input['color'] = isset($item['color']) ? $item['color'] : '';
             $input['type'] = 'spu';
             $input['__model'] = Goods::class;
-            $input['com_id'] = $item['id'];
+//            $input['com_id'] = $item['id'];
+
+            $input += $item['attributes'];
         }
         $data = new Item(array_merge($input, $item));
         $cartItems->put($__raw_id, $data);
+
         return $cartItems;
     }
+
+    /**
+     * 用户提交尼斯分类事件
+     *
+     * @param $classifications
+     */
+    protected function submitUserClassifications($classifications, $userId)
+    {
+        event(new UserClassificationEvent($classifications, $userId));
+    }
+
+    /**
+     * 计算自助申请价格
+     *
+     * @param collection $classifications
+     * @param float $servicePrice
+     * @param float $additionPrice
+     * @return float|int
+     */
+    public function getSelfApplyPrice($classifications, $servicePrice, $additionPrice)
+    {
+        $totalPrice = 0;
+
+        foreach ($classifications as $top) {
+            $i = 0;
+            foreach ($top['children']['data'] as $group) {
+                $i += count($group['children']['data']);
+            }
+
+            //大类下超过10个叠加附加费用
+            $topPrice = $i <= 10 ? $servicePrice : $servicePrice + ($i - 10) * $additionPrice;
+
+            $totalPrice += $topPrice;
+        }
+
+        return $totalPrice;
+    }
+
+
 }
