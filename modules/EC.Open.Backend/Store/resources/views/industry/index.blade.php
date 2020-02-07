@@ -125,21 +125,32 @@
         {{--}--}}
 
         function deleteIndustry(id) {
-            $.post("{{ route('admin.industry.delete') }}", {
-                'id': id,
-                _token: _token
-            }, function (data) {
-                if (data.status) {
-                    swal({
-                        title: "删除成功！",
-                        text: "",
-                        type: "success"
-                    }, function() {
-                        location.reload();
-                    });
-                } else {
-                    swal("删除失败!", "该行业存在子行业", "error");
-                }
+            swal({
+                title: "确定删除该行业吗?",
+                text: "",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "删除",
+                closeOnConfirm: false
+            }, function () {
+                $.post("{{ route('admin.industry.delete') }}", {
+                    'id': id,
+                    _token: _token
+                }, function (data) {
+                    if (data.status) {
+                        swal({
+                            title: "删除成功！",
+                            text: "",
+                            type: "success"
+                        }, function() {
+                            location.reload();
+                        });
+                    } else {
+                        swal("删除失败!", "该行业存在子行业", "error");
+                    }
+                });
             });
         }
+
     </script>
