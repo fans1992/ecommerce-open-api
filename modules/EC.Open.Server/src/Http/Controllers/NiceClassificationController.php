@@ -70,6 +70,7 @@ class NiceClassificationController extends Controller
     public function industryTree(Request $request, Factory $transformerFactory)
     {
         if ($request->input('include') == 'children') {
+//            $industries = Industry::defaultOrder()->get()->toTree();
             $industries = Industry::query()->orderBy('sort', 'Asc')->get()->toTree();
 
             // 关闭 Dingo 的预加载
